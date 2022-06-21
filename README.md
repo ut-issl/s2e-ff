@@ -19,3 +19,7 @@ An example of S2E user side repository for Formation Flying study.
 - Generate `ExtLibraries` directory
 - Open `s2e-ff/s2e-ff`
 - Build and execute
+
+## Support Environment
+- GCC 9.4.0
+- Visual Studio 2022
