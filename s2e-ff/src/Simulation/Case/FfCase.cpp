@@ -2,17 +2,23 @@
 
 FfCase::FfCase(std::string ini_fname) : SimulationCase(ini_fname) {}
 
-FfCase::~FfCase() { delete spacecraft_; }
+FfCase::~FfCase() {
+  for (auto& sc : spacecrafts_) {
+    delete sc;
+  }
+}
 
 void FfCase::Initialize() {
   // Instantiate the target of the simulation
-  const int sat_id = 0;  // `sat_id=0` corresponds to the index of `sat_file` in Simbase.ini
-  spacecraft_ = new FfSat(&sim_config_, glo_env_, sat_id);
-
+  for (int sat_id = 0; sat_id < sim_config_.num_of_simulated_spacecraft_; sat_id++) {
+    FfSat* sc = new FfSat(&sim_config_, glo_env_, sat_id);
+    spacecrafts_.push_back(sc);
+  }
   // Register the log output
   glo_env_->LogSetup(*(sim_config_.main_logger_));
-  spacecraft_->LogSetup(*(sim_config_.main_logger_));
-
+  for (auto& sc : spacecrafts_) {
+    sc->LogSetup(*(sim_config_.main_logger_));
+  }
   // Write headers to the log
   sim_config_.main_logger_->WriteHeaders();
 
@@ -31,7 +37,9 @@ void FfCase::Main() {
     // Global Environment Update
     glo_env_->Update();
     // Spacecraft Update
-    spacecraft_->Update(&(glo_env_->GetSimTime()));
+    for (auto& sc : spacecrafts_) {
+      sc->Update(&(glo_env_->GetSimTime()));
+    }
     // Debug output
     if (glo_env_->GetSimTime().GetState().disp_output) {
       std::cout << "Progresss: " << glo_env_->GetSimTime().GetProgressionRate() << "%\r";

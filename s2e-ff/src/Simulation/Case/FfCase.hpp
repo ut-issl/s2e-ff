@@ -15,5 +15,5 @@ class FfCase : public SimulationCase {
   virtual std::string GetLogValue() const;
 
  private:
-  FfSat* spacecraft_;
+  std::vector<FfSat*> spacecrafts_;
 };
