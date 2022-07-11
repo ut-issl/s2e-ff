@@ -50,6 +50,7 @@ include_directories(${S2E_CORE_DIR}/src/Component/Mission/Telescope)
 include_directories(${S2E_CORE_DIR}/src/Component/Power)
 include_directories(${S2E_CORE_DIR}/src/Component/Propulsion)
 include_directories(${S2E_CORE_DIR}/src/Component/Thermal)
+include_directories(${S2E_CORE_DIR}/src/RelativeInformation)
 
 ## add_subdirectories
 add_subdirectory(${S2E_CORE_DIR}/src/Component S2E_CORE/Component)

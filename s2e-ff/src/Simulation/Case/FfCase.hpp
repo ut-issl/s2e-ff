@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Spacecraft/FfSat.hpp"
+#include "RelativeInformation.h"
 #include "SimulationCase.h"
 
 class FfCase : public SimulationCase {
@@ -15,5 +16,6 @@ class FfCase : public SimulationCase {
   virtual std::string GetLogValue() const;
 
  private:
-  FfSat* spacecraft_;
+  std::vector<FfSat*> satellites_;
+  RelativeInformation relative_information_;
 };

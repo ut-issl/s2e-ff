@@ -5,7 +5,7 @@
 
 class FfSat : public Spacecraft {
  public:
-  FfSat(SimulationConfig *sim_config, const GlobalEnvironment *glo_env, const int sat_id);
+  FfSat(SimulationConfig *sim_config, const GlobalEnvironment *glo_env, RelativeInformation *relative_information, const int sat_id);
 
  private:
 };
