@@ -19,6 +19,8 @@ void FfCase::Initialize() {
   for (auto& sc : satellites_) {
     sc->LogSetup(*(sim_config_.main_logger_));
   }
+  relative_information_.LogSetup(*(sim_config_.main_logger_));
+
   // Write headers to the log
   sim_config_.main_logger_->WriteHeaders();
 
