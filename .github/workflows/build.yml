@@ -94,6 +94,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: checkout the submodules
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
       - name: set compiler
         id: compiler
         run: |
