@@ -45,7 +45,7 @@ jobs:
         uses: actions/cache@v3
         with:
           key: extlib-${{ runner.os }}-${{ hashFiles('./ExtLibraries/**') }}
-          path: ./s2e-core/ExtLibraries
+          path: ExtLibraries
 
       - name: build extlib
         if: steps.cache-extlib.outputs.cache-hit != 'true'
@@ -132,7 +132,7 @@ jobs:
         uses: actions/cache@v3
         with:
           key: extlib-${{ runner.os }}-${{ hashFiles('./ExtLibraries/**') }}-${{ matrix.build_bit }}
-          path: ./s2e-core/ExtLibraries
+          path: ExtLibraries
 
       - name: build extlib
         if: steps.cache-extlib.outputs.cache-hit != 'true'
