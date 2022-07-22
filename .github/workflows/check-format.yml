@@ -9,7 +9,7 @@ on:
     paths:
       - '.github/workflows/check-format.yml'
       - '.clang-format'
-      - 'src/**'
+      - 's2e-ff/src/**'
 
 jobs:
   clang-format:
