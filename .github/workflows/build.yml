@@ -29,7 +29,7 @@ jobs:
       - name: checkout the submodules
         uses: actions/checkout@v3
         with:
-          submodule: recursive
+          submodules: recursive
 
       - name: Configure build for x86
         uses: ilammy/msvc-dev-cmd@v1
