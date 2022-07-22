@@ -52,7 +52,7 @@ jobs:
         shell: powershell
         working-directory: ./s2e-core/ExtLibraries
         run: |
-          $extlib_dir = $GITHUB_WORKSPACE
+          $extlib_dir = ${GITHUB_WORKSPACE}
           echo "${extlib_dir}"
           cmake -G "Visual Studio 17 2022" -A Win32 -DCMAKE_CONFIGURATION_TYPES:STRING="Debug" -DEXT_LIB_DIR="${extlib_dir}"
           cmake --build .
