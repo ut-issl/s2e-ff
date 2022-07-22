@@ -9,10 +9,9 @@ on:
     types: [opened, synchronize, reopened, labeled]
     paths:
       - '.github/workflows/build.yml'
-      - 'ExtLibraries/**'
-      - 'CMakeLists.txt'
-      - 'common.cmake'
-      - 'CMakeSettings.json'
+      - 's2e-ff/CMakeLists.txt'
+      - 's2e-ff/common.cmake'
+      - 's2e-ff/CMakeSettings.json'
       - 's2e-ff/src/**'
 
 jobs:
@@ -53,7 +52,7 @@ jobs:
         shell: powershell
         working-directory: ./s2e-core/ExtLibraries
         run: |
-          $extlib_dir = ../../ExtLibraries/
+          $extlib_dir = ${(pwd).Path}/../../ExtLibraries/
           cmake -G "Visual Studio 17 2022" -A Win32 -DCMAKE_CONFIGURATION_TYPES:STRING="Debug" -DEXT_LIB_DIR="${extlib_dir}"
           cmake --build .
       - name: install extlib
