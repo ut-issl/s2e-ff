@@ -23,7 +23,7 @@ class FfComponents : public InstalledComponents {
  private:
   // Components
   OBC* obc_;
-  RelativeDistanceSensor* rel_dist_;
+  RelativeDistanceSensor* relative_distance_sensor_;
 
   // References
   const Dynamics* dynamics_;
