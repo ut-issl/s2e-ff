@@ -15,8 +15,6 @@ on:
       - 'CMakeSettings.json'
       - 's2e-ff/src/**'
 
-env:
-
 jobs:
   build_s2e_win:
     name: Build on Windows VS2022
