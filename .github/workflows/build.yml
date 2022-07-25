@@ -135,13 +135,13 @@ jobs:
           path: ExtLibraries
 
       - name: build extlib
-        # if: steps.cache-extlib.outputs.cache-hit != 'true'
+        if: steps.cache-extlib.outputs.cache-hit != 'true'
         working-directory: ./s2e-core/ExtLibraries
         run: |
           cmake -D${{ matrix.build_bit }}
           cmake --build .
       - name: install extlib
-        # if: steps.cache-extlib.outputs.cache-hit != 'true'
+        if: steps.cache-extlib.outputs.cache-hit != 'true'
         working-directory: ./s2e-core/ExtLibraries
         run: |
           cmake --install .
