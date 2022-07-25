@@ -8,6 +8,9 @@ project(S2E_FF
 
 cmake_minimum_required(VERSION 3.13)
 
+# build config
+option(BUILD_64BIT "Build 64bit" OFF)
+
 # preprocessor
 if(WIN32)
   add_definitions(-DWIN32)
@@ -93,9 +96,11 @@ if(CYGWIN)
     NAMES cspice.a csupport.a
     PATHS ${CSPICE_DIR}/cspice_cygwin/lib)
 elseif(UNIX)
-  find_library(CSPICE_LIB
-    NAMES cspice.a csupport.a
-    PATHS ${CSPICE_DIR}/cspice_unix/lib)
+  if(BUILD_64BIT)
+    set(CSPICE_LIB_DIR ${CSPICE_DIR}/cspice_unix64/lib)
+  else()
+    set(CSPICE_LIB_DIR ${CSPICE_DIR}/cspice_unix/lib)
+  endif()
 elseif(WIN32)
   SET (CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
   find_library(CSPICE_LIB
@@ -113,9 +118,15 @@ if(CYGWIN)
     NAMES libnrlmsise00.a
     PATHS ${NRLMSISE00_DIR}/lib)
 elseif(UNIX)
-  find_library(NRLMSISE00_LIB 
-    NAMES libnrlmsise00.a
-    PATHS ${NRLMSISE00_DIR}/lib)
+  if(BUILD_64BIT)
+    find_library(NRLMSISE00_LIB
+      NAMES libnrlmsise00.a
+      PATHS ${NRLMSISE00_DIR}/lib64)
+  else()
+    find_library(NRLMSISE00_LIB
+      NAMES libnrlmsise00.a
+      PATHS ${NRLMSISE00_DIR}/lib)
+  endif()
 elseif(WIN32)
   SET (CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
   find_library(NRLMSISE00_LIB 
