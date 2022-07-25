@@ -54,7 +54,10 @@ std::string ForceGenerator::GetLogHeader() const {
   std::string str_tmp = "";
 
   std::string head = "IdealForceGenerator";
+  str_tmp += WriteVector(head + "ordered_force", "b", "N", 3);
   str_tmp += WriteVector(head + "generated_force", "b", "N", 3);
+  str_tmp += WriteVector(head + "generated_force", "i", "N", 3);
+  str_tmp += WriteVector(head + "generated_force", "rtn", "N", 3);
 
   return str_tmp;
 }
@@ -62,7 +65,10 @@ std::string ForceGenerator::GetLogHeader() const {
 std::string ForceGenerator::GetLogValue() const {
   std::string str_tmp = "";
 
+  str_tmp += WriteVector(ordered_force_b_N_);
   str_tmp += WriteVector(generated_force_b_N_);
+  str_tmp += WriteVector(generated_force_i_N_);
+  str_tmp += WriteVector(generated_force_rtn_N_);
 
   return str_tmp;
 }
