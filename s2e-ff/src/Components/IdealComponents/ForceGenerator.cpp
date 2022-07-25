@@ -1,8 +1,14 @@
 #include "ForceGenerator.hpp"
 
+#include <cfloat>
+
 // Constructor
-ForceGenerator::ForceGenerator(const int prescaler, ClockGenerator* clock_gen, const Dynamics* dynamics)
-    : ComponentBase(prescaler, clock_gen), dynamics_(dynamics) {}
+ForceGenerator::ForceGenerator(const int prescaler, ClockGenerator* clock_gen, const double magnitude_error_standard_deviation_N,
+                               const double direction_error_standard_deviation_rad, const Dynamics* dynamics)
+    : ComponentBase(prescaler, clock_gen),
+      magnitude_noise_(0.0, magnitude_error_standard_deviation_N),
+      direction_noise_(0.0, direction_error_standard_deviation_rad),
+      dynamics_(dynamics) {}
 
 ForceGenerator::~ForceGenerator() {}
 
@@ -52,4 +58,25 @@ std::string ForceGenerator::GetLogValue() const {
   str_tmp += WriteVector(generated_force_b_N_);
 
   return str_tmp;
+}
+
+libra::Quaternion GenerateDirectionNoiseQuaternion(libra::Vector<3> true_direction, const double error_standard_deviation_rad) {
+  libra::NormalRand normal_rand;
+
+  libra::Vector<3> random_direction;
+  random_direction[0] = normal_rand;
+  random_direction[1] = normal_rand;
+  random_direction[2] = normal_rand;
+  random_direction = normalize(random_direction);
+
+  libra::Vector<3> rotation_axis;
+  rotation_axis = outer_product(true_direction, random_direction);
+  double norm_rotation_axis = norm(rotation_axis);
+  if (norm_rotation_axis < 0.0 + DBL_EPSILON) {
+    // TODO: add error handling
+  }
+
+  double error_angle_rad = normal_rand * error_standard_deviation_rad;
+  libra::Quaternion error_quaternion(rotation_axis, error_angle_rad);
+  return error_quaternion;
 }

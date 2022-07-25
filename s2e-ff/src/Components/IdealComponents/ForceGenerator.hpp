@@ -4,11 +4,13 @@
 #include <Dynamics/Dynamics.h>
 #include <Interface/LogOutput/Logger.h>
 
+#include <Library/math/NormalRand.hpp>
 #include <Library/math/Vector.hpp>
 
 class ForceGenerator : public ComponentBase, public ILoggable {
  public:
-  ForceGenerator(const int prescaler, ClockGenerator* clock_gen, const Dynamics* dynamics);
+  ForceGenerator(const int prescaler, ClockGenerator* clock_gen, const double magnitude_error_standard_deviation_N,
+                 const double direction_error_standard_deviation_rad, const Dynamics* dynamics);
   ~ForceGenerator();
 
   // ComponentBase override function
@@ -34,6 +36,11 @@ class ForceGenerator : public ComponentBase, public ILoggable {
   libra::Vector<3> generated_force_b_N_{0.0};
   libra::Vector<3> generated_force_i_N_{0.0};
   libra::Vector<3> generated_force_rtn_N_{0.0};
+
+  // Noise
+  libra::NormalRand magnitude_noise_;
+  libra::NormalRand direction_noise_;
+  libra::Quaternion GenerateDirectionNoiseQuaternion();
 
   const Dynamics* dynamics_;
 };
