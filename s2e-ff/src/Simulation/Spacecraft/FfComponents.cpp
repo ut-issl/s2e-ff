@@ -19,7 +19,14 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
   relative_distance_sensor_ = new RelativeDistanceSensor(InitializeRelativeDistanceSensor(clock_gen, rel_dist_file, compo_step_sec, *rel_info_));
 
   const std::string force_generator_file = sat_file.ReadString("COMPONENTS_FILE", "force_generator_file");
-  force_generator_ = new ForceGenerator(InitializeForceGenerator(clock_gen, rel_dist_file, dynamics_));
+  force_generator_ = new ForceGenerator(InitializeForceGenerator(clock_gen, force_generator_file, dynamics_));
+
+  // Debug for actuator output
+  libra::Vector<3> force_N;
+  force_N[0] = 1.0;
+  force_N[1] = 0.0;
+  force_N[2] = 0.0;
+  // force_generator_->SetForce_b_N(force_N);
 }
 
 FfComponents::~FfComponents() {

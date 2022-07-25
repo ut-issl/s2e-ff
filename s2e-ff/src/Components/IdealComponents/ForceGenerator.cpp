@@ -8,7 +8,9 @@ ForceGenerator::ForceGenerator(const int prescaler, ClockGenerator* clock_gen, c
     : ComponentBase(prescaler, clock_gen),
       magnitude_noise_(0.0, magnitude_error_standard_deviation_N),
       direction_error_standard_deviation_rad_(direction_error_standard_deviation_rad),
-      dynamics_(dynamics) {}
+      dynamics_(dynamics) {
+  direction_noise_.set_param(0.0, 1.0);
+}
 
 ForceGenerator::~ForceGenerator() {}
 
@@ -18,11 +20,15 @@ void ForceGenerator::MainRoutine(int count) {
   generated_force_b_N_ = ordered_force_b_N_;
 
   // Add noise
-  libra::Vector<3> true_direction = normalize(generated_force_b_N_);
-  libra::Quaternion error_quaternion = GenerateDirectionNoiseQuaternion(true_direction, direction_error_standard_deviation_rad_);
-  libra::Vector<3> converted_direction = error_quaternion.frame_conv(generated_force_b_N_);
-  double force_norm_with_error = norm(generated_force_b_N_) + magnitude_noise_;
-  generated_force_b_N_ = force_norm_with_error * converted_direction;
+  double norm_ordered_force = norm(ordered_force_b_N_);
+  if (norm_ordered_force > 0.0 + DBL_EPSILON) {
+    // Add noise only when the force is generated
+    libra::Vector<3> true_direction = normalize(generated_force_b_N_);
+    libra::Quaternion error_quaternion = GenerateDirectionNoiseQuaternion(true_direction, direction_error_standard_deviation_rad_);
+    libra::Vector<3> converted_direction = error_quaternion.frame_conv(generated_force_b_N_);
+    double force_norm_with_error = norm_ordered_force + magnitude_noise_;
+    generated_force_b_N_ = force_norm_with_error * converted_direction;
+  }
 
   // Convert frame
   libra::Quaternion q_i2b = dynamics_->GetAttitude().GetQuaternion_i2b();
@@ -53,7 +59,7 @@ void ForceGenerator::SetForce_rtn_N(const libra::Vector<3> force_rtn_N) {
 std::string ForceGenerator::GetLogHeader() const {
   std::string str_tmp = "";
 
-  std::string head = "IdealForceGenerator";
+  std::string head = "IdealForceGenerator_";
   str_tmp += WriteVector(head + "ordered_force", "b", "N", 3);
   str_tmp += WriteVector(head + "generated_force", "b", "N", 3);
   str_tmp += WriteVector(head + "generated_force", "i", "N", 3);
@@ -73,13 +79,11 @@ std::string ForceGenerator::GetLogValue() const {
   return str_tmp;
 }
 
-libra::Quaternion GenerateDirectionNoiseQuaternion(libra::Vector<3> true_direction, const double error_standard_deviation_rad) {
-  libra::NormalRand normal_rand;
-
+libra::Quaternion ForceGenerator::GenerateDirectionNoiseQuaternion(libra::Vector<3> true_direction, const double error_standard_deviation_rad) {
   libra::Vector<3> random_direction;
-  random_direction[0] = normal_rand;
-  random_direction[1] = normal_rand;
-  random_direction[2] = normal_rand;
+  random_direction[0] = direction_noise_;
+  random_direction[1] = direction_noise_;
+  random_direction[2] = direction_noise_;
   random_direction = normalize(random_direction);
 
   libra::Vector<3> rotation_axis;
@@ -90,7 +94,7 @@ libra::Quaternion GenerateDirectionNoiseQuaternion(libra::Vector<3> true_directi
     rotation_axis = true_direction;
   }
 
-  double error_angle_rad = normal_rand * error_standard_deviation_rad;
+  double error_angle_rad = direction_noise_ * error_standard_deviation_rad;
   libra::Quaternion error_quaternion(rotation_axis, error_angle_rad);
   return error_quaternion;
 }
