@@ -39,8 +39,10 @@ class ForceGenerator : public ComponentBase, public ILoggable {
 
   // Noise
   libra::NormalRand magnitude_noise_;
-  libra::NormalRand direction_noise_;
-  libra::Quaternion GenerateDirectionNoiseQuaternion();
+  double direction_error_standard_deviation_rad_;
 
   const Dynamics* dynamics_;
 };
+
+// TODO: move to core
+libra::Quaternion GenerateDirectionNoiseQuaternion(libra::Vector<3> true_direction, const double error_standard_deviation_rad);

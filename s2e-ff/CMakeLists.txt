@@ -83,6 +83,7 @@ set(SOURCE_FILES
   src/Components/AOCS/RelativeDistanceSensor.cpp
   src/Components/AOCS/InitializeRelativeDistanceSensor.cpp
   src/Components/IdealComponents/ForceGenerator.cpp
+  src/Components/IdealComponents/InitializeForceGenerator.cpp
   src/Simulation/Case/FfCase.cpp
   src/Simulation/Spacecraft/FfSat.cpp
   src/Simulation/Spacecraft/FfComponents.cpp

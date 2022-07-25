@@ -7,7 +7,7 @@ ForceGenerator::ForceGenerator(const int prescaler, ClockGenerator* clock_gen, c
                                const double direction_error_standard_deviation_rad, const Dynamics* dynamics)
     : ComponentBase(prescaler, clock_gen),
       magnitude_noise_(0.0, magnitude_error_standard_deviation_N),
-      direction_noise_(0.0, direction_error_standard_deviation_rad),
+      direction_error_standard_deviation_rad_(direction_error_standard_deviation_rad),
       dynamics_(dynamics) {}
 
 ForceGenerator::~ForceGenerator() {}
@@ -16,8 +16,15 @@ void ForceGenerator::MainRoutine(int count) {
   UNUSED(count);
 
   generated_force_b_N_ = ordered_force_b_N_;
-  // TODO: Add noise
 
+  // Add noise
+  libra::Vector<3> true_direction = normalize(generated_force_b_N_);
+  libra::Quaternion error_quaternion = GenerateDirectionNoiseQuaternion(true_direction, direction_error_standard_deviation_rad_);
+  libra::Vector<3> converted_direction = error_quaternion.frame_conv(generated_force_b_N_);
+  double force_norm_with_error = norm(generated_force_b_N_) + magnitude_noise_;
+  generated_force_b_N_ = force_norm_with_error * converted_direction;
+
+  // Convert frame
   libra::Quaternion q_i2b = dynamics_->GetAttitude().GetQuaternion_i2b();
   libra::Quaternion q_i2rtn = dynamics_->GetOrbit().CalcQuaternionI2LVLH();
   generated_force_i_N_ = q_i2b.frame_conv_inv(generated_force_b_N_);
@@ -73,7 +80,8 @@ libra::Quaternion GenerateDirectionNoiseQuaternion(libra::Vector<3> true_directi
   rotation_axis = outer_product(true_direction, random_direction);
   double norm_rotation_axis = norm(rotation_axis);
   if (norm_rotation_axis < 0.0 + DBL_EPSILON) {
-    // TODO: add error handling
+    // No rotation error if the randomized direction is parallel to the true direction
+    rotation_axis = true_direction;
   }
 
   double error_angle_rad = normal_rand * error_standard_deviation_rad;
