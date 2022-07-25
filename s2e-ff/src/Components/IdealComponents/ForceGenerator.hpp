@@ -13,7 +13,7 @@ class ForceGenerator : public ComponentBase, public ILoggable {
 
   // ComponentBase override function
   void MainRoutine(int count);
-  // TODO: add power off routines
+  void PowerOffRoutine();
 
   // ILogabble override function
   virtual std::string GetLogHeader() const;

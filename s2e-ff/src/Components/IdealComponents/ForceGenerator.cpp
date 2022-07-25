@@ -18,6 +18,12 @@ void ForceGenerator::MainRoutine(int count) {
   generated_force_rtn_N_ = q_i2rtn.frame_conv(generated_force_i_N_);
 }
 
+void ForceGenerator::PowerOffRoutine() {
+  generated_force_b_N_ *= 0.0;
+  generated_force_i_N_ *= 0.0;
+  generated_force_rtn_N_ *= 0.0;
+}
+
 void ForceGenerator::SetForce_i_N(const libra::Vector<3> force_i_N) {
   libra::Quaternion q_i2b = dynamics_->GetAttitude().GetQuaternion_i2b();
   ordered_force_b_N_ = q_i2b.frame_conv(force_i_N);
