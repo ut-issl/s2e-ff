@@ -77,6 +77,8 @@ add_subdirectory(${S2E_CORE_DIR}/src/Simulation S2E_CORE/Simulation)
 
 set(SOURCE_FILES
   src/S2eFf.cpp
+  src/Components/AOCS/RelativeDistanceSensor.cpp
+  src/Components/AOCS/InitializeRelativeDistanceSensor.cpp
   src/Components/IdealComponents/ForceGenerator.cpp
   src/Simulation/Case/FfCase.cpp
   src/Simulation/Spacecraft/FfSat.cpp
