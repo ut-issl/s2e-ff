@@ -19,6 +19,8 @@ class RelativePositionSensor : public ComponentBase, public SensorBase<3>, publi
   virtual std::string GetLogValue() const;
 
   // Getter
+  inline libra::Vector<3> GetMeasuredTargetPosition_i_m() const { return measured_target_position_i_m_; }
+  inline libra::Vector<3> GetMeasuredTargetPosition_rtn_m() const { return measured_target_position_rtn_m_; }
   inline libra::Vector<3> GetMeasuredTargetPosition_b_m() const { return measured_target_position_body_m_; }
 
   // Setter
@@ -28,6 +30,8 @@ class RelativePositionSensor : public ComponentBase, public SensorBase<3>, publi
   int target_sat_id_;
   const int reference_sat_id_;
 
+  libra::Vector<3> measured_target_position_i_m_{0.0};
+  libra::Vector<3> measured_target_position_rtn_m_{0.0};
   libra::Vector<3> measured_target_position_body_m_{0.0};
 
   const RelativeInformation& rel_info_;
