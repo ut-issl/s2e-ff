@@ -6,10 +6,16 @@
 #include <Interface/LogOutput/ILoggable.h>
 #include <RelativeInformation/RelativeInformation.h>
 
+enum class RelativePositionSensorErrorFrame {
+  INERTIAL,
+  RTN,
+  BODY
+};
+
 class RelativePositionSensor : public ComponentBase, public SensorBase<3>, public ILoggable {
  public:
   RelativePositionSensor(const int prescaler, ClockGenerator* clock_gen, SensorBase& sensor_base, const int target_sat_id, const int reference_sat_id,
-                         const RelativeInformation& rel_info, const Dynamics& dynamics);
+                         const RelativePositionSensorErrorFrame error_frame, const RelativeInformation& rel_info, const Dynamics& dynamics);
   ~RelativePositionSensor();
   // ComponentBase
   void MainRoutine(int count) override;
@@ -29,6 +35,7 @@ class RelativePositionSensor : public ComponentBase, public SensorBase<3>, publi
  protected:
   int target_sat_id_;
   const int reference_sat_id_;
+  RelativePositionSensorErrorFrame error_frame_;
 
   libra::Vector<3> measured_target_position_i_m_{0.0};
   libra::Vector<3> measured_target_position_rtn_m_{0.0};
