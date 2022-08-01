@@ -87,6 +87,7 @@ set(SOURCE_FILES
   src/Components/IdealComponents/ForceGenerator.cpp
   src/Components/IdealComponents/InitializeForceGenerator.cpp
   src/Components/IdealComponents/RelativeAttitudeController.cpp
+  src/Components/IdealComponents/InitializeRelativeAttitudeController.cpp
   src/Simulation/Case/FfCase.cpp
   src/Simulation/Spacecraft/FfSat.cpp
   src/Simulation/Spacecraft/FfComponents.cpp

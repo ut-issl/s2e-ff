@@ -5,24 +5,21 @@
 #define THRESHOLD_CA cos(30.0 / 180.0 * libra::pi)  // fix me
 
 // Constructor
-RelativeAttitudeController::RelativeAttitudeController(const int prescaler, ClockGenerator* clock_gen, const RelativeInformation& rel_info,
+RelativeAttitudeController::RelativeAttitudeController(const int prescaler, ClockGenerator* clock_gen, const RelativeAttitudeControlMode main_mode,
+                                                       const RelativeAttitudeControlMode sub_mode, const libra::Vector<3> main_target_direction_b,
+                                                       const libra::Vector<3> sub_target_direction_b, const int target_sat_id,
+                                                       const int reference_sat_id, const RelativeInformation& rel_info,
                                                        const LocalCelestialInformation& local_celes_info, const Dynamics& dynamics)
-    : ComponentBase(prescaler, clock_gen), rel_info_(rel_info), local_celes_info_(local_celes_info), dynamics_(dynamics) {
-  target_sat_id_ = 1;
-  my_sat_id_ = 0;
-
-  main_mode_ = RelativeAttitudeControlMode::TARGET_SATELLITE_POINTING;
-  pointing_main_target_b_[0] = 1.0;
-  pointing_main_target_b_[1] = 0.0;
-  pointing_main_target_b_[2] = 0.0;
-
-  sub_mode_ = RelativeAttitudeControlMode::ORBIT_NORMAL_POINTING;
-  pointing_sub_target_b_[0] = 0.0;
-  pointing_sub_target_b_[1] = 1.0;
-  pointing_sub_target_b_[2] = 0.0;
-
-  is_calc_enabled_ = true;
-}
+    : ComponentBase(prescaler, clock_gen),
+      main_mode_(main_mode),
+      sub_mode_(sub_mode),
+      main_target_direction_b_(main_target_direction_b),
+      sub_target_direction_b_(sub_target_direction_b),
+      target_sat_id_(target_sat_id),
+      my_sat_id_(reference_sat_id),
+      rel_info_(rel_info),
+      local_celes_info_(local_celes_info),
+      dynamics_(dynamics) {}
 
 RelativeAttitudeController::~RelativeAttitudeController() {}
 
@@ -71,9 +68,9 @@ void RelativeAttitudeController::Initialize(void) {
     return;
   }
   // pointing direction check
-  normalize(pointing_main_target_b_);
-  normalize(pointing_sub_target_b_);
-  double tmp = inner_product(pointing_main_target_b_, pointing_sub_target_b_);
+  normalize(main_target_direction_b_);
+  normalize(sub_target_direction_b_);
+  double tmp = inner_product(main_target_direction_b_, sub_target_direction_b_);
   tmp = std::abs(tmp);
   if (tmp > THRESHOLD_CA) {
     std::cout << "sub target direction should separate from the main target direction. \n";
@@ -89,6 +86,15 @@ libra::Vector<3> RelativeAttitudeController::CalcTargetDirection_i(RelativeAttit
   switch (mode) {
     case RelativeAttitudeControlMode::TARGET_SATELLITE_POINTING:
       direction_i = rel_info_.GetRelativePosition_i_m(target_sat_id_, my_sat_id_);
+      break;
+    case RelativeAttitudeControlMode::SUN_POINTING:
+      direction_i = local_celes_info_.GetPosFromSC_i("SUN");
+      break;
+    case RelativeAttitudeControlMode::BODY_CENTER_POINTING:
+      direction_i = local_celes_info_.GetPosFromSC_i("EARTH");
+      break;
+    case RelativeAttitudeControlMode::VELOCITY_DIRECTION_POINTING:
+      direction_i = dynamics_.GetOrbit().GetSatVelocity_i();
       break;
     case RelativeAttitudeControlMode::ORBIT_NORMAL_POINTING:
       direction_i = outer_product(dynamics_.GetOrbit().GetSatPosition_i(), dynamics_.GetOrbit().GetSatVelocity_i());
@@ -106,7 +112,7 @@ libra::Quaternion RelativeAttitudeController::CalcTargetQuaternion(const libra::
   // Calc DCM ECI->Target
   libra::Matrix<3, 3> DCM_t2i = CalcDcmFromVectors(main_direction_i, sub_direction_i);
   // Calc DCM Target->body
-  libra::Matrix<3, 3> DCM_t2b = CalcDcmFromVectors(pointing_main_target_b_, pointing_sub_target_b_);
+  libra::Matrix<3, 3> DCM_t2b = CalcDcmFromVectors(main_target_direction_b_, sub_target_direction_b_);
   // Calc DCM ECI->body
   libra::Matrix<3, 3> DCM_i2b = DCM_t2b * transpose(DCM_t2i);
   // Convert to Quaternion
@@ -139,4 +145,22 @@ libra::Matrix<3, 3> RelativeAttitudeController::CalcDcmFromVectors(const libra::
     dcm[i][2] = ez[i];
   }
   return dcm;
+}
+
+RelativeAttitudeControlMode ConvertStringToRelativeAttitudeControlMode(const std::string mode_name) {
+  if (mode_name == "TARGET_SATELLITE_POINTING") {
+    return RelativeAttitudeControlMode::TARGET_SATELLITE_POINTING;
+  } else if (mode_name == "SUN_POINTING") {
+    return RelativeAttitudeControlMode::SUN_POINTING;
+  } else if (mode_name == "BODY_CENTER_POINTING") {
+    return RelativeAttitudeControlMode::BODY_CENTER_POINTING;
+  } else if (mode_name == "VELOCITY_DIRECTION_POINTING") {
+    return RelativeAttitudeControlMode::VELOCITY_DIRECTION_POINTING;
+  } else if (mode_name == "ORBIT_NORMAL_POINTING") {
+    return RelativeAttitudeControlMode::ORBIT_NORMAL_POINTING;
+  } else {
+    // Error
+    std::cerr << "RelativeAttitudeControlMode error!" << std::endl;
+    return RelativeAttitudeControlMode::TARGET_SATELLITE_POINTING;
+  }
 }

@@ -5,22 +5,22 @@
 #include <RelativeInformation/RelativeInformation.h>
 
 enum class RelativeAttitudeControlMode {
-  INERTIAL_POINTING,
+  TARGET_SATELLITE_POINTING,
   SUN_POINTING,
-  EARTH_CENTER_POINTING,
+  BODY_CENTER_POINTING,
   VELOCITY_DIRECTION_POINTING,
   ORBIT_NORMAL_POINTING,
-  TARGET_SATELLITE_POINTING,
-  TARGET_SATELLITE_ORBIT_RADIAL_DIRECTION_POINTING,
-  TARGET_SATELLITE_VELOCITY_DIRECTION_POINTING,
-  TARGET_SATELLITE_ORBIT_NORMAL_DIRECTION_POINTING,
   NO_CONTROL,
 };
 
+RelativeAttitudeControlMode ConvertStringToRelativeAttitudeControlMode(const std::string mode_name);
+
 class RelativeAttitudeController : public ComponentBase, public ILoggable {
  public:
-  RelativeAttitudeController(const int prescaler, ClockGenerator* clock_gen, const RelativeInformation& rel_info,
-                             const LocalCelestialInformation& local_celes_info, const Dynamics& dynamics);
+  RelativeAttitudeController(const int prescaler, ClockGenerator* clock_gen, const RelativeAttitudeControlMode main_mode,
+                             const RelativeAttitudeControlMode sub_mode, const libra::Vector<3> main_target_direction_b,
+                             const libra::Vector<3> sub_target_direction_b, const int target_sat_id, const int reference_sat_id,
+                             const RelativeInformation& rel_info, const LocalCelestialInformation& local_celes_info, const Dynamics& dynamics);
   ~RelativeAttitudeController();
 
   // ComponentBase override function
@@ -34,16 +34,18 @@ class RelativeAttitudeController : public ComponentBase, public ILoggable {
   // Getter
 
   // Setter
+  inline void SetIsCalcEnabled(const bool is_enabled) { is_calc_enabled_ = is_enabled; }
+  inline void SetTargetSatId(const int target_sat_id) { target_sat_id_ = target_sat_id; }
 
  protected:
-  bool is_calc_enabled_ = false;
+  bool is_calc_enabled_ = true;
   RelativeAttitudeControlMode main_mode_;
   RelativeAttitudeControlMode sub_mode_;
   int target_sat_id_;
   int my_sat_id_;
 
-  libra::Vector<3> pointing_main_target_b_;  //!< Pointing main target on body frame
-  libra::Vector<3> pointing_sub_target_b_;   //!< Pointing main target on body frame
+  libra::Vector<3> main_target_direction_b_;  //!< Pointing main target on body frame
+  libra::Vector<3> sub_target_direction_b_;   //!< Pointing main target on body frame
 
   const RelativeInformation& rel_info_;
   const LocalCelestialInformation& local_celes_info_;
