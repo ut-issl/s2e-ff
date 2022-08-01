@@ -82,6 +82,8 @@ set(SOURCE_FILES
   src/S2eFf.cpp
   src/Components/AOCS/RelativeDistanceSensor.cpp
   src/Components/AOCS/InitializeRelativeDistanceSensor.cpp
+  src/Components/AOCS/RelativePositionSensor.cpp
+  src/Components/AOCS/InitializeRelativePositionSensor.cpp
   src/Components/IdealComponents/ForceGenerator.cpp
   src/Components/IdealComponents/InitializeForceGenerator.cpp
   src/Components/IdealComponents/RelativeAttitudeController.cpp
