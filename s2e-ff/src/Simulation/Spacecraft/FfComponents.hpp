@@ -9,6 +9,7 @@
 
 // include for components
 #include "../../Components/AOCS/RelativeDistanceSensor.hpp"
+#include "../../Components/AOCS/RelativePositionSensor.hpp"
 #include "../../Components/IdealComponents/ForceGenerator.hpp"
 #include "OBC.h"
 
@@ -25,6 +26,7 @@ class FfComponents : public InstalledComponents {
   // Components
   OBC* obc_;
   RelativeDistanceSensor* relative_distance_sensor_;
+  RelativePositionSensor* relative_position_sensor_;
   ForceGenerator* force_generator_;
 
   // References
