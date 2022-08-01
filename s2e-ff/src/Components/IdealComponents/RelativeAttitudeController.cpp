@@ -90,7 +90,7 @@ libra::Vector<3> RelativeAttitudeController::CalcTargetDirection_i(RelativeAttit
     case RelativeAttitudeControlMode::SUN_POINTING:
       direction_i = local_celes_info_.GetPosFromSC_i("SUN");
       break;
-    case RelativeAttitudeControlMode::BODY_CENTER_POINTING:
+    case RelativeAttitudeControlMode::EARTH_CENTER_POINTING:
       direction_i = local_celes_info_.GetPosFromSC_i("EARTH");
       break;
     case RelativeAttitudeControlMode::VELOCITY_DIRECTION_POINTING:
@@ -152,8 +152,8 @@ RelativeAttitudeControlMode ConvertStringToRelativeAttitudeControlMode(const std
     return RelativeAttitudeControlMode::TARGET_SATELLITE_POINTING;
   } else if (mode_name == "SUN_POINTING") {
     return RelativeAttitudeControlMode::SUN_POINTING;
-  } else if (mode_name == "BODY_CENTER_POINTING") {
-    return RelativeAttitudeControlMode::BODY_CENTER_POINTING;
+  } else if (mode_name == "EARTH_CENTER_POINTING") {
+    return RelativeAttitudeControlMode::EARTH_CENTER_POINTING;
   } else if (mode_name == "VELOCITY_DIRECTION_POINTING") {
     return RelativeAttitudeControlMode::VELOCITY_DIRECTION_POINTING;
   } else if (mode_name == "ORBIT_NORMAL_POINTING") {
