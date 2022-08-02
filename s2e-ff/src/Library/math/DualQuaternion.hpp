@@ -56,32 +56,33 @@ class DualQuaternion {
   Quaternion q_dual_;  //!< Dual part Quaternion
 };
 
+// Operation functions
 /**
  * @fn Addition of Dual Quaternion
  * @param[in] dq_lhs: Dual Quaternion left hand side
  * @param[in] dq_rhs: Dual Quaternion right hand side
  */
-Quaternion operator+(const Quaternion& dq_lhs, const Quaternion& dq_rhs);
+DualQuaternion operator+(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs);
 
 /**
  * @fn Subtraction of Dual Quaternion
  * @param[in] dq_lhs: Dual Quaternion left hand side
  * @param[in] dq_rhs: Dual Quaternion right hand side
  */
-Quaternion operator-(const Quaternion& dq_lhs, const Quaternion& dq_rhs);
+DualQuaternion operator-(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs);
 
 /**
  * @fn Multiplication of Dual Quaternion
  * @param[in] dq_lhs: Dual Quaternion left hand side
  * @param[in] dq_rhs: Dual Quaternion right hand side
  */
-Quaternion operator*(const Quaternion& dq_lhs, const Quaternion& dq_rhs);
+DualQuaternion operator*(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs);
 
 /**
  * @fn Multiplication of scalar and Dual Quaternion
  * @param[in] lhs: scalar left hand side
  * @param[in] dq_rhs: Dual Quaternion right hand side
  */
-Quaternion operator*(const double& lhs, const Quaternion& dq_rhs);
+DualQuaternion operator*(const double& lhs, const DualQuaternion& dq_rhs);
 
 }  // namespace libra

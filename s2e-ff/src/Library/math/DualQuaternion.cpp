@@ -9,4 +9,6 @@ DualQuaternion::DualQuaternion(const Quaternion q_real, const Quaternion q_dual)
   q_dual_ = q_dual;
 }
 
+// Operation functions
+
 }  // namespace libra
