@@ -25,6 +25,13 @@ class DualQuaternion {
    */
   DualQuaternion(const Quaternion q_real, const Quaternion q_dual);
 
+  /**
+   * @fn Constructor
+   * @brief Make from eight numbers
+   */
+  DualQuaternion(const double q_real_x, const double q_real_y, const double q_real_z, const double q_real_w, const double q_dual_x,
+                 const double q_dual_y, const double q_dual_z, const double q_dual_w);
+
   // Operator for a single dual quaternon
   /**
    * @fn Normalize rotation quaternion?
@@ -34,7 +41,7 @@ class DualQuaternion {
   /**
    * @fn Calulate conjugated dual quaternion
    */
-  DualQuaternion Conjugate(void) const;
+  // DualQuaternion Conjugate(void) const;
 
   // Frame conversion
   /**
@@ -42,14 +49,14 @@ class DualQuaternion {
    * @param[in]  v: Vector
    * @param[out] return: Converted vector
    */
-  Vector<3> ConvertFrame(const Vector<3>& v);
+  // Vector<3> ConvertFrame(const Vector<3>& v);
 
   /**
    * @fn Frame conversion with conjugated dual quaternion of a three dimensional vector
    * @param[in]  v: Vector
    * @param[out] return: Converted vector
    */
-  Vector<3> ConvertFrameConjugate(const Vector<3>& v);
+  // Vector<3> ConvertFrameConjugate(const Vector<3>& v);
 
   // Getter
   inline Quaternion GetRealPart() const { return q_real_; }
@@ -73,20 +80,20 @@ DualQuaternion operator+(const DualQuaternion& dq_lhs, const DualQuaternion& dq_
  * @param[in] dq_lhs: Dual Quaternion left hand side
  * @param[in] dq_rhs: Dual Quaternion right hand side
  */
-DualQuaternion operator-(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs);
+// DualQuaternion operator-(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs);
 
 /**
  * @fn Multiplication of Dual Quaternion
  * @param[in] dq_lhs: Dual Quaternion left hand side
  * @param[in] dq_rhs: Dual Quaternion right hand side
  */
-DualQuaternion operator*(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs);
+// DualQuaternion operator*(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs);
 
 /**
  * @fn Multiplication of scalar and Dual Quaternion
  * @param[in] lhs: scalar left hand side
  * @param[in] dq_rhs: Dual Quaternion right hand side
  */
-DualQuaternion operator*(const double& lhs, const DualQuaternion& dq_rhs);
+// DualQuaternion operator*(const double& lhs, const DualQuaternion& dq_rhs);
 
 }  // namespace libra

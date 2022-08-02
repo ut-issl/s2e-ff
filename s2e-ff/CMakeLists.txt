@@ -3,13 +3,17 @@ cmake_policy(SET CMP0048 NEW)
 project(S2E_FF
   LANGUAGES CXX
   DESCRIPTION "s2e-ff: A sample of formation flying simulation with S2E"
-  VERSION 0.0.0
+  #VERSION 0.0.0
 )
 
 cmake_minimum_required(VERSION 3.13)
 
 # build config
-option(BUILD_64BIT "Build 64bit" OFF)
+option(BUILD_64BIT "Build 64bit" ON)
+option(GOOGLE_TEST "Execute GoogleTest" ON)
+if (NOT BUILD_64BIT)
+  option(GOOGLE_TEST OFF) # GoogleTest supports 64bit only
+endif()
 
 # preprocessor
 if(WIN32)
@@ -173,3 +177,25 @@ message("Cspice_LIB:  " ${CSPICE_LIB})
 message("nrlmsise00_LIB:  " ${NRLMSISE00_LIB})
 
 include(${S2E_CORE_DIR}/common.cmake)
+
+## GoogleTest settings
+if(GOOGLE_TEST)
+  set(GOOGLE_TEST_DIR ${EXT_LIB_DIR}/googletest/googletest)
+  set(GOOGLETEST_VERSION 1.12.1)
+  if(WIN32)
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+  endif()
+  add_subdirectory(${GOOGLE_TEST_DIR} GOOGLE_TEST)
+
+  ## Unit test
+  set(TEST_PROJECT_NAME ${PROJECT_NAME}_TEST)
+  set(TEST_FILES
+    src/Library/math/DualQuaternion.cpp
+    test/TestDualQuaternion.cpp
+  )
+  add_executable(${TEST_PROJECT_NAME} ${TEST_FILES})
+  target_link_libraries(${TEST_PROJECT_NAME} gtest gtest_main)
+  target_link_libraries(${TEST_PROJECT_NAME} MATH)
+  add_test(NAME s2e-test COMMAND ${TEST_PROJECT_NAME})
+  enable_testing()
+endif()
