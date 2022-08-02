@@ -3,7 +3,7 @@ cmake_policy(SET CMP0048 NEW)
 project(S2E_FF
   LANGUAGES CXX
   DESCRIPTION "s2e-ff: A sample of formation flying simulation with S2E"
-  #VERSION 0.0.0
+  VERSION 0.0.0
 )
 
 cmake_minimum_required(VERSION 3.13)
