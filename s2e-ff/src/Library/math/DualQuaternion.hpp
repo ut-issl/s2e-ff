@@ -51,6 +51,10 @@ class DualQuaternion {
    */
   Vector<3> ConvertFrameConjugate(const Vector<3>& v);
 
+  // Getter
+  inline Quaternion GetRealPart() const { return q_real_; }
+  inline Quaternion GetDualPart() const { return q_dual_; }
+
  private:
   Quaternion q_real_;  //!< Real part Quaternion
   Quaternion q_dual_;  //!< Dual part Quaternion
