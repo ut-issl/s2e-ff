@@ -35,10 +35,9 @@ jobs:
           submodules: recursive
       
       - name: checkout GoogleTest
-        working-directory: ./ExtLibraries
         uses: actions/checkout@v3
         with:
-          path: googletest
+          path: ./ExtLibraries/googletest
           repository: google/googletest
           ref: ${{ env.GOOGLE_TEST_VERSION }}
           fetch-depth: 1
