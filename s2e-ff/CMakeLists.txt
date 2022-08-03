@@ -9,7 +9,7 @@ project(S2E_FF
 cmake_minimum_required(VERSION 3.13)
 
 # build config
-option(BUILD_64BIT "Build 64bit" ON)
+option(BUILD_64BIT "Build 64bit" OFF)
 option(GOOGLE_TEST "Execute GoogleTest" OFF)
 if (NOT BUILD_64BIT)
   option(GOOGLE_TEST OFF) # GoogleTest supports 64bit only
@@ -90,6 +90,8 @@ set(SOURCE_FILES
   src/Components/AOCS/InitializeRelativePositionSensor.cpp
   src/Components/IdealComponents/ForceGenerator.cpp
   src/Components/IdealComponents/InitializeForceGenerator.cpp
+  src/Components/IdealComponents/RelativeAttitudeController.cpp
+  src/Components/IdealComponents/InitializeRelativeAttitudeController.cpp
   src/Library/math/DualQuaternion.cpp
   src/Simulation/Case/FfCase.cpp
   src/Simulation/Spacecraft/FfSat.cpp

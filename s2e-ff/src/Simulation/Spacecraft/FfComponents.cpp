@@ -5,6 +5,7 @@
 #include "../../Components/AOCS/InitializeRelativeDistanceSensor.hpp"
 #include "../../Components/AOCS/InitializeRelativePositionSensor.hpp"
 #include "../../Components/IdealComponents/InitializeForceGenerator.hpp"
+#include "../../Components/IdealComponents/InitializeRelativeAttitudeController.hpp"
 
 FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure, const LocalEnvironment* local_env, const GlobalEnvironment* glo_env,
                            const SimulationConfig* config, ClockGenerator* clock_gen, const RelativeInformation* rel_info)
@@ -26,6 +27,10 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
   const std::string force_generator_file = sat_file.ReadString("COMPONENTS_FILE", "force_generator_file");
   force_generator_ = new ForceGenerator(InitializeForceGenerator(clock_gen, force_generator_file, dynamics_));
 
+  const std::string relative_attitude_controller_file = sat_file.ReadString("COMPONENTS_FILE", "relative_attitude_controller_file");
+  relative_attitude_controller_ = new RelativeAttitudeController(
+      InitializeRelativeAttitudeController(clock_gen, relative_attitude_controller_file, *rel_info_, local_env_->GetCelesInfo(), *dynamics_));
+
   // Debug for actuator output
   libra::Vector<3> force_N;
   force_N[0] = 1.0;
@@ -38,6 +43,7 @@ FfComponents::~FfComponents() {
   delete relative_distance_sensor_;
   delete relative_position_sensor_;
   delete force_generator_;
+  delete relative_attitude_controller_;
   // OBC must be deleted the last since it has com ports
   delete obc_;
 }
