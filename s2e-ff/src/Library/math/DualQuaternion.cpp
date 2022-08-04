@@ -19,11 +19,22 @@ DualQuaternion::DualQuaternion(const double q_real_x, const double q_real_y, con
 DualQuaternion::DualQuaternion(const Quaternion q_rot, const Vector<3> v_translation)
 {
   q_real_ = q_rot;
-  q_dual_ = 0.5 * q_rot * v_translation;
+  q_real_.normalize();
+  q_dual_ = 0.5 * q_real_ * v_translation;
 }
 
 
 // Calculations
+DualQuaternion DualQuaternion::NormalizeRotationQauternion() const {
+  Quaternion q_rot = q_real_;
+  Vector<3> v_translation = this->GetTranslationVector();
+  q_rot.normalize();
+
+  DualQuaternion dq_out(q_rot, v_translation);
+  return dq_out;
+}
+
+
 DualQuaternion DualQuaternion::DualNumberConjugate() const {
   Quaternion q_real_out = q_real_;
   Quaternion q_dual_out = -1.0 * q_dual_;

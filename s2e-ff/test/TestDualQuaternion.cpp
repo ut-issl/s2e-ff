@@ -31,7 +31,7 @@ TEST(DualQuaternion, ConstructorFromEightValue) {
 }
 
 TEST(DualQuaternion, ConstructorFromRotationTranslation) {
-  libra::Quaternion q_rot(0, 0, 0, 1);
+  libra::Quaternion q_rot(0, 0, 0, 2);
   libra::Vector<3> v_translation;
   v_translation[0] = 0.0;
   v_translation[1] = 0.0;
@@ -48,9 +48,23 @@ TEST(DualQuaternion, ConstructorFromRotationTranslation) {
   EXPECT_DOUBLE_EQ(0.0, dq.GetDualPart()[3]);
 
   libra::Vector<3> v_out = dq.GetTranslationVector();
-  EXPECT_DOUBLE_EQ(0.0, v_out[0]);
-  EXPECT_DOUBLE_EQ(0.0, v_out[1]);
-  EXPECT_DOUBLE_EQ(2.0, v_out[2]);
+  EXPECT_DOUBLE_EQ(v_translation[0], v_out[0]);
+  EXPECT_DOUBLE_EQ(v_translation[1], v_out[1]);
+  EXPECT_DOUBLE_EQ(v_translation[2], v_out[2]);
+}
+
+TEST(DualQuaternion, Normalize) {
+  libra::DualQuaternion dq(0, 0, 0, 2, 0, 0, 1, 0);
+  libra::DualQuaternion dq_out = dq.NormalizeRotationQauternion();
+
+  EXPECT_DOUBLE_EQ(0.0, dq_out.GetRealPart()[0]);
+  EXPECT_DOUBLE_EQ(0.0, dq_out.GetRealPart()[1]);
+  EXPECT_DOUBLE_EQ(0.0, dq_out.GetRealPart()[2]);
+  EXPECT_DOUBLE_EQ(1.0, dq_out.GetRealPart()[3]);
+  EXPECT_DOUBLE_EQ(0.0, dq_out.GetDualPart()[0]);
+  EXPECT_DOUBLE_EQ(0.0, dq_out.GetDualPart()[1]);
+  EXPECT_DOUBLE_EQ(2, dq_out.GetDualPart()[2]);
+  EXPECT_DOUBLE_EQ(0.0, dq_out.GetDualPart()[3]);
 }
 
 TEST(DualQuaternion, DualNumberConjugate) {

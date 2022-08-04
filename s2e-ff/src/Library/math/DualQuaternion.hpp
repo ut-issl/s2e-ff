@@ -36,16 +36,18 @@ class DualQuaternion {
    * @fn Constructor
    * @brief Make from rotation quaternion and translation vector
    *        Frame Conversion: Rotation -> Translation
-   * @param[in] q_rot: Quaternion for rotation
+   * @param[in] q_rot: Quaternion for rotation. This quaternion is used after normalized in this function.
    * @param[in] v_translation: Vector for translation
    */
   DualQuaternion(const Quaternion q_rot, const Vector<3> v_translation);
 
+  // TODO: Do we nne translation -> rotation dual quaternion?
+
   // Operator for a single dual quaternon
   /**
-   * @fn Normalize rotation quaternion?
+   * @fn Normalize rotation quaternion
    */
-  // DualQuaternion normalize(void);
+  DualQuaternion NormalizeRotationQauternion() const;
 
   /**
    * @fn Calulate conjugated of the dual quaternion as dual number
