@@ -74,6 +74,16 @@ TEST(DualQuaternion, Normalize) {
   EXPECT_DOUBLE_EQ(0.0, dq_out.GetDualPart()[1]);
   EXPECT_DOUBLE_EQ(2.0, dq_out.GetDualPart()[2]);
   EXPECT_DOUBLE_EQ(0.0, dq_out.GetDualPart()[3]);
+
+  dq.NormalizeRotationQauternion();
+  EXPECT_DOUBLE_EQ(0.0, dq.GetRealPart()[0]);
+  EXPECT_DOUBLE_EQ(0.0, dq.GetRealPart()[1]);
+  EXPECT_DOUBLE_EQ(0.0, dq.GetRealPart()[2]);
+  EXPECT_DOUBLE_EQ(1.0, dq.GetRealPart()[3]);
+  EXPECT_DOUBLE_EQ(0.0, dq.GetDualPart()[0]);
+  EXPECT_DOUBLE_EQ(0.0, dq.GetDualPart()[1]);
+  EXPECT_DOUBLE_EQ(2.0, dq.GetDualPart()[2]);
+  EXPECT_DOUBLE_EQ(0.0, dq.GetDualPart()[3]);
 }
 
 TEST(DualQuaternion, DualNumberConjugate) {

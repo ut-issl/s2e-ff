@@ -51,6 +51,12 @@ class DualQuaternion {
   DualQuaternion CalcNormalizedRotationQauternion() const;
 
   /**
+   * @fn Normalize rotation quaternion
+   * @brief This function changes the original DualQuaternion value
+   */
+  void NormalizeRotationQauternion();
+
+  /**
    * @fn Calulate conjugated of the dual quaternion as dual number
    */
   DualQuaternion DualNumberConjugate() const;

@@ -34,6 +34,13 @@ DualQuaternion DualQuaternion::CalcNormalizedRotationQauternion() const {
   return dq_out;
 }
 
+void DualQuaternion::NormalizeRotationQauternion() {
+  Vector<3> v_translation = this->GetTranslationVector();
+  q_real_.normalize();
+
+  DualQuaternion dq_out(q_real_, v_translation);
+  q_dual_ = dq_out.GetDualPart();
+}
 
 DualQuaternion DualQuaternion::DualNumberConjugate() const {
   Quaternion q_real_out = q_real_;
