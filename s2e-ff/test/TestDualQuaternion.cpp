@@ -46,6 +46,11 @@ TEST(DualQuaternion, ConstructorFromRotationTranslation) {
   EXPECT_DOUBLE_EQ(0.0, dq.GetDualPart()[1]);
   EXPECT_DOUBLE_EQ(1.0, dq.GetDualPart()[2]);
   EXPECT_DOUBLE_EQ(0.0, dq.GetDualPart()[3]);
+
+  libra::Vector<3> v_out = dq.GetTranslationVector();
+  EXPECT_DOUBLE_EQ(0.0, v_out[0]);
+  EXPECT_DOUBLE_EQ(0.0, v_out[1]);
+  EXPECT_DOUBLE_EQ(2.0, v_out[2]);
 }
 
 TEST(DualQuaternion, Addition) {

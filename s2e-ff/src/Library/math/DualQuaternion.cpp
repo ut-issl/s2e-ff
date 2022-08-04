@@ -23,6 +23,15 @@ DualQuaternion::DualQuaternion(const Quaternion q_rot, const Vector<3> v_transla
 }
 
 
+// Getter
+Vector<3> DualQuaternion::GetTranslationVector() const {
+  Quaternion q_out = 2.0 * q_dual_ * q_real_.conjugate();
+  Vector<3> v_out;
+  for (int i = 0; i < 3; i++) v_out[i] = q_out[i];
+  return v_out;
+}
+
+
 // Operation functions
 DualQuaternion operator+(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs) {
   Quaternion q_real_out = dq_lhs.GetRealPart() + dq_rhs.GetRealPart();
@@ -30,7 +39,6 @@ DualQuaternion operator+(const DualQuaternion& dq_lhs, const DualQuaternion& dq_
   DualQuaternion dq_out(q_real_out, q_dual_out);
   return dq_out;
 }
-
 
 DualQuaternion operator-(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs) {
   DualQuaternion dq_rhs_negative = -1.0 * dq_rhs;

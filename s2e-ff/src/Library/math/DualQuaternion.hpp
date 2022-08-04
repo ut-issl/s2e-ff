@@ -69,6 +69,8 @@ class DualQuaternion {
   // Getter
   inline Quaternion GetRealPart() const { return q_real_; }
   inline Quaternion GetDualPart() const { return q_dual_; }
+  inline Quaternion GetRotationQuaternion() const { return q_real_; }
+  Vector<3> GetTranslationVector() const;
 
  private:
   Quaternion q_real_;  //!< Real part Quaternion
