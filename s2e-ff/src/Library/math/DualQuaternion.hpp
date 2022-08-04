@@ -35,6 +35,7 @@ class DualQuaternion {
   /**
    * @fn Constructor
    * @brief Make from rotation quaternion and translation vector
+   *        Frame Conversion: Rotation -> Translation
    * @param[in] q_rot: Quaternion for rotation
    * @param[in] v_translation: Vector for translation
    */
