@@ -55,7 +55,16 @@ TEST(DualQuaternion, ConstructorFromRotationTranslation) {
 
 TEST(DualQuaternion, Normalize) {
   libra::DualQuaternion dq(0, 0, 0, 2, 0, 0, 1, 0);
-  libra::DualQuaternion dq_out = dq.NormalizeRotationQauternion();
+  libra::DualQuaternion dq_out = dq.CalcNormalizedRotationQauternion();
+
+  EXPECT_DOUBLE_EQ(0.0, dq.GetRealPart()[0]);
+  EXPECT_DOUBLE_EQ(0.0, dq.GetRealPart()[1]);
+  EXPECT_DOUBLE_EQ(0.0, dq.GetRealPart()[2]);
+  EXPECT_DOUBLE_EQ(2.0, dq.GetRealPart()[3]);
+  EXPECT_DOUBLE_EQ(0.0, dq.GetDualPart()[0]);
+  EXPECT_DOUBLE_EQ(0.0, dq.GetDualPart()[1]);
+  EXPECT_DOUBLE_EQ(1.0, dq.GetDualPart()[2]);
+  EXPECT_DOUBLE_EQ(0.0, dq.GetDualPart()[3]);
 
   EXPECT_DOUBLE_EQ(0.0, dq_out.GetRealPart()[0]);
   EXPECT_DOUBLE_EQ(0.0, dq_out.GetRealPart()[1]);
@@ -63,7 +72,7 @@ TEST(DualQuaternion, Normalize) {
   EXPECT_DOUBLE_EQ(1.0, dq_out.GetRealPart()[3]);
   EXPECT_DOUBLE_EQ(0.0, dq_out.GetDualPart()[0]);
   EXPECT_DOUBLE_EQ(0.0, dq_out.GetDualPart()[1]);
-  EXPECT_DOUBLE_EQ(2, dq_out.GetDualPart()[2]);
+  EXPECT_DOUBLE_EQ(2.0, dq_out.GetDualPart()[2]);
   EXPECT_DOUBLE_EQ(0.0, dq_out.GetDualPart()[3]);
 }
 

@@ -25,7 +25,7 @@ DualQuaternion::DualQuaternion(const Quaternion q_rot, const Vector<3> v_transla
 
 
 // Calculations
-DualQuaternion DualQuaternion::NormalizeRotationQauternion() const {
+DualQuaternion DualQuaternion::CalcNormalizedRotationQauternion() const {
   Quaternion q_rot = q_real_;
   Vector<3> v_translation = this->GetTranslationVector();
   q_rot.normalize();

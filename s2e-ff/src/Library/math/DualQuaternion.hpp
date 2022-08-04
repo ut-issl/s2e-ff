@@ -46,8 +46,9 @@ class DualQuaternion {
   // Operator for a single dual quaternon
   /**
    * @fn Normalize rotation quaternion
+   * @brief This function doesn't change the original DualQuaternion value
    */
-  DualQuaternion NormalizeRotationQauternion() const;
+  DualQuaternion CalcNormalizedRotationQauternion() const;
 
   /**
    * @fn Calulate conjugated of the dual quaternion as dual number
