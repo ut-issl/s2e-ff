@@ -141,7 +141,7 @@ TEST(DualQuaternion, DualQuaternionConjugate) {
   EXPECT_DOUBLE_EQ(-0.5, dq_out.GetDualPart()[3]);
 }
 
-TEST(DualQuaternion, ConvertFrame) {
+TEST(DualQuaternion, TransformVector) {
   libra::Quaternion q_rot(1.0, 0.0, 0.0, 1.0); // 90deg rotation around X axis
   libra::Vector<3> v_translation;
   v_translation[0] = 0.0;
@@ -154,13 +154,13 @@ TEST(DualQuaternion, ConvertFrame) {
   v_in[1] = 0.0;
   v_in[2] = 0.0;
 
-  libra::Vector<3> v_out = dq.ConvertFrame(v_in);
+  libra::Vector<3> v_out = dq.TransformVector(v_in);
 
   EXPECT_DOUBLE_EQ(1.0, v_out[0]);
   EXPECT_DOUBLE_EQ(0.0, v_out[1]);
   EXPECT_DOUBLE_EQ(1.0, v_out[2]);
 
-  libra::Vector<3> v_out_inverse = dq.InverseConvertFrame(v_out);
+  libra::Vector<3> v_out_inverse = dq.InverseTransformVector(v_out);
 
   EXPECT_NEAR(v_in[0], v_out_inverse[0], 1e-9);
   EXPECT_NEAR(v_in[1], v_out_inverse[1], 1e-9);
