@@ -16,6 +16,13 @@ DualQuaternion::DualQuaternion(const double q_real_x, const double q_real_y, con
   q_dual_ = Quaternion(q_dual_x, q_dual_y, q_dual_z, q_dual_w);
 }
 
+DualQuaternion::DualQuaternion(const Quaternion q_rot, const Vector<3> v_translation)
+{
+  q_real_ = q_rot;
+  q_dual_ = 0.5 * q_rot * v_translation;
+}
+
+
 // Operation functions
 DualQuaternion operator+(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs) {
   Quaternion q_real_out = dq_lhs.GetRealPart() + dq_rhs.GetRealPart();
@@ -31,7 +38,6 @@ DualQuaternion operator-(const DualQuaternion& dq_lhs, const DualQuaternion& dq_
   return dq_out;
 }
 
-
 DualQuaternion operator*(const double& scalar, const DualQuaternion& dq)
 {
   Quaternion q_real_out = scalar * dq.GetRealPart();
@@ -40,5 +46,12 @@ DualQuaternion operator*(const double& scalar, const DualQuaternion& dq)
   return dq_out;
 }
 
+DualQuaternion operator*(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs)
+{
+  Quaternion q_real_out = dq_lhs.GetRealPart() * dq_rhs.GetRealPart();
+  Quaternion q_dual_out = (dq_lhs.GetRealPart() * dq_rhs.GetDualPart()) + (dq_rhs.GetRealPart() * dq_lhs.GetDualPart());
+  DualQuaternion dq_out(q_real_out, q_dual_out);
+  return dq_out;
+}
 
 }  // namespace libra
