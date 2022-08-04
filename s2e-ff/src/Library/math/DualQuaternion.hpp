@@ -80,20 +80,20 @@ DualQuaternion operator+(const DualQuaternion& dq_lhs, const DualQuaternion& dq_
  * @param[in] dq_lhs: Dual Quaternion left hand side
  * @param[in] dq_rhs: Dual Quaternion right hand side
  */
-// DualQuaternion operator-(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs);
+DualQuaternion operator-(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs);
 
 /**
  * @fn Multiplication of Dual Quaternion
  * @param[in] dq_lhs: Dual Quaternion left hand side
  * @param[in] dq_rhs: Dual Quaternion right hand side
  */
-// DualQuaternion operator*(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs);
+ //DualQuaternion operator*(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs);
 
 /**
  * @fn Multiplication of scalar and Dual Quaternion
- * @param[in] lhs: scalar left hand side
- * @param[in] dq_rhs: Dual Quaternion right hand side
+ * @param[in] scalar: scalar value
+ * @param[in] dq: Dual Quaternion
  */
-// DualQuaternion operator*(const double& lhs, const DualQuaternion& dq_rhs);
+ DualQuaternion operator*(const double& scalar, const DualQuaternion& dq);
 
 }  // namespace libra

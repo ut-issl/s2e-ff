@@ -24,4 +24,21 @@ DualQuaternion operator+(const DualQuaternion& dq_lhs, const DualQuaternion& dq_
   return dq_out;
 }
 
+
+DualQuaternion operator-(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs) {
+  DualQuaternion dq_rhs_negative = -1.0 * dq_rhs;
+  DualQuaternion dq_out = dq_lhs + dq_rhs_negative;
+  return dq_out;
+}
+
+
+DualQuaternion operator*(const double& scalar, const DualQuaternion& dq)
+{
+  Quaternion q_real_out = scalar * dq.GetRealPart();
+  Quaternion q_dual_out = scalar * dq.GetDualPart();
+  DualQuaternion dq_out(q_real_out, q_dual_out);
+  return dq_out;
+}
+
+
 }  // namespace libra
