@@ -68,7 +68,7 @@ class DualQuaternion {
    * @param[in]  v: Vector
    * @param[out] return: Converted vector
    */
-  // Vector<3> ConvertFrame(const Vector<3>& v);
+  Vector<3> ConvertFrame(const Vector<3>& v) const;
 
   /**
    * @fn Frame conversion with conjugated dual quaternion of a three dimensional vector

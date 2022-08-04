@@ -95,6 +95,26 @@ TEST(DualQuaternion, DualQuaternionConjugate) {
   EXPECT_DOUBLE_EQ(-0.5, dq_out.GetDualPart()[3]);
 }
 
+TEST(DualQuaternion, ConvertFrame) {
+  libra::Quaternion q_rot(0.0, 0.0, 0.0, 1.0);
+  libra::Vector<3> v_translation;
+  v_translation[0] = 0.0;
+  v_translation[1] = 0.0;
+  v_translation[2] = 1.0;
+  libra::DualQuaternion dq(q_rot, v_translation);
+
+  libra::Vector<3> v_in;
+  v_in[0] = 1.0;
+  v_in[1] = 0.0;
+  v_in[2] = 0.0;
+
+  libra::Vector<3> v_out = dq.ConvertFrame(v_in);
+
+  EXPECT_DOUBLE_EQ(1.0, v_out[0]);
+  EXPECT_DOUBLE_EQ(0.0, v_out[1]);
+  EXPECT_DOUBLE_EQ(1.0, v_out[2]);
+}
+
 TEST(DualQuaternion, Addition) {
   libra::DualQuaternion dq_lhs(0, 0, 0, 1, 0, 0, 0, 1);
   libra::DualQuaternion dq_rhs(0, 0, 0, 1, 0, 0, 0, 1);

@@ -45,6 +45,15 @@ DualQuaternion DualQuaternion::DualQuaternionConjugate() const {
   return dq_out;
 }
 
+Vector<3> DualQuaternion::ConvertFrame(const Vector<3>& v) const
+{
+  DualQuaternion dq_v(0.0, 0.0, 0.0, 1.0, v[0], v[1], v[2], 0.0);
+  DualQuaternion dq_out = ((*this) * dq_v) * this->DualQuaternionConjugate();
+
+  Vector<3> v_out;
+  for (int i = 0; i < 3; i++) v_out[i] = dq_out.GetDualPart()[i];
+  return v_out;
+}
 
 // Getters
 Vector<3> DualQuaternion::GetTranslationVector() const {
