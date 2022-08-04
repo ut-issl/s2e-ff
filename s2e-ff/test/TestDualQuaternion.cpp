@@ -113,6 +113,12 @@ TEST(DualQuaternion, ConvertFrame) {
   EXPECT_DOUBLE_EQ(1.0, v_out[0]);
   EXPECT_DOUBLE_EQ(0.0, v_out[1]);
   EXPECT_DOUBLE_EQ(1.0, v_out[2]);
+
+  libra::Vector<3> v_out_inverse = dq.InverseConvertFrame(v_out);
+
+  EXPECT_DOUBLE_EQ(v_in[0], v_out_inverse[0]);
+  EXPECT_DOUBLE_EQ(v_in[1], v_out_inverse[1]);
+  EXPECT_DOUBLE_EQ(v_in[2], v_out_inverse[2]);
 }
 
 TEST(DualQuaternion, Addition) {

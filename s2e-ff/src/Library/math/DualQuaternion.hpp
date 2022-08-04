@@ -72,11 +72,11 @@ class DualQuaternion {
   Vector<3> ConvertFrame(const Vector<3>& v) const;
 
   /**
-   * @fn Frame conversion with conjugated dual quaternion of a three dimensional vector
+   * @fn Frame inverse conversion of a three dimensional vector
    * @param[in]  v: Vector
    * @param[out] return: Converted vector
    */
-  // Vector<3> ConvertFrameConjugate(const Vector<3>& v);
+  Vector<3> InverseConvertFrame(const Vector<3>& v) const;
 
   // Getter
   inline Quaternion GetRealPart() const { return q_real_; }
