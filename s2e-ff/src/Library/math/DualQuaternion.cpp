@@ -3,7 +3,10 @@
 namespace libra {
 
 // Constructors
-DualQuaternion::DualQuaternion() {}
+DualQuaternion::DualQuaternion() {
+  q_real_ = Quaternion(0.0, 0.0, 0.0, 1.0);
+  q_dual_ = Quaternion(0.0, 0.0, 0.0, 0.0);
+}
 
 DualQuaternion::DualQuaternion(const Quaternion q_real, const Quaternion q_dual) {
   q_real_ = q_real;
@@ -16,11 +19,13 @@ DualQuaternion::DualQuaternion(const double q_real_x, const double q_real_y, con
   q_dual_ = Quaternion(q_dual_x, q_dual_y, q_dual_z, q_dual_w);
 }
 
-DualQuaternion::DualQuaternion(const Quaternion q_rot, const Vector<3> v_translation)
-{
+DualQuaternion::DualQuaternion(const Quaternion q_rot, const Vector<3> v_translation) {
   q_real_ = q_rot;
   q_real_.normalize();
-  q_dual_ = 0.5 * q_real_ * v_translation;
+  
+  // TODO: Make vector * quaternion function in core's Quaternion class
+  Quaternion q_v(v_translation[0], v_translation[1], v_translation[2], 0.0);
+  q_dual_ = 0.5 * (q_v * q_real_);
 }
 
 
@@ -63,8 +68,7 @@ DualQuaternion DualQuaternion::DualQuaternionConjugate() const {
   return dq_out;
 }
 
-Vector<3> DualQuaternion::ConvertFrame(const Vector<3>& v) const
-{
+Vector<3> DualQuaternion::ConvertFrame(const Vector<3>& v) const {
   DualQuaternion dq_v(0.0, 0.0, 0.0, 1.0, v[0], v[1], v[2], 0.0);
   DualQuaternion dq_out = ((*this) * dq_v) * this->DualQuaternionConjugate();
 
@@ -73,8 +77,7 @@ Vector<3> DualQuaternion::ConvertFrame(const Vector<3>& v) const
   return v_out;
 }
 
-Vector<3> DualQuaternion::InverseConvertFrame(const Vector<3>& v) const
-{
+Vector<3> DualQuaternion::InverseConvertFrame(const Vector<3>& v) const {
   DualQuaternion dq_v(0.0, 0.0, 0.0, 1.0, v[0], v[1], v[2], 0.0);
   DualQuaternion dq_inv = this->QuaternionConjugate();
 
@@ -108,18 +111,16 @@ DualQuaternion operator-(const DualQuaternion& dq_lhs, const DualQuaternion& dq_
   return dq_out;
 }
 
-DualQuaternion operator*(const double& scalar, const DualQuaternion& dq)
-{
+DualQuaternion operator*(const double& scalar, const DualQuaternion& dq) {
   Quaternion q_real_out = scalar * dq.GetRealPart();
   Quaternion q_dual_out = scalar * dq.GetDualPart();
   DualQuaternion dq_out(q_real_out, q_dual_out);
   return dq_out;
 }
 
-DualQuaternion operator*(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs)
-{
+DualQuaternion operator*(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs) {
   Quaternion q_real_out = dq_lhs.GetRealPart() * dq_rhs.GetRealPart();
-  Quaternion q_dual_out = (dq_lhs.GetRealPart() * dq_rhs.GetDualPart()) + (dq_rhs.GetRealPart() * dq_lhs.GetDualPart());
+  Quaternion q_dual_out = (dq_lhs.GetRealPart() * dq_rhs.GetDualPart()) + (dq_lhs.GetDualPart() * dq_rhs.GetRealPart());
   DualQuaternion dq_out(q_real_out, q_dual_out);
   return dq_out;
 }

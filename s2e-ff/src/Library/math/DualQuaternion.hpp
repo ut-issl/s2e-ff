@@ -6,14 +6,14 @@ namespace libra {
 
 /**
  * @class DualQuaternion
- * @brief Dual quaternion
+ * @brief Frame conversion sequence: Rotation -> Translation
  */
 class DualQuaternion {
  public:
   // Constructors
   /**
    * @fn Default constructor
-   * @brief TODO: decide do nothing? set default value?
+   * @brief make unit dual quaternion without any conversion
    */
   DualQuaternion();
 
@@ -35,13 +35,11 @@ class DualQuaternion {
   /**
    * @fn Constructor
    * @brief Make from rotation quaternion and translation vector
-   *        Frame Conversion: Rotation -> Translation
+   *        Frame conversion sequence: Rotation -> Translation
    * @param[in] q_rot: Quaternion for rotation. This quaternion is used after normalized in this function.
    * @param[in] v_translation: Vector for translation
    */
   DualQuaternion(const Quaternion q_rot, const Vector<3> v_translation);
-
-  // TODO: Do we nne translation -> rotation dual quaternion?
 
   // Operator for a single dual quaternon
   /**

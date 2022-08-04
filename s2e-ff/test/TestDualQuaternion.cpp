@@ -2,6 +2,19 @@
 
 #include "../src/Library/math/DualQuaternion.hpp"
 
+TEST(DualQuaternion, DefaultConstructor) {
+  libra::DualQuaternion dq;
+
+  EXPECT_DOUBLE_EQ(0.0, dq.GetRealPart()[0]);
+  EXPECT_DOUBLE_EQ(0.0, dq.GetRealPart()[1]);
+  EXPECT_DOUBLE_EQ(0.0, dq.GetRealPart()[2]);
+  EXPECT_DOUBLE_EQ(1.0, dq.GetRealPart()[3]);
+  EXPECT_DOUBLE_EQ(0.0, dq.GetDualPart()[0]);
+  EXPECT_DOUBLE_EQ(0.0, dq.GetDualPart()[1]);
+  EXPECT_DOUBLE_EQ(0.0, dq.GetDualPart()[2]);
+  EXPECT_DOUBLE_EQ(0.0, dq.GetDualPart()[3]);
+}
+
 TEST(DualQuaternion, ConstructorFromTwoQuaternion) {
   libra::Quaternion q_real(0, 0, 0, 1);
   libra::Quaternion q_dual(0, 0, 0, 2);
@@ -31,20 +44,20 @@ TEST(DualQuaternion, ConstructorFromEightValue) {
 }
 
 TEST(DualQuaternion, ConstructorFromRotationTranslation) {
-  libra::Quaternion q_rot(0, 0, 0, 2);
+  libra::Quaternion q_rot(1.0, 0.0, 0.0, 1.0); // 90deg rotation around X axis
   libra::Vector<3> v_translation;
   v_translation[0] = 0.0;
   v_translation[1] = 0.0;
   v_translation[2] = 2.0;
   libra::DualQuaternion dq(q_rot, v_translation);
 
-  EXPECT_DOUBLE_EQ(0.0, dq.GetRealPart()[0]);
+  EXPECT_DOUBLE_EQ(1.0/sqrt(2.0), dq.GetRealPart()[0]);
   EXPECT_DOUBLE_EQ(0.0, dq.GetRealPart()[1]);
   EXPECT_DOUBLE_EQ(0.0, dq.GetRealPart()[2]);
-  EXPECT_DOUBLE_EQ(1.0, dq.GetRealPart()[3]);
+  EXPECT_DOUBLE_EQ(1.0/sqrt(2.0), dq.GetRealPart()[3]);
   EXPECT_DOUBLE_EQ(0.0, dq.GetDualPart()[0]);
-  EXPECT_DOUBLE_EQ(0.0, dq.GetDualPart()[1]);
-  EXPECT_DOUBLE_EQ(1.0, dq.GetDualPart()[2]);
+  EXPECT_DOUBLE_EQ(1.0/sqrt(2.0), dq.GetDualPart()[1]);
+  EXPECT_DOUBLE_EQ(1.0/sqrt(2.0), dq.GetDualPart()[2]);
   EXPECT_DOUBLE_EQ(0.0, dq.GetDualPart()[3]);
 
   libra::Vector<3> v_out = dq.GetTranslationVector();
@@ -129,7 +142,7 @@ TEST(DualQuaternion, DualQuaternionConjugate) {
 }
 
 TEST(DualQuaternion, ConvertFrame) {
-  libra::Quaternion q_rot(0.0, 0.0, 0.0, 1.0);
+  libra::Quaternion q_rot(1.0, 0.0, 0.0, 1.0); // 90deg rotation around X axis
   libra::Vector<3> v_translation;
   v_translation[0] = 0.0;
   v_translation[1] = 0.0;
@@ -149,9 +162,9 @@ TEST(DualQuaternion, ConvertFrame) {
 
   libra::Vector<3> v_out_inverse = dq.InverseConvertFrame(v_out);
 
-  EXPECT_DOUBLE_EQ(v_in[0], v_out_inverse[0]);
-  EXPECT_DOUBLE_EQ(v_in[1], v_out_inverse[1]);
-  EXPECT_DOUBLE_EQ(v_in[2], v_out_inverse[2]);
+  EXPECT_NEAR(v_in[0], v_out_inverse[0], 1e-9);
+  EXPECT_NEAR(v_in[1], v_out_inverse[1], 1e-9);
+  EXPECT_NEAR(v_in[2], v_out_inverse[2], 1e-9);
 }
 
 TEST(DualQuaternion, Addition) {
