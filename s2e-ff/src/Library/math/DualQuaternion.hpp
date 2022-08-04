@@ -47,9 +47,20 @@ class DualQuaternion {
   // DualQuaternion normalize(void);
 
   /**
-   * @fn Calulate conjugated dual quaternion
+   * @fn Calulate conjugated of the dual quaternion as dual number
    */
-  // DualQuaternion Conjugate(void) const;
+  DualQuaternion DualNumberConjugate() const;
+
+  /**
+   * @fn Calulate conjugated of the dual quaternion as quaternion
+   */
+  DualQuaternion QuaternionConjugate() const;
+
+  /**
+   * @fn Calulate conjugated of the dual quaternion combined dual number and quaternion conjugate
+   */
+  DualQuaternion DualQuaternionConjugate() const;
+
 
   // Frame conversion
   /**

@@ -23,7 +23,30 @@ DualQuaternion::DualQuaternion(const Quaternion q_rot, const Vector<3> v_transla
 }
 
 
-// Getter
+// Calculations
+DualQuaternion DualQuaternion::DualNumberConjugate() const {
+  Quaternion q_real_out = q_real_;
+  Quaternion q_dual_out = -1.0 * q_dual_;
+  DualQuaternion dq_out(q_real_out, q_dual_out);
+  return dq_out;
+}
+
+DualQuaternion DualQuaternion::QuaternionConjugate() const {
+  Quaternion q_real_out = q_real_.conjugate();
+  Quaternion q_dual_out = q_dual_.conjugate();
+  DualQuaternion dq_out(q_real_out, q_dual_out);
+  return dq_out;
+}
+
+DualQuaternion DualQuaternion::DualQuaternionConjugate() const {
+  Quaternion q_real_out = q_real_.conjugate();
+  Quaternion q_dual_out = -1.0 * q_dual_.conjugate();
+  DualQuaternion dq_out(q_real_out, q_dual_out);
+  return dq_out;
+}
+
+
+// Getters
 Vector<3> DualQuaternion::GetTranslationVector() const {
   Quaternion q_out = 2.0 * q_dual_ * q_real_.conjugate();
   Vector<3> v_out;
