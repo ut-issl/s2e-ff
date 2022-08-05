@@ -69,6 +69,11 @@ class DualQuaternion {
    */
   DualQuaternion DualQuaternionConjugate() const;
 
+  /**
+   * @fn Calulate inverse of the dual quaternion
+   */
+  inline DualQuaternion Inverse() const { return this->QuaternionConjugate(); };
+
   // Frame conversion
   /**
    * @fn Transform a three dimensional vector
@@ -140,5 +145,15 @@ DualQuaternion operator*(const double& scalar, const DualQuaternion& dq);
  * @param[in] dq_rhs: Dual Quaternion right hand side
  */
 DualQuaternion operator*(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs);
+
+/**
+ * @fn Screw Linear Interpolation
+ * @param[in]  dq1: First dual quaternion
+ * @param[in]  dq2: Second dual quaternion
+ * @param[in]  tau [0, 1]
+ * @param[out] return: Interpolated dual equation
+ * note return dq1 when the error happened
+ */
+DualQuaternion Sclerp(const DualQuaternion dq1, const DualQuaternion dq2, const double tau);
 
 }  // namespace libra

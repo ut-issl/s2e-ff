@@ -282,6 +282,55 @@ TEST(DualQuaternion, Integral) {
   EXPECT_NEAR(1.0, v_out[2], 1e-2);
 }
 
+TEST(DualQuaternion, SclerpTranslationOnly) {
+  libra::DualQuaternion dq1(0, 0, 0, 1, 0, 0, 0, 0);
+  libra::DualQuaternion dq2(0, 0, 0, 1, 1, 0, 0, 0);
+
+  libra::DualQuaternion dq_out = libra::Sclerp(dq1, dq2, 0.5);
+
+  EXPECT_NEAR(0.0, dq_out.GetRealPart()[0], 1e-3);
+  EXPECT_NEAR(0.0, dq_out.GetRealPart()[1], 1e-3);
+  EXPECT_NEAR(0.0, dq_out.GetRealPart()[2], 1e-3);
+  EXPECT_NEAR(1.0, dq_out.GetRealPart()[3], 1e-3);
+  EXPECT_NEAR(0.5, dq_out.GetDualPart()[0], 1e-3);
+  EXPECT_NEAR(0.0, dq_out.GetDualPart()[1], 1e-3);
+  EXPECT_NEAR(0.0, dq_out.GetDualPart()[2], 1e-3);
+  EXPECT_NEAR(0.0, dq_out.GetDualPart()[3], 1e-3);
+}
+
+TEST(DualQuaternion, Sclerp) {
+  libra::DualQuaternion dq1(0, 0, 0, 1, 0, 0, 0, 0);
+  // X 90deg rotation and X axis translation
+  libra::Quaternion q2_rot(1.0, 0.0, 0.0, 1.0);
+  libra::Vector<3> v2_translation;
+  v2_translation[0] = 1.0;
+  v2_translation[1] = 0.0;
+  v2_translation[2] = 0.0;
+  libra::DualQuaternion dq2(q2_rot, v2_translation);
+
+  // X 45deg rotation and X axis harf translation
+  libra::DualQuaternion dq_out = libra::Sclerp(dq1, dq2, 0.5);
+
+  EXPECT_NEAR(0.3826, dq_out.GetRealPart()[0], 1e-3);
+  EXPECT_NEAR(0.0, dq_out.GetRealPart()[1], 1e-3);
+  EXPECT_NEAR(0.0, dq_out.GetRealPart()[2], 1e-3);
+  EXPECT_NEAR(0.9239, dq_out.GetRealPart()[3], 1e-3);
+  EXPECT_NEAR(0.23097, dq_out.GetDualPart()[0], 1e-3);
+  EXPECT_NEAR(0.0, dq_out.GetDualPart()[1], 1e-3);
+  EXPECT_NEAR(0.0, dq_out.GetDualPart()[2], 1e-3);
+  EXPECT_NEAR(-0.0957, dq_out.GetDualPart()[3], 1e-3);
+
+  libra::Vector<3> v_in;
+  v_in[0] = 1.0;
+  v_in[1] = 1.0;
+  v_in[2] = 0.0;
+
+  libra::Vector<3> v_out = dq_out.TransformVector(v_in);
+  EXPECT_NEAR(1.5, v_out[0], 1e-3);
+  EXPECT_NEAR(0.7071, v_out[1], 1e-3);
+  EXPECT_NEAR(0.7071, v_out[2], 1e-3);
+}
+
 TEST(DualQuaternion, Addition) {
   libra::DualQuaternion dq_lhs(0, 0, 0, 1, 0, 0, 0, 1);
   libra::DualQuaternion dq_rhs(0, 0, 0, 1, 0, 0, 0, 1);

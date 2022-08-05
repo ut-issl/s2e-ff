@@ -1,5 +1,7 @@
 #include "DualQuaternion.hpp"
 
+#include <float.h>
+
 namespace libra {
 
 // Constructors
@@ -138,6 +140,39 @@ DualQuaternion operator*(const DualQuaternion& dq_lhs, const DualQuaternion& dq_
   Quaternion q_real_out = dq_lhs.GetRealPart() * dq_rhs.GetRealPart();
   Quaternion q_dual_out = (dq_lhs.GetRealPart() * dq_rhs.GetDualPart()) + (dq_lhs.GetDualPart() * dq_rhs.GetRealPart());
   DualQuaternion dq_out(q_real_out, q_dual_out);
+  return dq_out;
+}
+
+DualQuaternion Sclerp(const DualQuaternion dq1, const DualQuaternion dq2, const double tau) {
+  if (tau < 0.0) return dq1;
+  if (tau > 1.0) return dq1;
+
+  DualQuaternion dq1_inv = dq1.Inverse();
+  DualQuaternion dq12 = dq1_inv * dq2;
+
+  // Calc rotation angle and axis
+  // TODO: make function in core's quaternion library
+  double theta = 2.0 * acos(dq12.GetRealPart()[3]);
+  Vector<3> axis;
+  if (theta < 0.0 + DBL_MIN) {
+    // No rotation
+    axis = dq12.GetTranslationVector();
+  } else {
+    for (int i = 0; i < 3; i++) axis[i] = dq12.GetRealPart()[i];
+  }
+  normalize(axis);
+
+  // Calc (dq1^-1 * dq2)^tau
+  double d = dot(dq12.GetTranslationVector(), axis);
+  Quaternion dq12_tau_real(axis, tau * theta);
+  Quaternion dq12_tau_dual;
+  for (int i = 0; i < 3; i++) dq12_tau_dual[i] = cos(tau * theta * 0.5) * axis[i];
+  dq12_tau_dual[3] = -sin(tau * theta * 0.5);
+  dq12_tau_dual = (0.5 * tau * d) * dq12_tau_dual;
+  DualQuaternion dq12_tau(dq12_tau_real, dq12_tau_dual);
+
+  // Calc interpolated dual quaternion
+  DualQuaternion dq_out = dq1 * dq12_tau;
   return dq_out;
 }
 
