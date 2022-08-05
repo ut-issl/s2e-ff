@@ -69,7 +69,6 @@ class DualQuaternion {
    */
   DualQuaternion DualQuaternionConjugate() const;
 
-
   // Frame conversion
   /**
    * @fn Transform a three dimensional vector
@@ -79,11 +78,28 @@ class DualQuaternion {
   Vector<3> TransformVector(const Vector<3>& v) const;
 
   /**
-   * @fn Inverse transform  a three dimensional vector
+   * @fn Inverse transform a three dimensional vector
    * @param[in]  v: Vector
    * @param[out] return: Converted vector
    */
   Vector<3> InverseTransformVector(const Vector<3>& v) const;
+
+  /**
+   * @fn Differential equation of dual quaternion
+   * @param[in]  omega: Angular velocity [rad/s]
+   * @param[in]  velocity: Velocity [-]
+   * @param[out] return: Differential of dual equation
+   */
+  DualQuaternion Differential(const Vector<3>& omega, const Vector<3>& velocity) const;
+
+  /**
+   * @fn Differential equation of dual quaternion
+   * @param[in]  omega: Angular velocity [rad/s]
+   * @param[in]  velocity: Velocity [-]
+   * @param[in]  dt: Differential time [s]
+   * @param[out] return: Integrated dual equation
+   */
+  DualQuaternion Integrate(const Vector<3>& omega, const Vector<3>& velocity, const double dt) const;
 
   // Getter
   inline Quaternion GetRealPart() const { return q_real_; }

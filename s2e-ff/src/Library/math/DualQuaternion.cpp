@@ -22,12 +22,11 @@ DualQuaternion::DualQuaternion(const double q_real_x, const double q_real_y, con
 DualQuaternion::DualQuaternion(const Quaternion q_rot, const Vector<3> v_translation) {
   q_real_ = q_rot;
   q_real_.normalize();
-  
+
   // TODO: Make vector * quaternion function in core's Quaternion class
   Quaternion q_v(v_translation[0], v_translation[1], v_translation[2], 0.0);
   q_dual_ = 0.5 * (q_v * q_real_);
 }
-
 
 // Calculations
 DualQuaternion DualQuaternion::CalcNormalizedRotationQauternion() const {
@@ -88,6 +87,24 @@ Vector<3> DualQuaternion::InverseTransformVector(const Vector<3>& v) const {
   return v_out;
 }
 
+DualQuaternion DualQuaternion::Differential(const Vector<3>& omega, const Vector<3>& velocity) const {
+  Quaternion q_omega(omega[0], omega[1], omega[2], 0.0);
+  Quaternion q_velocity(velocity[0], velocity[1], velocity[2], 0.0);
+
+  Quaternion q_real_out = 0.5 * q_omega * q_real_;
+  Quaternion q_dual_out = 0.5 * ((q_velocity * q_real_) + 0.5 * (q_velocity * q_omega * q_real_));
+
+  DualQuaternion dq_out(q_real_out, q_dual_out);
+  return dq_out;
+}
+
+DualQuaternion DualQuaternion::Integrate(const Vector<3>& omega, const Vector<3>& velocity, const double dt) const {
+  DualQuaternion diff_dq = this->Differential(omega, velocity);
+  DualQuaternion dq_out = (*this) + dt * diff_dq;
+  dq_out.NormalizeRotationQauternion();
+  return dq_out;
+}
+
 // Getters
 Vector<3> DualQuaternion::GetTranslationVector() const {
   Quaternion q_out = 2.0 * q_dual_ * q_real_.conjugate();
@@ -95,7 +112,6 @@ Vector<3> DualQuaternion::GetTranslationVector() const {
   for (int i = 0; i < 3; i++) v_out[i] = q_out[i];
   return v_out;
 }
-
 
 // Operation functions
 DualQuaternion operator+(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs) {
