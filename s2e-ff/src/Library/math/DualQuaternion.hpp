@@ -69,6 +69,10 @@ class DualQuaternion {
    */
   DualQuaternion DualQuaternionConjugate() const;
 
+  /**
+   * @fn Calulate inverse of the dual quaternion
+   */
+  inline DualQuaternion Inverse() const { return this->QuaternionConjugate(); };
 
   // Frame conversion
   /**
@@ -79,11 +83,28 @@ class DualQuaternion {
   Vector<3> TransformVector(const Vector<3>& v) const;
 
   /**
-   * @fn Inverse transform  a three dimensional vector
+   * @fn Inverse transform a three dimensional vector
    * @param[in]  v: Vector
    * @param[out] return: Converted vector
    */
   Vector<3> InverseTransformVector(const Vector<3>& v) const;
+
+  /**
+   * @fn Differential equation of dual quaternion
+   * @param[in]  omega: Angular velocity [rad/s]
+   * @param[in]  velocity: Velocity [-]
+   * @param[out] return: Differential of dual equation
+   */
+  DualQuaternion Differential(const Vector<3>& omega, const Vector<3>& velocity) const;
+
+  /**
+   * @fn Differential equation of dual quaternion
+   * @param[in]  omega: Angular velocity [rad/s]
+   * @param[in]  velocity: Velocity [-]
+   * @param[in]  dt: Differential time [s]
+   * @param[out] return: Integrated dual equation
+   */
+  DualQuaternion Integrate(const Vector<3>& omega, const Vector<3>& velocity, const double dt) const;
 
   // Getter
   inline Quaternion GetRealPart() const { return q_real_; }
@@ -124,5 +145,15 @@ DualQuaternion operator*(const double& scalar, const DualQuaternion& dq);
  * @param[in] dq_rhs: Dual Quaternion right hand side
  */
 DualQuaternion operator*(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs);
+
+/**
+ * @fn Screw Linear Interpolation
+ * @param[in]  dq1: First dual quaternion
+ * @param[in]  dq2: Second dual quaternion
+ * @param[in]  tau [0, 1]
+ * @param[out] return: Interpolated dual equation
+ * note return dq1 when the error happened
+ */
+DualQuaternion Sclerp(const DualQuaternion dq1, const DualQuaternion dq2, const double tau);
 
 }  // namespace libra
