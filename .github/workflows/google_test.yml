@@ -8,7 +8,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, labeled]
     paths:
-      - '.github/workflows/build.yml'
+      - '.github/workflows/google_test.yml'
       - 's2e-ff/CMakeLists.txt'
       - 's2e-ff/common.cmake'
       - 's2e-ff/CMakeSettings.json'
@@ -33,14 +33,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: recursive
-      
-      - name: checkout GoogleTest
-        uses: actions/checkout@v3
-        with:
-          path: ./ExtLibraries/googletest
-          repository: google/googletest
-          ref: ${{ env.GOOGLE_TEST_VERSION }}
-          fetch-depth: 1
 
       - name: set compiler
         id: compiler
