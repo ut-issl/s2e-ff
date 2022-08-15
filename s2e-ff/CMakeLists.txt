@@ -10,6 +10,10 @@ cmake_minimum_required(VERSION 3.13)
 
 # build config
 option(BUILD_64BIT "Build 64bit" OFF)
+option(GOOGLE_TEST "Execute GoogleTest" OFF)
+if (NOT BUILD_64BIT)
+  option(GOOGLE_TEST OFF) # GoogleTest supports 64bit only
+endif()
 
 # preprocessor
 if(WIN32)
@@ -88,6 +92,7 @@ set(SOURCE_FILES
   src/Components/IdealComponents/InitializeForceGenerator.cpp
   src/Components/IdealComponents/RelativeAttitudeController.cpp
   src/Components/IdealComponents/InitializeRelativeAttitudeController.cpp
+  src/Library/math/DualQuaternion.cpp
   src/Simulation/Case/FfCase.cpp
   src/Simulation/Spacecraft/FfSat.cpp
   src/Simulation/Spacecraft/FfComponents.cpp
@@ -174,3 +179,30 @@ message("Cspice_LIB:  " ${CSPICE_LIB})
 message("nrlmsise00_LIB:  " ${NRLMSISE00_LIB})
 
 include(${S2E_CORE_DIR}/common.cmake)
+
+## GoogleTest settings
+if(GOOGLE_TEST)
+  include(FetchContent)
+  FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG release-1.12.1
+  )
+  FetchContent_MakeAvailable(googletest)
+  if(WIN32)
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+  endif()
+
+  ## Unit test
+  set(TEST_PROJECT_NAME ${PROJECT_NAME}_TEST)
+  set(TEST_FILES
+    src/Library/math/DualQuaternion.cpp
+    test/TestDualQuaternion.cpp
+  )
+  add_executable(${TEST_PROJECT_NAME} ${TEST_FILES})
+  target_link_libraries(${TEST_PROJECT_NAME} gtest gtest_main)
+  target_link_libraries(${TEST_PROJECT_NAME} MATH)
+  include_directories(${TEST_PROJECT_NAME})
+  add_test(NAME s2e-test COMMAND ${TEST_PROJECT_NAME})
+  enable_testing()
+endif()
