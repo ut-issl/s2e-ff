@@ -41,6 +41,15 @@ class DualQuaternion {
    */
   DualQuaternion(const Quaternion q_rot, const Vector<3> v_translation);
 
+  /**
+   * @fn Constructor
+   * @brief Make from rotation quaternion and translation vector
+   *        Frame conversion sequence: Translation -> Rotation
+   * @param[in] q_rot: Quaternion for rotation. This quaternion is used after normalized in this function.
+   * @param[in] v_translation: Vector for translation
+   */
+  DualQuaternion(const Vector<3> v_translation, const Quaternion q_rot);
+
   // Operator for a single dual quaternon
   /**
    * @fn Normalize rotation quaternion
@@ -110,7 +119,8 @@ class DualQuaternion {
   inline Quaternion GetRealPart() const { return q_real_; }
   inline Quaternion GetDualPart() const { return q_dual_; }
   inline Quaternion GetRotationQuaternion() const { return q_real_; }
-  Vector<3> GetTranslationVector() const;
+  Vector<3> GetRotationFirstTranslationVector() const;
+  Vector<3> GetTranslationFirstTranslationVector() const;
 
  private:
   Quaternion q_real_;  //!< Real part Quaternion

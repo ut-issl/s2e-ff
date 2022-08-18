@@ -60,7 +60,31 @@ TEST(DualQuaternion, ConstructorFromRotationTranslation) {
   EXPECT_DOUBLE_EQ(1.0 / sqrt(2.0), dq.GetDualPart()[2]);
   EXPECT_DOUBLE_EQ(0.0, dq.GetDualPart()[3]);
 
-  libra::Vector<3> v_out = dq.GetTranslationVector();
+  libra::Vector<3> v_out = dq.GetRotationFirstTranslationVector();
+  EXPECT_DOUBLE_EQ(v_translation[0], v_out[0]);
+  EXPECT_DOUBLE_EQ(v_translation[1], v_out[1]);
+  EXPECT_DOUBLE_EQ(v_translation[2], v_out[2]);
+}
+
+TEST(DualQuaternion, ConstructorFromTranslationRotation) {
+  libra::Vector<3> v_translation;
+  v_translation[0] = 0.0;
+  v_translation[1] = 0.0;
+  v_translation[2] = 2.0;
+  libra::Quaternion q_rot(1.0, 0.0, 0.0, 1.0);  // 90deg rotation around X axis
+
+  libra::DualQuaternion dq(v_translation, q_rot);
+
+  EXPECT_DOUBLE_EQ(1.0 / sqrt(2.0), dq.GetRealPart()[0]);
+  EXPECT_DOUBLE_EQ(0.0, dq.GetRealPart()[1]);
+  EXPECT_DOUBLE_EQ(0.0, dq.GetRealPart()[2]);
+  EXPECT_DOUBLE_EQ(1.0 / sqrt(2.0), dq.GetRealPart()[3]);
+  EXPECT_DOUBLE_EQ(0.0, dq.GetDualPart()[0]);
+  EXPECT_DOUBLE_EQ(-1.0 / sqrt(2.0), dq.GetDualPart()[1]);
+  EXPECT_DOUBLE_EQ(1.0 / sqrt(2.0), dq.GetDualPart()[2]);
+  EXPECT_DOUBLE_EQ(0.0, dq.GetDualPart()[3]);
+
+  libra::Vector<3> v_out = dq.GetTranslationFirstTranslationVector();
   EXPECT_DOUBLE_EQ(v_translation[0], v_out[0]);
   EXPECT_DOUBLE_EQ(v_translation[1], v_out[1]);
   EXPECT_DOUBLE_EQ(v_translation[2], v_out[2]);

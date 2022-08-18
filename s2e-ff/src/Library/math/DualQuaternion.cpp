@@ -30,10 +30,19 @@ DualQuaternion::DualQuaternion(const Quaternion q_rot, const Vector<3> v_transla
   q_dual_ = 0.5 * (q_v * q_real_);
 }
 
+DualQuaternion::DualQuaternion(const Vector<3> v_translation, const Quaternion q_rot) {
+  q_real_ = q_rot;
+  q_real_.normalize();
+
+  // TODO: Make vector * quaternion function in core's Quaternion class
+  Quaternion q_v(v_translation[0], v_translation[1], v_translation[2], 0.0);
+  q_dual_ = 0.5 * (q_real_ * q_v);
+}
+
 // Calculations
 DualQuaternion DualQuaternion::CalcNormalizedRotationQauternion() const {
   Quaternion q_rot = q_real_;
-  Vector<3> v_translation = this->GetTranslationVector();
+  Vector<3> v_translation = this->GetRotationFirstTranslationVector();
   q_rot.normalize();
 
   DualQuaternion dq_out(q_rot, v_translation);
@@ -41,7 +50,7 @@ DualQuaternion DualQuaternion::CalcNormalizedRotationQauternion() const {
 }
 
 void DualQuaternion::NormalizeRotationQauternion() {
-  Vector<3> v_translation = this->GetTranslationVector();
+  Vector<3> v_translation = this->GetRotationFirstTranslationVector();
   q_real_.normalize();
 
   DualQuaternion dq_out(q_real_, v_translation);
@@ -108,8 +117,15 @@ DualQuaternion DualQuaternion::Integrate(const Vector<3>& omega, const Vector<3>
 }
 
 // Getters
-Vector<3> DualQuaternion::GetTranslationVector() const {
+Vector<3> DualQuaternion::GetRotationFirstTranslationVector() const {
   Quaternion q_out = 2.0 * q_dual_ * q_real_.conjugate();
+  Vector<3> v_out;
+  for (int i = 0; i < 3; i++) v_out[i] = q_out[i];
+  return v_out;
+}
+
+Vector<3> DualQuaternion::GetTranslationFirstTranslationVector() const {
+  Quaternion q_out = 2.0 * q_real_.conjugate() * q_dual_;
   Vector<3> v_out;
   for (int i = 0; i < 3; i++) v_out[i] = q_out[i];
   return v_out;
@@ -156,14 +172,14 @@ DualQuaternion Sclerp(const DualQuaternion dq1, const DualQuaternion dq2, const 
   Vector<3> axis;
   if (theta < 0.0 + DBL_MIN) {
     // No rotation
-    axis = dq12.GetTranslationVector();
+    axis = dq12.GetRotationFirstTranslationVector();
   } else {
     for (int i = 0; i < 3; i++) axis[i] = dq12.GetRealPart()[i];
   }
   normalize(axis);
 
   // Calc (dq1^-1 * dq2)^tau
-  double d = dot(dq12.GetTranslationVector(), axis);
+  double d = dot(dq12.GetRotationFirstTranslationVector(), axis);
   Quaternion dq12_tau_real(axis, tau * theta);
   Quaternion dq12_tau_dual;
   for (int i = 0; i < 3; i++) dq12_tau_dual[i] = cos(tau * theta * 0.5) * axis[i];
