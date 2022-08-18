@@ -60,7 +60,15 @@ TEST(RotationFirstDualQuaternion, Normalize) {
 }
 
 TEST(RotationFirstDualQuaternion, Integral) {
-  libra::RotationFirstDualQuaternion dq;
+  // Initial DualQuaternion
+  libra::Quaternion q_rot(0.0, 0.0, 0.0, 1.0);
+  libra::Vector<3> v_translation;
+  v_translation[0] = 0.0;
+  v_translation[1] = 1.0;
+  v_translation[2] = 0.0;
+  libra::RotationFirstDualQuaternion dq(q_rot, v_translation);
+
+  // Kinematics condition
   libra::Vector<3> omega;
   omega[0] = 0.01745329;  // 1 deg/s
   omega[1] = 0.0;
@@ -71,25 +79,33 @@ TEST(RotationFirstDualQuaternion, Integral) {
   velocity[2] = 0.0;
   double dt = 0.1;
 
+  // Integrations
   for (int i = 0; i < 900; i++) {
     dq = dq.Integrate(omega, velocity, dt);
   }
 
+  // Check rotation
   EXPECT_NEAR(0.7071, dq.GetRealPart()[0], 1e-3);
   EXPECT_NEAR(0.0, dq.GetRealPart()[1], 1e-3);
   EXPECT_NEAR(0.0, dq.GetRealPart()[2], 1e-3);
   EXPECT_NEAR(0.7071, dq.GetRealPart()[3], 1e-3);
 
+  // Check transition
+  EXPECT_NEAR(90.0, dq.GetTranslationVector()[0], 1e-1);
+  EXPECT_NEAR(1.0, dq.GetTranslationVector()[1], 1e-1);
+  EXPECT_NEAR(0.0, dq.GetTranslationVector()[2], 1e-1);
+
+  // Check frame conversion
   libra::Vector<3> v_in;
   v_in[0] = 1.0;
-  v_in[1] = 1.0;
-  v_in[2] = 0.0;
+  v_in[1] = 0.0;
+  v_in[2] = 1.0;
 
   libra::Vector<3> v_out = dq.TransformVector(v_in);
 
   EXPECT_NEAR(91.0, v_out[0], 1e-1);
   EXPECT_NEAR(0.0, v_out[1], 1e-1);
-  EXPECT_NEAR(1.0, v_out[2], 1e-1);
+  EXPECT_NEAR(0.0, v_out[2], 1e-1);
 }
 
 TEST(RotationFirstDualQuaternion, SclerpTranslationOnly) {
