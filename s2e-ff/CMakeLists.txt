@@ -93,6 +93,8 @@ set(SOURCE_FILES
   src/Components/IdealComponents/RelativeAttitudeController.cpp
   src/Components/IdealComponents/InitializeRelativeAttitudeController.cpp
   src/Library/math/DualQuaternion.cpp
+  src/Library/math/RotationFirstDualQuaternion.cpp
+  src/Library/math/TranslationFirstDualQuaternion.cpp
   src/Simulation/Case/FfCase.cpp
   src/Simulation/Spacecraft/FfSat.cpp
   src/Simulation/Spacecraft/FfComponents.cpp
@@ -198,6 +200,10 @@ if(GOOGLE_TEST)
   set(TEST_FILES
     src/Library/math/DualQuaternion.cpp
     test/TestDualQuaternion.cpp
+    src/Library/math/RotationFirstDualQuaternion.cpp
+    test/TestRotationFirstDualQuaternion.cpp
+    src/Library/math/TranslationFirstDualQuaternion.cpp
+    test/TestTranslationFirstDualQuaternion.cpp
   )
   add_executable(${TEST_PROJECT_NAME} ${TEST_FILES})
   target_link_libraries(${TEST_PROJECT_NAME} gtest gtest_main)
