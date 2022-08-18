@@ -22,6 +22,13 @@ DualQuaternion::DualQuaternion(const double q_real_x, const double q_real_y, con
 }
 
 // Calculations
+DualQuaternion DualQuaternion::Properization() const {
+  if (this->GetRealPart()[3] > 0.0) {
+    return *this;
+  }
+  return -1.0 * (*this);
+}
+
 DualQuaternion DualQuaternion::DualNumberConjugate() const {
   Quaternion q_real_out = q_real_;
   Quaternion q_dual_out = -1.0 * q_dual_;

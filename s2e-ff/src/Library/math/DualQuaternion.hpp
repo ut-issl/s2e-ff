@@ -34,6 +34,11 @@ class DualQuaternion {
 
   // Operator for a single dual quaternon
   /**
+   * @fn Keeping scalar part of the rotation quaternion be positive
+   */
+  DualQuaternion Properization() const;
+
+  /**
    * @fn Calulate conjugated of the dual quaternion as dual number
    */
   DualQuaternion DualNumberConjugate() const;

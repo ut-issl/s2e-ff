@@ -23,6 +23,18 @@ TEST(RotationFirstDualQuaternion, ConstructorFromRotationTranslation) {
   EXPECT_DOUBLE_EQ(v_translation[0], v_out[0]);
   EXPECT_DOUBLE_EQ(v_translation[1], v_out[1]);
   EXPECT_DOUBLE_EQ(v_translation[2], v_out[2]);
+
+  // Check vector transform
+  libra::Vector<3> v_in;
+  v_in[0] = 1.0;
+  v_in[1] = 0.0;
+  v_in[2] = 1.0;
+
+  libra::Vector<3> v_conv = dq.TransformVector(v_in);
+
+  EXPECT_NEAR(1.0, v_conv[0], 1e-1);
+  EXPECT_NEAR(-1.0, v_conv[1], 1e-1);
+  EXPECT_NEAR(2.0, v_conv[2], 1e-1);
 }
 
 TEST(RotationFirstDualQuaternion, Normalize) {
@@ -95,7 +107,7 @@ TEST(RotationFirstDualQuaternion, Integral) {
   EXPECT_NEAR(1.0, dq.GetTranslationVector()[1], 1e-1);
   EXPECT_NEAR(0.0, dq.GetTranslationVector()[2], 1e-1);
 
-  // Check frame conversion
+  // Check vector transform
   libra::Vector<3> v_in;
   v_in[0] = 1.0;
   v_in[1] = 0.0;
@@ -125,7 +137,14 @@ TEST(RotationFirstDualQuaternion, SclerpTranslationOnly) {
 }
 
 TEST(RotationFirstDualQuaternion, Sclerp) {
-  libra::RotationFirstDualQuaternion dq1;
+  // Initial DualQuaternion
+  libra::Quaternion q1_rot(0.0, 0.0, 0.0, 1.0);
+  libra::Vector<3> v1_translation;
+  v1_translation[0] = 0.0;
+  v1_translation[1] = 1.0;
+  v1_translation[2] = 0.0;
+  libra::RotationFirstDualQuaternion dq1(q1_rot, v1_translation);
+
   // X 90deg rotation and X axis translation
   libra::Quaternion q2_rot(1.0, 0.0, 0.0, 1.0);
   libra::Vector<3> v2_translation;
@@ -137,15 +156,18 @@ TEST(RotationFirstDualQuaternion, Sclerp) {
   // X 45deg rotation and X axis harf translation
   libra::RotationFirstDualQuaternion dq_out = libra::Sclerp(dq1, dq2, 0.5);
 
+  // Check rotation: 45 deg around X
   EXPECT_NEAR(0.3826, dq_out.GetRealPart()[0], 1e-3);
   EXPECT_NEAR(0.0, dq_out.GetRealPart()[1], 1e-3);
   EXPECT_NEAR(0.0, dq_out.GetRealPart()[2], 1e-3);
   EXPECT_NEAR(0.9239, dq_out.GetRealPart()[3], 1e-3);
-  EXPECT_NEAR(0.23097, dq_out.GetDualPart()[0], 1e-3);
-  EXPECT_NEAR(0.0, dq_out.GetDualPart()[1], 1e-3);
-  EXPECT_NEAR(0.0, dq_out.GetDualPart()[2], 1e-3);
-  EXPECT_NEAR(-0.0957, dq_out.GetDualPart()[3], 1e-3);
 
+  // Check translation: 0.5 move on X axis
+  EXPECT_NEAR(0.5, dq_out.GetTranslationVector()[0], 1e-3);
+  EXPECT_NEAR(1.0, dq_out.GetTranslationVector()[1], 1e-3);
+  EXPECT_NEAR(0.0, dq_out.GetTranslationVector()[2], 1e-3);
+
+  // Check vector transform
   libra::Vector<3> v_in;
   v_in[0] = 1.0;
   v_in[1] = 1.0;
@@ -153,6 +175,6 @@ TEST(RotationFirstDualQuaternion, Sclerp) {
 
   libra::Vector<3> v_out = dq_out.TransformVector(v_in);
   EXPECT_NEAR(1.5, v_out[0], 1e-3);
-  EXPECT_NEAR(0.7071, v_out[1], 1e-3);
+  EXPECT_NEAR(1.7071, v_out[1], 1e-3);
   EXPECT_NEAR(0.7071, v_out[2], 1e-3);
 }

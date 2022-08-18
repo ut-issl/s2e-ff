@@ -63,14 +63,21 @@ Vector<3> RotationFirstDualQuaternion::GetTranslationVector() const {
 
 RotationFirstDualQuaternion Sclerp(const RotationFirstDualQuaternion dq1, const RotationFirstDualQuaternion dq2, const double tau) {
   if (tau < 0.0) return dq1;
-  if (tau > 1.0) return dq1;
+  if (tau > 1.0) return dq2;
 
   RotationFirstDualQuaternion dq1_inv = dq1.Inverse();
   RotationFirstDualQuaternion dq12 = dq1_inv * dq2;
+  dq12 = dq12.Properization();
 
   // Calc rotation angle and axis
   // TODO: make function in core's quaternion library
-  double theta = 2.0 * acos(dq12.GetRealPart()[3]);
+  double cos_part = dq12.GetRealPart()[3];
+  Vector<3> vector_part;
+  for (int i = 0; i < 3; i++) {
+    vector_part[i] = dq12.GetRealPart()[i];
+  }
+  double sin_part = norm(vector_part);
+  double theta = 2.0 * atan2(sin_part, cos_part);
   Vector<3> axis;
   if (theta < 0.0 + DBL_MIN) {
     // No rotation
