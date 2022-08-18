@@ -37,9 +37,11 @@ void RotationFirstDualQuaternion::NormalizeRotationQauternion() {
 RotationFirstDualQuaternion RotationFirstDualQuaternion::Differential(const Vector<3>& omega, const Vector<3>& velocity) const {
   Quaternion q_omega(omega[0], omega[1], omega[2], 0.0);
   Quaternion q_velocity(velocity[0], velocity[1], velocity[2], 0.0);
+  Vector<3> v_translation = this->GetTranslationVector();
+  Quaternion q_translation(v_translation[0], v_translation[1], v_translation[2], 0.0);
 
   Quaternion q_real_out = 0.5 * q_omega * q_real_;
-  Quaternion q_dual_out = 0.5 * ((q_velocity * q_real_) + 0.5 * (q_velocity * q_omega * q_real_));
+  Quaternion q_dual_out = 0.5 * ((q_velocity * q_real_) + (q_translation * q_real_out));
 
   DualQuaternion dq_out(q_real_out, q_dual_out);
   return dq_out;
