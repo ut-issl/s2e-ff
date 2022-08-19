@@ -1,6 +1,11 @@
 # S2E-FF
 An example of S2E user side repository for Formation Flying study.
 
+[![check format](https://github.com/ut-issl/s2e-ff/actions/workflows/check-format.yml/badge.svg)](https://github.com/ut-issl/s2e-ff/actions/workflows/check-format.yml)
+[![Build](https://github.com/ut-issl/s2e-ff/actions/workflows/build.yml/badge.svg)](https://github.com/ut-issl/s2e-ff/actions/workflows/build.yml)
+[![GoogleTest](https://github.com/ut-issl/s2e-ff/actions/workflows/google_test.yml/badge.svg)](https://github.com/ut-issl/s2e-ff/actions/workflows/google_test.yml)  
+
+
 ## Structure
 - The structure of this repository is shown as follows.
 - The `s2e-ff/s2e-core` codes are managed by using `git submodule`
