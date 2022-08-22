@@ -84,6 +84,7 @@ TEST(DualQuaternion, DualQuaternionConjugate) {
   EXPECT_DOUBLE_EQ(0.5, dq_out.GetDualPart()[2]);
   EXPECT_DOUBLE_EQ(-0.5, dq_out.GetDualPart()[3]);
 }
+
 /*
 TEST(DualQuaternion, TransformVectorXrot) {
   libra::Quaternion q_rot(1.0, 0.0, 0.0, 1.0);  // 90deg rotation around X axis
@@ -188,6 +189,8 @@ TEST(DualQuaternion, TransformVectorAllAxes) {
   EXPECT_NEAR(v_in[1], v_out_inverse[1], 1e-9);
   EXPECT_NEAR(v_in[2], v_out_inverse[2], 1e-9);
 }
+*/
+
 TEST(DualQuaternion, Addition) {
   libra::DualQuaternion dq_lhs(0, 0, 0, 1, 0, 0, 0, 1);
   libra::DualQuaternion dq_rhs(0, 0, 0, 1, 0, 0, 0, 1);
@@ -202,7 +205,7 @@ TEST(DualQuaternion, Addition) {
   EXPECT_DOUBLE_EQ(0.0, dq_out.GetDualPart()[2]);
   EXPECT_DOUBLE_EQ(2.0, dq_out.GetDualPart()[3]);
 }
-*/
+
 
 TEST(DualQuaternion, Subtraction) {
   libra::DualQuaternion dq_lhs(0, 0, 0, 3, 0, 0, 0, 3);

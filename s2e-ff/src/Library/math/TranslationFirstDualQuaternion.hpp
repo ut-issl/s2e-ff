@@ -78,6 +78,6 @@ class TranslationFirstDualQuaternion : public DualQuaternion {
  * @param[out] return: Interpolated dual equation
  * note return dq1 when the error happened
  */
-TranslationFirstDualQuaternion Sclerp(const TranslationFirstDualQuaternion dq1, const TranslationFirstDualQuaternion dq2, const double tau);
+//TranslationFirstDualQuaternion Sclerp(const TranslationFirstDualQuaternion dq1, const TranslationFirstDualQuaternion dq2, const double tau);
 
 }  // namespace libra

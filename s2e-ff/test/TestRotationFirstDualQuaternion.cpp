@@ -138,7 +138,11 @@ TEST(RotationFirstDualQuaternion, SclerpTranslationOnly) {
 
 TEST(RotationFirstDualQuaternion, Sclerp) {
   // Initial DualQuaternion
-  libra::Quaternion q1_rot(0.0, 0.0, 0.0, 1.0);
+  libra::Vector<3> q1_axis;
+  q1_axis[0] = 1.0;
+  q1_axis[1] = 0.0;
+  q1_axis[2] = 0.0;
+  libra::Quaternion q1_rot(q1_axis, 0.0);
   libra::Vector<3> v1_translation;
   v1_translation[0] = 0.0;
   v1_translation[1] = 1.0;
@@ -146,10 +150,14 @@ TEST(RotationFirstDualQuaternion, Sclerp) {
   libra::RotationFirstDualQuaternion dq1(q1_rot, v1_translation);
 
   // X 90deg rotation and X axis translation
-  libra::Quaternion q2_rot(1.0, 0.0, 0.0, 1.0);
+  libra::Vector<3> q2_axis;
+  q2_axis[0] = 1.0;
+  q2_axis[1] = 0.0;
+  q2_axis[2] = 0.0;
+  libra::Quaternion q2_rot(q1_axis, 3.14159);
   libra::Vector<3> v2_translation;
   v2_translation[0] = 1.0;
-  v2_translation[1] = 0.0;
+  v2_translation[1] = 1.0;
   v2_translation[2] = 0.0;
   libra::RotationFirstDualQuaternion dq2(q2_rot, v2_translation);
 
@@ -157,24 +165,24 @@ TEST(RotationFirstDualQuaternion, Sclerp) {
   libra::RotationFirstDualQuaternion dq_out = libra::Sclerp(dq1, dq2, 0.5);
 
   // Check rotation: 45 deg around X
-  EXPECT_NEAR(0.3826, dq_out.GetRealPart()[0], 1e-3);
-  EXPECT_NEAR(0.0, dq_out.GetRealPart()[1], 1e-3);
-  EXPECT_NEAR(0.0, dq_out.GetRealPart()[2], 1e-3);
-  EXPECT_NEAR(0.9239, dq_out.GetRealPart()[3], 1e-3);
+  EXPECT_NEAR(0.7071, dq_out.GetRealPart()[0], 1e-2);
+  EXPECT_NEAR(0.0, dq_out.GetRealPart()[1], 1e-2);
+  EXPECT_NEAR(0.0, dq_out.GetRealPart()[2], 1e-2);
+  EXPECT_NEAR(0.7071, dq_out.GetRealPart()[3], 1e-2);
 
   // Check translation: 0.5 move on X axis
-  EXPECT_NEAR(0.5, dq_out.GetTranslationVector()[0], 1e-3);
-  EXPECT_NEAR(1.0, dq_out.GetTranslationVector()[1], 1e-3);
-  EXPECT_NEAR(0.0, dq_out.GetTranslationVector()[2], 1e-3);
+  EXPECT_NEAR(0.5, dq_out.GetTranslationVector()[0], 1e-2);
+  EXPECT_NEAR(1.0, dq_out.GetTranslationVector()[1], 1e-2);
+  EXPECT_NEAR(0.0, dq_out.GetTranslationVector()[2], 1e-2);
 
   // Check vector transform
   libra::Vector<3> v_in;
   v_in[0] = 1.0;
-  v_in[1] = 1.0;
+  v_in[1] = -1.0;
   v_in[2] = 0.0;
 
   libra::Vector<3> v_out = dq_out.TransformVector(v_in);
-  EXPECT_NEAR(1.5, v_out[0], 1e-3);
-  EXPECT_NEAR(1.7071, v_out[1], 1e-3);
-  EXPECT_NEAR(0.7071, v_out[2], 1e-3);
+  EXPECT_NEAR(1.5, v_out[0], 1e-2);
+  EXPECT_NEAR(1.0, v_out[1], 1e-2);
+  EXPECT_NEAR(-1.0, v_out[2], 1e-2);
 }

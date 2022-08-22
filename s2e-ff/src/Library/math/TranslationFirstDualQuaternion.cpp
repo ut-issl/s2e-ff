@@ -61,6 +61,7 @@ Vector<3> TranslationFirstDualQuaternion::GetTranslationVector() const {
   return v_out;
 }
 
+/*
 TranslationFirstDualQuaternion Sclerp(const TranslationFirstDualQuaternion dq1, const TranslationFirstDualQuaternion dq2, const double tau) {
   if (tau < 0.0) return dq1;
   if (tau > 1.0) return dq2;
@@ -99,5 +100,5 @@ TranslationFirstDualQuaternion Sclerp(const TranslationFirstDualQuaternion dq1, 
   TranslationFirstDualQuaternion dq_out = dq1 * dq12_tau;
   return dq_out;
 }
-
+*/
 }  // namespace libra

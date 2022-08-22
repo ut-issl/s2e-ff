@@ -9,8 +9,8 @@ project(S2E_FF
 cmake_minimum_required(VERSION 3.13)
 
 # build config
-option(BUILD_64BIT "Build 64bit" OFF)
-option(GOOGLE_TEST "Execute GoogleTest" OFF)
+option(BUILD_64BIT "Build 64bit" ON)
+option(GOOGLE_TEST "Execute GoogleTest" ON)
 if (NOT BUILD_64BIT)
   option(GOOGLE_TEST OFF) # GoogleTest supports 64bit only
 endif()

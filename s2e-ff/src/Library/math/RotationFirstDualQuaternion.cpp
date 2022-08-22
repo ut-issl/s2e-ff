@@ -79,21 +79,34 @@ RotationFirstDualQuaternion Sclerp(const RotationFirstDualQuaternion dq1, const 
   double sin_part = norm(vector_part);
   double theta = 2.0 * atan2(sin_part, cos_part);
   Vector<3> axis;
+
+  // Screw parameters
+  Vector<3> v_t = dq12.GetTranslationVector();
+  Vector<3> moment;
+  double pitch;
+
+  // When theta = 0
   if (theta < 0.0 + DBL_MIN) {
     // No rotation
-    axis = dq12.GetTranslationVector();
+    axis = v_t;
+    moment = axis;
+    pitch = 0.0;
   } else {
     for (int i = 0; i < 3; i++) axis[i] = dq12.GetRealPart()[i];
+    pitch = dot(v_t, axis);
+    double cot = 1.0 / tan(theta * 0.5);
+    moment = 0.5 * (cross(v_t, axis) + cot * (v_t - pitch * axis));
   }
   normalize(axis);
 
   // Calc (dq1^-1 * dq2)^tau
-  double d = dot(dq12.GetTranslationVector(), axis);
   Quaternion dq12_tau_real(axis, tau * theta);
   Quaternion dq12_tau_dual;
-  for (int i = 0; i < 3; i++) dq12_tau_dual[i] = cos(tau * theta * 0.5) * axis[i];
+  for (int i = 0; i < 3; i++){
+    dq12_tau_dual[i] = cos(tau * theta * 0.5) * axis[i] + sin(tau * theta * 0.5) * moment[i];
+  } 
   dq12_tau_dual[3] = -sin(tau * theta * 0.5);
-  dq12_tau_dual = (0.5 * tau * d) * dq12_tau_dual;
+  dq12_tau_dual = (0.5 * tau * pitch) * dq12_tau_dual;
   DualQuaternion dq12_tau(dq12_tau_real, dq12_tau_dual);
 
   // Calc interpolated dual quaternion
