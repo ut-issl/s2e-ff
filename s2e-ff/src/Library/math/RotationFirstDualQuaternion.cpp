@@ -100,14 +100,15 @@ RotationFirstDualQuaternion Sclerp(const RotationFirstDualQuaternion dq1, const 
   normalize(axis);
 
   // Calc (dq1^-1 * dq2)^tau
+
   Quaternion dq12_tau_real(axis, tau * theta);
   Quaternion dq12_tau_dual;
   for (int i = 0; i < 3; i++){
-    dq12_tau_dual[i] = cos(tau * theta * 0.5) * axis[i] + sin(tau * theta * 0.5) * moment[i];
+    dq12_tau_dual[i] = (0.5 * tau * pitch) * cos(tau * theta * 0.5) * axis[i] + sin(tau * theta * 0.5) * moment[i];
   } 
-  dq12_tau_dual[3] = -sin(tau * theta * 0.5);
-  dq12_tau_dual = (0.5 * tau * pitch) * dq12_tau_dual;
+  dq12_tau_dual[3] = - (0.5 * tau * pitch) * sin(tau * theta * 0.5);
   DualQuaternion dq12_tau(dq12_tau_real, dq12_tau_dual);
+  RotationFirstDualQuaternion dq12_tau_(dq12_tau);
 
   // Calc interpolated dual quaternion
   RotationFirstDualQuaternion dq_out = dq1 * dq12_tau;
