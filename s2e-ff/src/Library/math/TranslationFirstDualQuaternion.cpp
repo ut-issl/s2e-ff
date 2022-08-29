@@ -83,9 +83,11 @@ TranslationFirstDualQuaternion Sclerp(const TranslationFirstDualQuaternion dq1, 
   // Calc (dq1^-1 * dq2)^tau
   Quaternion dq12_tau_real(skrew.axis_, tau * skrew.angle_rad_);
   Quaternion dq12_tau_dual;
-  for (int i = 0; i < 3; i++) dq12_tau_dual[i] = cos(tau * skrew.angle_rad_ * 0.5) * skrew.axis_[i];
-  dq12_tau_dual[3] = -sin(tau * skrew.angle_rad_ * 0.5);
-  dq12_tau_dual = (0.5 * tau * skrew.pitch_) * dq12_tau_dual;
+  for (int i = 0; i < 3; i++) {
+    dq12_tau_dual[i] =
+        (0.5 * tau * skrew.pitch_) * cos(tau * skrew.angle_rad_ * 0.5) * skrew.axis_[i] + sin(tau * skrew.angle_rad_ * 0.5) * skrew.moment_[i];
+  }
+  dq12_tau_dual[3] = -(0.5 * tau * skrew.pitch_) * sin(tau * skrew.angle_rad_ * 0.5);
   DualQuaternion dq12_tau(dq12_tau_real, dq12_tau_dual);
 
   // Calc interpolated dual quaternion
