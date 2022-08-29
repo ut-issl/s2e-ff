@@ -4,6 +4,14 @@
 
 namespace libra {
 
+class SkrewParameters {
+ public:
+  Vector<3> axis_;
+  double angle_rad_;
+  Vector<3> moment_;
+  double pitch_;
+};
+
 /**
  * @class DualQuaternion
  * @brief Frame conversion sequence: Rotation -> Translation
@@ -73,6 +81,12 @@ class DualQuaternion {
    */
   Vector<3> InverseTransformVector(const Vector<3>& v) const;
 
+  /**
+   * @fn Calculate skrew parameters from dual quaternion
+   * @param[out] return: Skrew parameters
+   */
+  SkrewParameters CalcSkrewParameters() const;
+
   // Getter
   inline Quaternion GetRealPart() const { return q_real_; }
   inline Quaternion GetDualPart() const { return q_dual_; }
@@ -81,6 +95,15 @@ class DualQuaternion {
  protected:
   Quaternion q_real_;  //!< Real part Quaternion
   Quaternion q_dual_;  //!< Dual part Quaternion
+
+  /**
+   * @fn Screw Linear Interpolation without
+   * @param[in]  dq1: First dual quaternion
+   * @param[in]  dq2: Second dual quaternion
+   * @param[in]  tau: Interpolation coefficients [0, 1]
+   * @param[out] return: Interpolated dual quaternion
+   */
+  //  DualQuaternion Sclerp(const DualQuaternion dq1, const DualQuaternion dq2, const double tau);
 };
 
 // Operation functions

@@ -124,7 +124,7 @@ TEST(TranslationFirstDualQuaternion, SclerpTranslationOnly) {
   libra::DualQuaternion dq1(0, 0, 0, 1, 0, 0, 0, 0);
   libra::DualQuaternion dq2(0, 0, 0, 1, 1, 0, 0, 0);
 
-  libra::DualQuaternion dq_out;// = libra::Sclerp(dq1, dq2, 0.5);
+  libra::DualQuaternion dq_out = libra::Sclerp(dq1, dq2, 0.5);
 
   EXPECT_NEAR(0.0, dq_out.GetRealPart()[0], 1e-3);
   EXPECT_NEAR(0.0, dq_out.GetRealPart()[1], 1e-3);
@@ -154,7 +154,7 @@ TEST(TranslationFirstDualQuaternion, Sclerp) {
   libra::TranslationFirstDualQuaternion dq2(v2_translation, q2_rot);
 
   // X 45deg rotation and X axis harf translation
-  libra::TranslationFirstDualQuaternion dq_out;// = libra::Sclerp(dq1, dq2, 0.5);
+  libra::TranslationFirstDualQuaternion dq_out = libra::Sclerp(dq1, dq2, 0.5);
 
   // Check rotation
   EXPECT_NEAR(0.3826, dq_out.GetRealPart()[0], 1e-3);

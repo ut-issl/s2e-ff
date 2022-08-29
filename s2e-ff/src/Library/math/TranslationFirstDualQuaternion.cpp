@@ -67,42 +67,25 @@ TranslationFirstDualQuaternion Sclerp(const TranslationFirstDualQuaternion dq1, 
 
   TranslationFirstDualQuaternion dq1_inv = dq1.Inverse();
   TranslationFirstDualQuaternion dq12 = dq1_inv * dq2;
+  dq12 = dq12.Properization();
 
-  // Calc rotation angle and axis
-  // TODO: make function in core's quaternion library
-  double cos_part = dq12.GetRealPart()[3];
-  Vector<3> vector_part;
-  for (int i = 0; i < 3; i++) {
-    vector_part[i] = dq12.GetRealPart()[i];
-  }
-  double sin_part = norm(vector_part);
-  double theta = 2.0 * atan2(sin_part, cos_part);
+  // Calc skrew params
+  SkrewParameters skrew = dq12.CalcSkrewParameters();
 
   // When theta = 0
-  if (theta < 0.0 + DBL_MIN) {
+  if (skrew.angle_rad_ < 0.0 + DBL_MIN) {
     // Linear interpolation of translation
     Vector<3> v_out = tau * dq1.GetTranslationVector() + (1.0 - tau) * dq2.GetTranslationVector();
     TranslationFirstDualQuaternion dq_out(v_out, dq1.GetRealPart());
     return dq_out;
   }
 
-  // Screw parameters
-  Vector<3> axis;
-  if (theta < 0.0 + DBL_MIN) {
-    // No rotation
-    axis = dq12.GetTranslationVector();
-  } else {
-    for (int i = 0; i < 3; i++) axis[i] = dq12.GetRealPart()[i];
-  }
-  normalize(axis);
-
   // Calc (dq1^-1 * dq2)^tau
-  double d = dot(dq12.GetTranslationVector(), axis);
-  Quaternion dq12_tau_real(axis, tau * theta);
+  Quaternion dq12_tau_real(skrew.axis_, tau * skrew.angle_rad_);
   Quaternion dq12_tau_dual;
-  for (int i = 0; i < 3; i++) dq12_tau_dual[i] = cos(tau * theta * 0.5) * axis[i];
-  dq12_tau_dual[3] = -sin(tau * theta * 0.5);
-  dq12_tau_dual = (0.5 * tau * d) * dq12_tau_dual;
+  for (int i = 0; i < 3; i++) dq12_tau_dual[i] = cos(tau * skrew.angle_rad_ * 0.5) * skrew.axis_[i];
+  dq12_tau_dual[3] = -sin(tau * skrew.angle_rad_ * 0.5);
+  dq12_tau_dual = (0.5 * tau * skrew.pitch_) * dq12_tau_dual;
   DualQuaternion dq12_tau(dq12_tau_real, dq12_tau_dual);
 
   // Calc interpolated dual quaternion

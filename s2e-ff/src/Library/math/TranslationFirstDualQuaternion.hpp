@@ -73,9 +73,8 @@ class TranslationFirstDualQuaternion : public DualQuaternion {
  * @fn Screw Linear Interpolation
  * @param[in]  dq1: First dual quaternion
  * @param[in]  dq2: Second dual quaternion
- * @param[in]  tau [0, 1]
- * @param[out] return: Interpolated dual equation
- * note return dq1 when the error happened
+ * @param[in]  tau: Interpolation coefficients [0, 1]
+ * @param[out] return: Interpolated dual quaternion
  */
 TranslationFirstDualQuaternion Sclerp(const TranslationFirstDualQuaternion dq1, const TranslationFirstDualQuaternion dq2, const double tau);
 

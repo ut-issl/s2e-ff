@@ -70,6 +70,48 @@ Vector<3> DualQuaternion::InverseTransformVector(const Vector<3>& v) const {
   return v_out;
 }
 
+SkrewParameters DualQuaternion::CalcSkrewParameters() const {
+  SkrewParameters out;
+
+  Vector<3> real_vector_part;
+  for (int i = 0; i < 3; i++) real_vector_part[i] = this->GetRealPart()[i];
+  double real_scalar_part = this->GetRealPart()[3];
+
+  Vector<3> dual_vector_part;
+  for (int i = 0; i < 3; i++) dual_vector_part[i] = this->GetDualPart()[i];
+  double dual_scalar_part = this->GetDualPart()[3];
+
+  double norm_real_vector = norm(real_vector_part);
+  if (norm_real_vector < 0.0 + DBL_MIN) {
+    // We cannot define skrew parameters
+    out.angle_rad_ = 0.0;
+    out.axis_[0] = 0.0;
+    out.axis_[1] = 0.0;
+    out.axis_[2] = 0.0;
+    out.pitch_ = 0.0;
+    out.moment_[0] = 0.0;
+    out.moment_[1] = 0.0;
+    out.moment_[2] = 0.0;
+    return out;
+  }
+
+  // rotation axis
+  for (int i = 0; i < 3; i++) out.axis_[i] = real_vector_part[i];
+  normalize(out.axis_);
+
+  // rotation angle
+  out.angle_rad_ = 2.0 * atan2(norm_real_vector, real_scalar_part);
+
+  // pitch
+  out.pitch_ = -2.0 * dual_scalar_part / norm_real_vector;
+
+  // moment
+  out.moment_ = (dual_vector_part - 0.5 * out.pitch_ * real_scalar_part * out.axis_);
+  out.moment_ /= norm_real_vector;
+
+  return out;
+}
+
 // Operation functions
 DualQuaternion operator+(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs) {
   Quaternion q_real_out = dq_lhs.GetRealPart() + dq_rhs.GetRealPart();
