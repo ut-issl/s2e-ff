@@ -61,7 +61,6 @@ Vector<3> TranslationFirstDualQuaternion::GetTranslationVector() const {
   return v_out;
 }
 
-/*
 TranslationFirstDualQuaternion Sclerp(const TranslationFirstDualQuaternion dq1, const TranslationFirstDualQuaternion dq2, const double tau) {
   if (tau < 0.0) return dq1;
   if (tau > 1.0) return dq2;
@@ -78,6 +77,16 @@ TranslationFirstDualQuaternion Sclerp(const TranslationFirstDualQuaternion dq1, 
   }
   double sin_part = norm(vector_part);
   double theta = 2.0 * atan2(sin_part, cos_part);
+
+  // When theta = 0
+  if (theta < 0.0 + DBL_MIN) {
+    // Linear interpolation of translation
+    Vector<3> v_out = tau * dq1.GetTranslationVector() + (1.0 - tau) * dq2.GetTranslationVector();
+    TranslationFirstDualQuaternion dq_out(v_out, dq1.GetRealPart());
+    return dq_out;
+  }
+
+  // Screw parameters
   Vector<3> axis;
   if (theta < 0.0 + DBL_MIN) {
     // No rotation
@@ -100,5 +109,5 @@ TranslationFirstDualQuaternion Sclerp(const TranslationFirstDualQuaternion dq1, 
   TranslationFirstDualQuaternion dq_out = dq1 * dq12_tau;
   return dq_out;
 }
-*/
+
 }  // namespace libra

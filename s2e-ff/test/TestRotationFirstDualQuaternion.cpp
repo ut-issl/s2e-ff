@@ -121,22 +121,46 @@ TEST(RotationFirstDualQuaternion, Integral) {
 }
 
 TEST(RotationFirstDualQuaternion, SclerpTranslationOnly) {
-  libra::DualQuaternion dq1(0, 0, 0, 1, 0, 0, 0, 0);
-  libra::DualQuaternion dq2(0, 0, 0, 1, 1, 0, 0, 0);
+  // Initial DualQuaternion
+  libra::Vector<3> q1_axis;
+  q1_axis[0] = 1.0;
+  q1_axis[1] = 0.0;
+  q1_axis[2] = 0.0;
+  libra::Quaternion q1_rot(q1_axis, 0.0);
+  libra::Vector<3> v1_translation;
+  v1_translation[0] = 0.0;
+  v1_translation[1] = 0.0;
+  v1_translation[2] = 0.0;
+  libra::RotationFirstDualQuaternion dq1(q1_rot, v1_translation);
 
-  libra::DualQuaternion dq_out = libra::Sclerp(dq1, dq2, 0.5);
+  libra::Vector<3> q2_axis;
+  q2_axis[0] = 1.0;
+  q2_axis[1] = 0.0;
+  q2_axis[2] = 0.0;
+  libra::Quaternion q2_rot(q2_axis, 0.0);
+  libra::Vector<3> v2_translation;
+  v2_translation[0] = 1.0;
+  v2_translation[1] = 1.0;
+  v2_translation[2] = 1.0;
+  libra::RotationFirstDualQuaternion dq2(q2_rot, v2_translation);
+
+  libra::RotationFirstDualQuaternion dq_out = libra::Sclerp(dq1, dq2, 0.5);
 
   EXPECT_NEAR(0.0, dq_out.GetRealPart()[0], 1e-3);
   EXPECT_NEAR(0.0, dq_out.GetRealPart()[1], 1e-3);
   EXPECT_NEAR(0.0, dq_out.GetRealPart()[2], 1e-3);
   EXPECT_NEAR(1.0, dq_out.GetRealPart()[3], 1e-3);
-  EXPECT_NEAR(0.5, dq_out.GetDualPart()[0], 1e-3);
-  EXPECT_NEAR(0.0, dq_out.GetDualPart()[1], 1e-3);
-  EXPECT_NEAR(0.0, dq_out.GetDualPart()[2], 1e-3);
+  EXPECT_NEAR(0.25, dq_out.GetDualPart()[0], 1e-3);
+  EXPECT_NEAR(0.25, dq_out.GetDualPart()[1], 1e-3);
+  EXPECT_NEAR(0.25, dq_out.GetDualPart()[2], 1e-3);
   EXPECT_NEAR(0.0, dq_out.GetDualPart()[3], 1e-3);
+
+  EXPECT_NEAR(0.5, dq_out.GetTranslationVector()[0], 1e-2);
+  EXPECT_NEAR(0.5, dq_out.GetTranslationVector()[1], 1e-2);
+  EXPECT_NEAR(0.5, dq_out.GetTranslationVector()[2], 1e-2);
 }
 
-TEST(RotationFirstDualQuaternion, Sclerp) {
+TEST(RotationFirstDualQuaternion, SclerpXAxisOnly) {
   // Initial DualQuaternion
   libra::Vector<3> q1_axis;
   q1_axis[0] = 1.0;
@@ -149,7 +173,7 @@ TEST(RotationFirstDualQuaternion, Sclerp) {
   v1_translation[2] = 0.0;
   libra::RotationFirstDualQuaternion dq1(q1_rot, v1_translation);
 
-  // X 90deg rotation and X axis translation
+  // X 180deg rotation and X axis translation
   libra::Vector<3> q2_axis;
   q2_axis[0] = 1.0;
   q2_axis[1] = 0.0;
@@ -161,7 +185,7 @@ TEST(RotationFirstDualQuaternion, Sclerp) {
   v2_translation[2] = 0.0;
   libra::RotationFirstDualQuaternion dq2(q2_rot, v2_translation);
 
-  // X 45deg rotation and X axis harf translation
+  // X 90deg rotation and X axis harf translation
   libra::RotationFirstDualQuaternion dq_out = libra::Sclerp(dq1, dq2, 0.5);
 
   // Check rotation: 45 deg around X
@@ -200,7 +224,7 @@ TEST(RotationFirstDualQuaternion, Sclerp2) {
   v1_translation[2] = 0.0;
   libra::RotationFirstDualQuaternion dq1(q1_rot, v1_translation);
 
-  // X 90deg rotation and X axis translation
+  // X 180deg rotation and X axis translation
   libra::Vector<3> q2_axis;
   q2_axis[0] = 1.0;
   q2_axis[1] = 0.0;
@@ -212,7 +236,7 @@ TEST(RotationFirstDualQuaternion, Sclerp2) {
   v2_translation[2] = 0.0;
   libra::RotationFirstDualQuaternion dq2(q2_rot, v2_translation);
 
-  // X 45deg rotation and X axis harf translation
+  // X 90deg rotation and X-Y axis translation
   libra::RotationFirstDualQuaternion dq_out = libra::Sclerp(dq1, dq2, 0.5);
 
   // Check rotation: 45 deg around X
