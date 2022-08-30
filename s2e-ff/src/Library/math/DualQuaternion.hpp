@@ -4,7 +4,7 @@
 
 namespace libra {
 
-class SkrewParameters {
+class ScrewParameters {
  public:
   Vector<3> axis_;
   double angle_rad_;
@@ -82,10 +82,10 @@ class DualQuaternion {
   Vector<3> InverseTransformVector(const Vector<3>& v) const;
 
   /**
-   * @fn Calculate skrew parameters from dual quaternion
-   * @param[out] return: Skrew parameters
+   * @fn Calculate screw parameters from dual quaternion
+   * @param[out] return: Screw parameters
    */
-  SkrewParameters CalcSkrewParameters() const;
+  ScrewParameters CalcScrewParameters() const;
 
   // Getter
   inline Quaternion GetRealPart() const { return q_real_; }

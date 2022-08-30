@@ -70,8 +70,8 @@ Vector<3> DualQuaternion::InverseTransformVector(const Vector<3>& v) const {
   return v_out;
 }
 
-SkrewParameters DualQuaternion::CalcSkrewParameters() const {
-  SkrewParameters out;
+ScrewParameters DualQuaternion::CalcScrewParameters() const {
+  ScrewParameters out;
 
   Vector<3> real_vector_part;
   for (int i = 0; i < 3; i++) real_vector_part[i] = this->GetRealPart()[i];

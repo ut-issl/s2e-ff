@@ -70,10 +70,10 @@ RotationFirstDualQuaternion Sclerp(const RotationFirstDualQuaternion dq1, const 
   dq12 = dq12.Properization();
 
   // Calc skrew params
-  SkrewParameters skrew = dq12.CalcSkrewParameters();
+  ScrewParameters screw = dq12.CalcScrewParameters();
 
   // When theta = 0
-  if (skrew.angle_rad_ < 0.0 + DBL_MIN) {
+  if (screw.angle_rad_ < 0.0 + DBL_MIN) {
     // Linear interpolation of translation
     Vector<3> v_out = tau * dq1.GetTranslationVector() + (1.0 - tau) * dq2.GetTranslationVector();
     RotationFirstDualQuaternion dq_out(dq1.GetRealPart(), v_out);
@@ -81,13 +81,13 @@ RotationFirstDualQuaternion Sclerp(const RotationFirstDualQuaternion dq1, const 
   }
 
   // Calc (dq1^-1 * dq2)^tau
-  Quaternion dq12_tau_real(skrew.axis_, tau * skrew.angle_rad_);
+  Quaternion dq12_tau_real(screw.axis_, tau * screw.angle_rad_);
   Quaternion dq12_tau_dual;
   for (int i = 0; i < 3; i++) {
     dq12_tau_dual[i] =
-        (0.5 * tau * skrew.pitch_) * cos(tau * skrew.angle_rad_ * 0.5) * skrew.axis_[i] + sin(tau * skrew.angle_rad_ * 0.5) * skrew.moment_[i];
+        (0.5 * tau * screw.pitch_) * cos(tau * screw.angle_rad_ * 0.5) * screw.axis_[i] + sin(tau * screw.angle_rad_ * 0.5) * screw.moment_[i];
   }
-  dq12_tau_dual[3] = -(0.5 * tau * skrew.pitch_) * sin(tau * skrew.angle_rad_ * 0.5);
+  dq12_tau_dual[3] = -(0.5 * tau * screw.pitch_) * sin(tau * screw.angle_rad_ * 0.5);
   DualQuaternion dq12_tau(dq12_tau_real, dq12_tau_dual);
 
   // Calc interpolated dual quaternion
