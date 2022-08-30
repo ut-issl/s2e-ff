@@ -160,7 +160,7 @@ TEST(RotationFirstDualQuaternion, SclerpTranslationOnly) {
   EXPECT_NEAR(0.5, dq_out.GetTranslationVector()[2], 1e-2);
 }
 
-TEST(RotationFirstDualQuaternion, SclerpXAxisOnly) {
+TEST(RotationFirstDualQuaternion, SclerpXAxisRotXAxisMove) {
   // Initial DualQuaternion
   libra::Vector<3> q1_axis;
   q1_axis[0] = 1.0;
@@ -185,16 +185,13 @@ TEST(RotationFirstDualQuaternion, SclerpXAxisOnly) {
   v2_translation[2] = 0.0;
   libra::RotationFirstDualQuaternion dq2(q2_rot, v2_translation);
 
-  // X 90deg rotation and X axis harf translation
   libra::RotationFirstDualQuaternion dq_out = libra::Sclerp(dq1, dq2, 0.5);
 
-  // Check rotation: 45 deg around X
   EXPECT_NEAR(0.7071, dq_out.GetRealPart()[0], 1e-2);
   EXPECT_NEAR(0.0, dq_out.GetRealPart()[1], 1e-2);
   EXPECT_NEAR(0.0, dq_out.GetRealPart()[2], 1e-2);
   EXPECT_NEAR(0.7071, dq_out.GetRealPart()[3], 1e-2);
 
-  // Check translation: 0.5 move on X axis
   EXPECT_NEAR(0.5, dq_out.GetTranslationVector()[0], 1e-2);
   EXPECT_NEAR(1.0, dq_out.GetTranslationVector()[1], 1e-2);
   EXPECT_NEAR(0.0, dq_out.GetTranslationVector()[2], 1e-2);
@@ -211,7 +208,7 @@ TEST(RotationFirstDualQuaternion, SclerpXAxisOnly) {
   EXPECT_NEAR(-1.0, v_out[2], 1e-2);
 }
 
-TEST(RotationFirstDualQuaternion, Sclerp2) {
+TEST(RotationFirstDualQuaternion, SclerpXAxisRotXYAxisMove) {
   // Initial DualQuaternion
   libra::Vector<3> q1_axis;
   q1_axis[0] = 1.0;
@@ -224,7 +221,7 @@ TEST(RotationFirstDualQuaternion, Sclerp2) {
   v1_translation[2] = 0.0;
   libra::RotationFirstDualQuaternion dq1(q1_rot, v1_translation);
 
-  // X 180deg rotation and X axis translation
+  // X 180deg rotation and X axis XY axis translation
   libra::Vector<3> q2_axis;
   q2_axis[0] = 1.0;
   q2_axis[1] = 0.0;
@@ -236,10 +233,9 @@ TEST(RotationFirstDualQuaternion, Sclerp2) {
   v2_translation[2] = 0.0;
   libra::RotationFirstDualQuaternion dq2(q2_rot, v2_translation);
 
-  // X 90deg rotation and X-Y axis translation
   libra::RotationFirstDualQuaternion dq_out = libra::Sclerp(dq1, dq2, 0.5);
 
-  // Check rotation: 45 deg around X
+  // Check rotation: 90 deg around X
   EXPECT_NEAR(0.7071, dq_out.GetRealPart()[0], 1e-2);
   EXPECT_NEAR(0.0, dq_out.GetRealPart()[1], 1e-2);
   EXPECT_NEAR(0.0, dq_out.GetRealPart()[2], 1e-2);

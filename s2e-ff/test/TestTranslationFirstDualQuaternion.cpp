@@ -121,22 +121,46 @@ TEST(TranslationFirstDualQuaternion, Integral) {
 }
 
 TEST(TranslationFirstDualQuaternion, SclerpTranslationOnly) {
-  libra::DualQuaternion dq1(0, 0, 0, 1, 0, 0, 0, 0);
-  libra::DualQuaternion dq2(0, 0, 0, 1, 1, 0, 0, 0);
+  // Initial DualQuaternion
+  libra::Vector<3> q1_axis;
+  q1_axis[0] = 1.0;
+  q1_axis[1] = 0.0;
+  q1_axis[2] = 0.0;
+  libra::Quaternion q1_rot(q1_axis, 0.0);
+  libra::Vector<3> v1_translation;
+  v1_translation[0] = 0.0;
+  v1_translation[1] = 0.0;
+  v1_translation[2] = 0.0;
+  libra::TranslationFirstDualQuaternion dq1(v1_translation, q1_rot);
 
-  libra::DualQuaternion dq_out = libra::Sclerp(dq1, dq2, 0.5);
+  libra::Vector<3> q2_axis;
+  q2_axis[0] = 1.0;
+  q2_axis[1] = 0.0;
+  q2_axis[2] = 0.0;
+  libra::Quaternion q2_rot(q2_axis, 0.0);
+  libra::Vector<3> v2_translation;
+  v2_translation[0] = 1.0;
+  v2_translation[1] = 1.0;
+  v2_translation[2] = 1.0;
+  libra::TranslationFirstDualQuaternion dq2(v2_translation, q2_rot);
+
+  libra::TranslationFirstDualQuaternion dq_out = libra::Sclerp(dq1, dq2, 0.5);
 
   EXPECT_NEAR(0.0, dq_out.GetRealPart()[0], 1e-3);
   EXPECT_NEAR(0.0, dq_out.GetRealPart()[1], 1e-3);
   EXPECT_NEAR(0.0, dq_out.GetRealPart()[2], 1e-3);
   EXPECT_NEAR(1.0, dq_out.GetRealPart()[3], 1e-3);
-  EXPECT_NEAR(0.5, dq_out.GetDualPart()[0], 1e-3);
-  EXPECT_NEAR(0.0, dq_out.GetDualPart()[1], 1e-3);
-  EXPECT_NEAR(0.0, dq_out.GetDualPart()[2], 1e-3);
+  EXPECT_NEAR(0.25, dq_out.GetDualPart()[0], 1e-3);
+  EXPECT_NEAR(0.25, dq_out.GetDualPart()[1], 1e-3);
+  EXPECT_NEAR(0.25, dq_out.GetDualPart()[2], 1e-3);
   EXPECT_NEAR(0.0, dq_out.GetDualPart()[3], 1e-3);
+
+  EXPECT_NEAR(0.5, dq_out.GetTranslationVector()[0], 1e-2);
+  EXPECT_NEAR(0.5, dq_out.GetTranslationVector()[1], 1e-2);
+  EXPECT_NEAR(0.5, dq_out.GetTranslationVector()[2], 1e-2);
 }
 
-TEST(TranslationFirstDualQuaternion, Sclerp) {
+TEST(TranslationFirstDualQuaternion, SclerpXAxisRotXAxisMove) {
   // Initial DualQuaternion
   libra::Vector<3> q1_axis;
   q1_axis[0] = 1.0;
@@ -185,4 +209,55 @@ TEST(TranslationFirstDualQuaternion, Sclerp) {
   EXPECT_NEAR(1.5, v_out[0], 1e-2);
   EXPECT_NEAR(0.0, v_out[1], 1e-2);
   EXPECT_NEAR(2.0, v_out[2], 1e-2);
+}
+
+TEST(TranslationFirstDualQuaternion, SclerpXAxisRotXYAxisMove) {
+  // Initial DualQuaternion
+  libra::Vector<3> q1_axis;
+  q1_axis[0] = 1.0;
+  q1_axis[1] = 0.0;
+  q1_axis[2] = 0.0;
+  libra::Quaternion q1_rot(q1_axis, 0.0);
+  libra::Vector<3> v1_translation;
+  v1_translation[0] = 0.0;
+  v1_translation[1] = 1.0;
+  v1_translation[2] = 0.0;
+  libra::TranslationFirstDualQuaternion dq1(v1_translation, q1_rot);
+
+  // X 180deg rotation and X axis translation
+  libra::Vector<3> q2_axis;
+  q2_axis[0] = 1.0;
+  q2_axis[1] = 0.0;
+  q2_axis[2] = 0.0;
+  libra::Quaternion q2_rot(q2_axis, 3.14159);
+  libra::Vector<3> v2_translation;
+  v2_translation[0] = 2.0;
+  v2_translation[1] = 2.0;
+  v2_translation[2] = 0.0;
+  libra::TranslationFirstDualQuaternion dq2(v2_translation, q2_rot);
+
+  // X 90deg rotation and X-Y axis translation
+  libra::TranslationFirstDualQuaternion dq_out = libra::Sclerp(dq1, dq2, 0.5);
+
+  // Check rotation: 45 deg around X
+  EXPECT_NEAR(0.7071, dq_out.GetRealPart()[0], 1e-2);
+  EXPECT_NEAR(0.0, dq_out.GetRealPart()[1], 1e-2);
+  EXPECT_NEAR(0.0, dq_out.GetRealPart()[2], 1e-2);
+  EXPECT_NEAR(0.7071, dq_out.GetRealPart()[3], 1e-2);
+
+  // Check translation: 0.5 move on X axis
+  EXPECT_NEAR(1.0, dq_out.GetTranslationVector()[0], 1e-2);
+  EXPECT_NEAR(1.5, dq_out.GetTranslationVector()[1], 1e-2);
+  EXPECT_NEAR(0.5, dq_out.GetTranslationVector()[2], 1e-2);
+
+  // Check vector transform
+  libra::Vector<3> v_in;
+  v_in[0] = 1.0;
+  v_in[1] = -1.0;
+  v_in[2] = 0.0;
+
+  libra::Vector<3> v_out = dq_out.TransformVector(v_in);
+  EXPECT_NEAR(2.0, v_out[0], 1e-2);
+  EXPECT_NEAR(-0.5, v_out[1], 1e-2);
+  EXPECT_NEAR(0.5, v_out[2], 1e-2);
 }
