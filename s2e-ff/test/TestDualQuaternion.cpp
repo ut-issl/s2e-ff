@@ -98,14 +98,11 @@ TEST(DualQuaternion, Inverse) {
   EXPECT_DOUBLE_EQ(-0.5, dq_out.GetDualPart()[2]);
   EXPECT_DOUBLE_EQ(0.5, dq_out.GetDualPart()[3]);
 }
-/*
+
 TEST(DualQuaternion, TransformVectorXrot) {
-  libra::Quaternion q_rot(1.0, 0.0, 0.0, 1.0);  // 90deg rotation around X axis
-  libra::Vector<3> v_translation;
-  v_translation[0] = 0.0;
-  v_translation[1] = 0.0;
-  v_translation[2] = 1.0;
-  libra::DualQuaternion dq(q_rot, v_translation);
+  libra::Quaternion q_real(0.707106, 0.0, 0.0, 0.707106);  // 90deg rotation around X axis
+  libra::Quaternion q_dual(0.0, 0.707106, 0.707106, 0.0);  // 2 step move to Z axis
+  libra::DualQuaternion dq(q_real, q_dual);
 
   libra::Vector<3> v_in;
   v_in[0] = 1.0;
@@ -114,24 +111,21 @@ TEST(DualQuaternion, TransformVectorXrot) {
 
   libra::Vector<3> v_out = dq.TransformVector(v_in);
 
-  EXPECT_DOUBLE_EQ(1.0, v_out[0]);
-  EXPECT_DOUBLE_EQ(0.0, v_out[1]);
-  EXPECT_DOUBLE_EQ(1.0, v_out[2]);
+  EXPECT_NEAR(1.0, v_out[0], 1e-4);
+  EXPECT_NEAR(0.0, v_out[1], 1e-4);
+  EXPECT_NEAR(2.0, v_out[2], 1e-4);
 
   libra::Vector<3> v_out_inverse = dq.InverseTransformVector(v_out);
 
-  EXPECT_NEAR(v_in[0], v_out_inverse[0], 1e-9);
-  EXPECT_NEAR(v_in[1], v_out_inverse[1], 1e-9);
-  EXPECT_NEAR(v_in[2], v_out_inverse[2], 1e-9);
+  EXPECT_NEAR(v_in[0], v_out_inverse[0], 1e-4);
+  EXPECT_NEAR(v_in[1], v_out_inverse[1], 1e-4);
+  EXPECT_NEAR(v_in[2], v_out_inverse[2], 1e-4);
 }
 
 TEST(DualQuaternion, TransformVectorYrot) {
-  libra::Quaternion q_rot(0.0, 1.0, 0.0, 1.0);  // 90deg rotation around Y axis
-  libra::Vector<3> v_translation;
-  v_translation[0] = 0.0;
-  v_translation[1] = 0.0;
-  v_translation[2] = 2.0;
-  libra::DualQuaternion dq(q_rot, v_translation);
+  libra::Quaternion q_real(0.0, 0.707106, 0.0, 0.707106);   // 90deg rotation around Y axis
+  libra::Quaternion q_dual(-0.707106, 0.0, 0.707106, 0.0);  // 2 step move to Z axis
+  libra::DualQuaternion dq(q_real, q_dual);
 
   libra::Vector<3> v_in;
   v_in[0] = 1.0;
@@ -140,24 +134,21 @@ TEST(DualQuaternion, TransformVectorYrot) {
 
   libra::Vector<3> v_out = dq.TransformVector(v_in);
 
-  EXPECT_DOUBLE_EQ(0.0, v_out[0]);
-  EXPECT_DOUBLE_EQ(0.0, v_out[1]);
-  EXPECT_DOUBLE_EQ(1.0, v_out[2]);
+  EXPECT_NEAR(0.0, v_out[0], 1e-4);
+  EXPECT_NEAR(0.0, v_out[1], 1e-4);
+  EXPECT_NEAR(1.0, v_out[2], 1e-4);
 
   libra::Vector<3> v_out_inverse = dq.InverseTransformVector(v_out);
 
-  EXPECT_NEAR(v_in[0], v_out_inverse[0], 1e-9);
-  EXPECT_NEAR(v_in[1], v_out_inverse[1], 1e-9);
-  EXPECT_NEAR(v_in[2], v_out_inverse[2], 1e-9);
+  EXPECT_NEAR(v_in[0], v_out_inverse[0], 1e-4);
+  EXPECT_NEAR(v_in[1], v_out_inverse[1], 1e-4);
+  EXPECT_NEAR(v_in[2], v_out_inverse[2], 1e-4);
 }
 
 TEST(DualQuaternion, TransformVectorZrot) {
-  libra::Quaternion q_rot(0.0, 0.0, 1.0, 1.0);  // 90deg rotation around Z axis
-  libra::Vector<3> v_translation;
-  v_translation[0] = 0.0;
-  v_translation[1] = 0.0;
-  v_translation[2] = 1.0;
-  libra::DualQuaternion dq(q_rot, v_translation);
+  libra::Quaternion q_real(0.0, 0.0, 0.707106, 0.707106);   // 90deg rotation around Z axis
+  libra::Quaternion q_dual(0.0, 0.0, 0.707106, -0.707106);  // 2 step move to Z axis
+  libra::DualQuaternion dq(q_real, q_dual);
 
   libra::Vector<3> v_in;
   v_in[0] = 1.0;
@@ -166,24 +157,21 @@ TEST(DualQuaternion, TransformVectorZrot) {
 
   libra::Vector<3> v_out = dq.TransformVector(v_in);
 
-  EXPECT_DOUBLE_EQ(0.0, v_out[0]);
-  EXPECT_DOUBLE_EQ(1.0, v_out[1]);
-  EXPECT_DOUBLE_EQ(1.0, v_out[2]);
+  EXPECT_NEAR(0.0, v_out[0], 1e-4);
+  EXPECT_NEAR(1.0, v_out[1], 1e-4);
+  EXPECT_NEAR(2.0, v_out[2], 1e-4);
 
   libra::Vector<3> v_out_inverse = dq.InverseTransformVector(v_out);
 
-  EXPECT_NEAR(v_in[0], v_out_inverse[0], 1e-9);
-  EXPECT_NEAR(v_in[1], v_out_inverse[1], 1e-9);
-  EXPECT_NEAR(v_in[2], v_out_inverse[2], 1e-9);
+  EXPECT_NEAR(v_in[0], v_out_inverse[0], 1e-4);
+  EXPECT_NEAR(v_in[1], v_out_inverse[1], 1e-4);
+  EXPECT_NEAR(v_in[2], v_out_inverse[2], 1e-4);
 }
 
 TEST(DualQuaternion, TransformVectorAllAxes) {
-  libra::Quaternion q_rot(1.0, 1.0, 1.0, 1.0);
-  libra::Vector<3> v_translation;
-  v_translation[0] = 0.0;
-  v_translation[1] = 0.0;
-  v_translation[2] = -1.0;
-  libra::DualQuaternion dq(q_rot, v_translation);
+  libra::Quaternion q_real(0.5, 0.5, 0.5, 0.5);        // all axis rotation
+  libra::Quaternion q_dual(-0.25, 0.25, 0.25, -0.25);  // 1 step move to Z axis
+  libra::DualQuaternion dq(q_real, q_dual);
 
   libra::Vector<3> v_in;
   v_in[0] = 1.0;
@@ -192,17 +180,16 @@ TEST(DualQuaternion, TransformVectorAllAxes) {
 
   libra::Vector<3> v_out = dq.TransformVector(v_in);
 
-  EXPECT_DOUBLE_EQ(0.0, v_out[0]);
-  EXPECT_DOUBLE_EQ(1.0, v_out[1]);
-  EXPECT_DOUBLE_EQ(-1.0, v_out[2]);
+  EXPECT_NEAR(0.0, v_out[0], 1e-4);
+  EXPECT_NEAR(1.0, v_out[1], 1e-4);
+  EXPECT_NEAR(1.0, v_out[2], 1e-4);
 
   libra::Vector<3> v_out_inverse = dq.InverseTransformVector(v_out);
 
-  EXPECT_NEAR(v_in[0], v_out_inverse[0], 1e-9);
-  EXPECT_NEAR(v_in[1], v_out_inverse[1], 1e-9);
-  EXPECT_NEAR(v_in[2], v_out_inverse[2], 1e-9);
+  EXPECT_NEAR(v_in[0], v_out_inverse[0], 1e-4);
+  EXPECT_NEAR(v_in[1], v_out_inverse[1], 1e-4);
+  EXPECT_NEAR(v_in[2], v_out_inverse[2], 1e-4);
 }
-*/
 
 TEST(DualQuaternion, CalcScrewParametersNoRotation) {
   // No rotation error
