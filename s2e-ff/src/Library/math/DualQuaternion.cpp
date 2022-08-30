@@ -112,6 +112,21 @@ ScrewParameters DualQuaternion::CalcScrewParameters() const {
   return out;
 }
 
+DualQuaternion DualQuaternion::Power(const double tau) const {
+  ScrewParameters screw = this->CalcScrewParameters();
+
+  Quaternion dq_out_real(screw.axis_, tau * screw.angle_rad_);
+  Quaternion dq_out_dual;
+  double ang = tau * screw.angle_rad_ * 0.5;
+
+  for (int i = 0; i < 3; i++) {
+    dq_out_dual[i] = (0.5 * tau * screw.pitch_) * cos(ang) * screw.axis_[i] + sin(ang) * screw.moment_[i];
+  }
+  dq_out_dual[3] = -(0.5 * tau * screw.pitch_) * sin(ang);
+  DualQuaternion dq_out(dq_out_real, dq_out_dual);
+  return dq_out;
+}
+
 // Operation functions
 DualQuaternion operator+(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs) {
   Quaternion q_real_out = dq_lhs.GetRealPart() + dq_rhs.GetRealPart();

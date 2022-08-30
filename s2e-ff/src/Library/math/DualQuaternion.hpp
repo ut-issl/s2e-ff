@@ -87,6 +87,13 @@ class DualQuaternion {
    */
   ScrewParameters CalcScrewParameters() const;
 
+  /**
+   * @fn Calculate dq^(tau)
+   * @param[in]  tau: Exponents
+   * @param[out] return: Screw parameters
+   */
+  DualQuaternion Power(const double tau) const;
+
   // Getter
   inline Quaternion GetRealPart() const { return q_real_; }
   inline Quaternion GetDualPart() const { return q_dual_; }
