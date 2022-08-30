@@ -95,15 +95,6 @@ class DualQuaternion {
  protected:
   Quaternion q_real_;  //!< Real part Quaternion
   Quaternion q_dual_;  //!< Dual part Quaternion
-
-  /**
-   * @fn Screw Linear Interpolation without
-   * @param[in]  dq1: First dual quaternion
-   * @param[in]  dq2: Second dual quaternion
-   * @param[in]  tau: Interpolation coefficients [0, 1]
-   * @param[out] return: Interpolated dual quaternion
-   */
-  //  DualQuaternion Sclerp(const DualQuaternion dq1, const DualQuaternion dq2, const double tau);
 };
 
 // Operation functions
