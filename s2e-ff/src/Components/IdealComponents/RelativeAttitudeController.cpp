@@ -13,10 +13,10 @@ RelativeAttitudeController::RelativeAttitudeController(const int prescaler, Cloc
     : ComponentBase(prescaler, clock_gen),
       main_mode_(main_mode),
       sub_mode_(sub_mode),
-      main_target_direction_b_(main_target_direction_b),
-      sub_target_direction_b_(sub_target_direction_b),
       target_sat_id_(target_sat_id),
       my_sat_id_(reference_sat_id),
+      main_target_direction_b_(main_target_direction_b),
+      sub_target_direction_b_(sub_target_direction_b),
       rel_info_(rel_info),
       local_celes_info_(local_celes_info),
       dynamics_(dynamics) {}
