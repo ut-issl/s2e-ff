@@ -21,31 +21,12 @@ DualQuaternion::DualQuaternion(const double q_real_x, const double q_real_y, con
   q_dual_ = Quaternion(q_dual_x, q_dual_y, q_dual_z, q_dual_w);
 }
 
-DualQuaternion::DualQuaternion(const Quaternion q_rot, const Vector<3> v_translation) {
-  q_real_ = q_rot;
-  q_real_.normalize();
-
-  // TODO: Make vector * quaternion function in core's Quaternion class
-  Quaternion q_v(v_translation[0], v_translation[1], v_translation[2], 0.0);
-  q_dual_ = 0.5 * (q_v * q_real_);
-}
-
 // Calculations
-DualQuaternion DualQuaternion::CalcNormalizedRotationQauternion() const {
-  Quaternion q_rot = q_real_;
-  Vector<3> v_translation = this->GetTranslationVector();
-  q_rot.normalize();
-
-  DualQuaternion dq_out(q_rot, v_translation);
-  return dq_out;
-}
-
-void DualQuaternion::NormalizeRotationQauternion() {
-  Vector<3> v_translation = this->GetTranslationVector();
-  q_real_.normalize();
-
-  DualQuaternion dq_out(q_real_, v_translation);
-  q_dual_ = dq_out.GetDualPart();
+DualQuaternion DualQuaternion::Properization() const {
+  if (this->GetRealPart()[3] > 0.0) {
+    return *this;
+  }
+  return -1.0 * (*this);
 }
 
 DualQuaternion DualQuaternion::DualNumberConjugate() const {
@@ -89,30 +70,61 @@ Vector<3> DualQuaternion::InverseTransformVector(const Vector<3>& v) const {
   return v_out;
 }
 
-DualQuaternion DualQuaternion::Differential(const Vector<3>& omega, const Vector<3>& velocity) const {
-  Quaternion q_omega(omega[0], omega[1], omega[2], 0.0);
-  Quaternion q_velocity(velocity[0], velocity[1], velocity[2], 0.0);
+ScrewParameters DualQuaternion::CalcScrewParameters() const {
+  ScrewParameters out;
 
-  Quaternion q_real_out = 0.5 * q_omega * q_real_;
-  Quaternion q_dual_out = 0.5 * ((q_velocity * q_real_) + 0.5 * (q_velocity * q_omega * q_real_));
+  Vector<3> real_vector_part;
+  for (int i = 0; i < 3; i++) real_vector_part[i] = this->GetRealPart()[i];
+  double real_scalar_part = this->GetRealPart()[3];
 
-  DualQuaternion dq_out(q_real_out, q_dual_out);
-  return dq_out;
+  Vector<3> dual_vector_part;
+  for (int i = 0; i < 3; i++) dual_vector_part[i] = this->GetDualPart()[i];
+  double dual_scalar_part = this->GetDualPart()[3];
+
+  double norm_real_vector = norm(real_vector_part);
+  if (norm_real_vector < 0.0 + DBL_MIN) {
+    // We cannot define skrew parameters
+    out.angle_rad_ = 0.0;
+    out.axis_[0] = 0.0;
+    out.axis_[1] = 0.0;
+    out.axis_[2] = 0.0;
+    out.pitch_ = 0.0;
+    out.moment_[0] = 0.0;
+    out.moment_[1] = 0.0;
+    out.moment_[2] = 0.0;
+    return out;
+  }
+
+  // rotation axis
+  for (int i = 0; i < 3; i++) out.axis_[i] = real_vector_part[i];
+  normalize(out.axis_);
+
+  // rotation angle
+  out.angle_rad_ = 2.0 * atan2(norm_real_vector, real_scalar_part);
+
+  // pitch
+  out.pitch_ = -2.0 * dual_scalar_part / norm_real_vector;
+
+  // moment
+  out.moment_ = (dual_vector_part - 0.5 * out.pitch_ * real_scalar_part * out.axis_);
+  out.moment_ /= norm_real_vector;
+
+  return out;
 }
 
-DualQuaternion DualQuaternion::Integrate(const Vector<3>& omega, const Vector<3>& velocity, const double dt) const {
-  DualQuaternion diff_dq = this->Differential(omega, velocity);
-  DualQuaternion dq_out = (*this) + dt * diff_dq;
-  dq_out.NormalizeRotationQauternion();
-  return dq_out;
-}
+DualQuaternion DualQuaternion::Power(const double tau) const {
+  ScrewParameters screw = this->CalcScrewParameters();
 
-// Getters
-Vector<3> DualQuaternion::GetTranslationVector() const {
-  Quaternion q_out = 2.0 * q_dual_ * q_real_.conjugate();
-  Vector<3> v_out;
-  for (int i = 0; i < 3; i++) v_out[i] = q_out[i];
-  return v_out;
+  Quaternion dq_out_real(screw.axis_, tau * screw.angle_rad_);
+  Quaternion dq_out_dual;
+  double ang = tau * screw.angle_rad_ * 0.5;
+
+  for (int i = 0; i < 3; i++) {
+    dq_out_dual[i] = (0.5 * tau * screw.pitch_) * cos(ang) * screw.axis_[i] + sin(ang) * screw.moment_[i];
+  }
+  dq_out_dual[3] = -(0.5 * tau * screw.pitch_) * sin(ang);
+  DualQuaternion dq_out(dq_out_real, dq_out_dual);
+  return dq_out;
 }
 
 // Operation functions
@@ -140,39 +152,6 @@ DualQuaternion operator*(const DualQuaternion& dq_lhs, const DualQuaternion& dq_
   Quaternion q_real_out = dq_lhs.GetRealPart() * dq_rhs.GetRealPart();
   Quaternion q_dual_out = (dq_lhs.GetRealPart() * dq_rhs.GetDualPart()) + (dq_lhs.GetDualPart() * dq_rhs.GetRealPart());
   DualQuaternion dq_out(q_real_out, q_dual_out);
-  return dq_out;
-}
-
-DualQuaternion Sclerp(const DualQuaternion dq1, const DualQuaternion dq2, const double tau) {
-  if (tau < 0.0) return dq1;
-  if (tau > 1.0) return dq1;
-
-  DualQuaternion dq1_inv = dq1.Inverse();
-  DualQuaternion dq12 = dq1_inv * dq2;
-
-  // Calc rotation angle and axis
-  // TODO: make function in core's quaternion library
-  double theta = 2.0 * acos(dq12.GetRealPart()[3]);
-  Vector<3> axis;
-  if (theta < 0.0 + DBL_MIN) {
-    // No rotation
-    axis = dq12.GetTranslationVector();
-  } else {
-    for (int i = 0; i < 3; i++) axis[i] = dq12.GetRealPart()[i];
-  }
-  normalize(axis);
-
-  // Calc (dq1^-1 * dq2)^tau
-  double d = dot(dq12.GetTranslationVector(), axis);
-  Quaternion dq12_tau_real(axis, tau * theta);
-  Quaternion dq12_tau_dual;
-  for (int i = 0; i < 3; i++) dq12_tau_dual[i] = cos(tau * theta * 0.5) * axis[i];
-  dq12_tau_dual[3] = -sin(tau * theta * 0.5);
-  dq12_tau_dual = (0.5 * tau * d) * dq12_tau_dual;
-  DualQuaternion dq12_tau(dq12_tau_real, dq12_tau_dual);
-
-  // Calc interpolated dual quaternion
-  DualQuaternion dq_out = dq1 * dq12_tau;
   return dq_out;
 }
 
