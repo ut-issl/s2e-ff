@@ -95,6 +95,8 @@ set(SOURCE_FILES
   src/Library/math/DualQuaternion.cpp
   src/Library/math/RotationFirstDualQuaternion.cpp
   src/Library/math/TranslationFirstDualQuaternion.cpp
+  src/Library/Orbit/NonsingularOrbitalElements.cpp
+  src/Library/RelativeOrbit/RelativeOrbitalElements.cpp
   src/Simulation/Case/FfCase.cpp
   src/Simulation/Spacecraft/FfSat.cpp
   src/Simulation/Spacecraft/FfComponents.cpp
