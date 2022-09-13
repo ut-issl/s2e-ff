@@ -98,6 +98,7 @@ set(SOURCE_FILES
   src/Simulation/Case/FfCase.cpp
   src/Simulation/Spacecraft/FfSat.cpp
   src/Simulation/Spacecraft/FfComponents.cpp
+  src/Simulation/Spacecraft/FfComponents2.cpp
 )
 # Create executable file
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})

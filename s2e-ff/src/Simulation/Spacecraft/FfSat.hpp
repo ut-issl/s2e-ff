@@ -1,6 +1,7 @@
 #pragma once
 
 #include "FfComponents.hpp"
+#include "FfComponents2.hpp"
 #include "Spacecraft.h"
 
 class FfSat : public Spacecraft {
