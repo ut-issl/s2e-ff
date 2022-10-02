@@ -16,6 +16,14 @@ class QuasiNonsingularOrbitalElementDifferences {
   ~QuasiNonsingularOrbitalElementDifferences();
   // libra::Vector<3> CalcRelativePositionRtn_m(const double arg_lat_rad);  //!< Calculate relative position from ROE
 
+  // Getter
+  inline double GetDiffSemiMajor_m() const { return d_semi_major_axis_m_; }
+  inline double GetDiffEccentricityX() const { return d_eccentricity_x_; }
+  inline double GetDiffEccentricityY() const { return d_eccentricity_y_; }
+  inline double GetDiffInclination_rad() const { return d_inclination_rad_; }
+  inline double GetDiffRaan_rad() const { return d_raan_rad_; }
+  inline double GetDiffMeanArgLatEpoch_rad() const { return d_mean_arg_latitude_epoch_rad_; }
+
  private:
   // Relative Orbital Elements
   double d_semi_major_axis_m_;
