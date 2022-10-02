@@ -1,14 +1,19 @@
-#ifndef RELATIVE_ORBITAL_ELEMENTS_H_
-#define RELATIVE_ORBITAL_ELEMENTS_H_
+#ifndef QUASI_NONSINGULAR_RELATIVE_ORBITAL_ELEMENTS_H_
+#define QUASI_NONSINGULAR_RELATIVE_ORBITAL_ELEMENTS_H_
 
 #include <Library/math/Vector.hpp>
 
 #include "../Orbit/QuasiNonsingularOrbitalElements.hpp"
 
-class RelativeOrbitalElements {
+/**
+ * @class QuasiNonsingularRelativeOrbitalElements
+ * @brief Relative orbital elements defined by eccentricity/inclination vectors to avoid singularity when the eccentricity is near zero.
+ * @note  Relative orbital elements(ROEs) is defined as a set of six unique linear or nonlinear combinations of two orbital elements
+ */
+class QuasiNonsingularRelativeOrbitalElements {
  public:
-  RelativeOrbitalElements(const QuasiNonsingularOrbitalElements qns_oe_reference, const QuasiNonsingularOrbitalElements qns_oe_target);
-  ~RelativeOrbitalElements();
+  QuasiNonsingularRelativeOrbitalElements(const QuasiNonsingularOrbitalElements qns_oe_reference, const QuasiNonsingularOrbitalElements qns_oe_target);
+  ~QuasiNonsingularRelativeOrbitalElements();
   libra::Vector<3> CalcRelativePositionRtn_m(const double arg_lat_rad);  //!< Calculate relative position from ROE
 
  private:

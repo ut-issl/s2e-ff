@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-RelativeOrbitalElements::RelativeOrbitalElements(const QuasiNonsingularOrbitalElements qns_oe_reference, const QuasiNonsingularOrbitalElements qns_oe_target) {
+QuasiNonsingularRelativeOrbitalElements::QuasiNonsingularRelativeOrbitalElements(const QuasiNonsingularOrbitalElements qns_oe_reference, const QuasiNonsingularOrbitalElements qns_oe_target) {
   double diff_raan = qns_oe_target.GetRaan() - qns_oe_reference.GetRaan();
 
   a_ref_m_ = qns_oe_reference.GetSemiMajor();
@@ -15,9 +15,9 @@ RelativeOrbitalElements::RelativeOrbitalElements(const QuasiNonsingularOrbitalEl
   delta_i_y_ = diff_raan * sin(qns_oe_reference.GetInclination());
 }
 
-RelativeOrbitalElements::~RelativeOrbitalElements() {}
+QuasiNonsingularRelativeOrbitalElements::~QuasiNonsingularRelativeOrbitalElements() {}
 
-libra::Vector<3> RelativeOrbitalElements::CalcRelativePositionRtn_m(const double arg_lat_rad) {
+libra::Vector<3> QuasiNonsingularRelativeOrbitalElements::CalcRelativePositionRtn_m(const double arg_lat_rad) {
   libra::Vector<3> relative_position_rtn_m;
   double cos_u = cos(arg_lat_rad);
   double sin_u = sin(arg_lat_rad);
