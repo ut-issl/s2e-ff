@@ -1,6 +1,6 @@
-#include "NonsingularOrbitalElements.hpp"
+#include "QuasiNonsingularOrbitalElements.hpp"
 
-NonsingularOrbitalElements::NonsingularOrbitalElements(const OrbitalElements oe) {
+QuasiNonsingularOrbitalElements::QuasiNonsingularOrbitalElements(const OrbitalElements oe) {
   double mean_anomaly_rad = 0.0;  // since the epoch is the perigee pass time
 
   semi_major_axis_m_ = oe.GetSemiMajor();

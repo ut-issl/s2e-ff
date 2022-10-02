@@ -1,12 +1,12 @@
-#ifndef NONSINGULAR_ORBITAL_ELEMENTS_H_
-#define NONSINGULAR_ORBITAL_ELEMENTS_H_
+#ifndef QUASI_NONSINGULAR_ORBITAL_ELEMENTS_H_
+#define QUASI_NONSINGULAR_ORBITAL_ELEMENTS_H_
 
 #include <Library/Orbit/OrbitalElements.h>
 
-class NonsingularOrbitalElements {
+class QuasiNonsingularOrbitalElements {
  public:
-  NonsingularOrbitalElements(const OrbitalElements oe);
-  ~NonsingularOrbitalElements();
+  QuasiNonsingularOrbitalElements(const OrbitalElements oe);
+  ~QuasiNonsingularOrbitalElements();
 
   // Getter
   inline double GetSemiMajor() const { return semi_major_axis_m_; }

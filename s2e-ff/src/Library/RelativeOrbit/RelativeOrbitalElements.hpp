@@ -3,11 +3,11 @@
 
 #include <Library/math/Vector.hpp>
 
-#include "../Orbit/NonsingularOrbitalElements.hpp"
+#include "../Orbit/QuasiNonsingularOrbitalElements.hpp"
 
 class RelativeOrbitalElements {
  public:
-  RelativeOrbitalElements(const NonsingularOrbitalElements noe_chief, const NonsingularOrbitalElements noe_deputy);
+  RelativeOrbitalElements(const QuasiNonsingularOrbitalElements qns_oe_reference, const QuasiNonsingularOrbitalElements qns_oe_target);
   ~RelativeOrbitalElements();
   libra::Vector<3> CalcRelativePositionRtn_m(const double arg_lat_rad);  //!< Calculate relative position from ROE
 

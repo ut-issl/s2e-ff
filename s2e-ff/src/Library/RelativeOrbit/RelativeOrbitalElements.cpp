@@ -2,17 +2,17 @@
 
 #include <cmath>
 
-RelativeOrbitalElements::RelativeOrbitalElements(const NonsingularOrbitalElements noe_reference, const NonsingularOrbitalElements noe_target) {
-  double diff_raan = noe_target.GetRaan() - noe_reference.GetRaan();
+RelativeOrbitalElements::RelativeOrbitalElements(const QuasiNonsingularOrbitalElements qns_oe_reference, const QuasiNonsingularOrbitalElements qns_oe_target) {
+  double diff_raan = qns_oe_target.GetRaan() - qns_oe_reference.GetRaan();
 
-  a_ref_m_ = noe_reference.GetSemiMajor();
-  delta_a_ = (noe_target.GetSemiMajor() - a_ref_m_) / a_ref_m_;
-  delta_lambda_ = (noe_target.GetMeanArgLatEpoch() - noe_reference.GetMeanArgLatEpoch()) + diff_raan * cos(noe_reference.GetInclination());
+  a_ref_m_ = qns_oe_reference.GetSemiMajor();
+  delta_a_ = (qns_oe_target.GetSemiMajor() - a_ref_m_) / a_ref_m_;
+  delta_lambda_ = (qns_oe_target.GetMeanArgLatEpoch() - qns_oe_reference.GetMeanArgLatEpoch()) + diff_raan * cos(qns_oe_reference.GetInclination());
 
-  delta_e_x_ = noe_target.GetEccentricityX() - noe_reference.GetEccentricityX();
-  delta_e_y_ = noe_target.GetEccentricityY() - noe_reference.GetEccentricityY();
-  delta_i_x_ = noe_target.GetInclination() - noe_reference.GetInclination();
-  delta_i_y_ = diff_raan * sin(noe_reference.GetInclination());
+  delta_e_x_ = qns_oe_target.GetEccentricityX() - qns_oe_reference.GetEccentricityX();
+  delta_e_y_ = qns_oe_target.GetEccentricityY() - qns_oe_reference.GetEccentricityY();
+  delta_i_x_ = qns_oe_target.GetInclination() - qns_oe_reference.GetInclination();
+  delta_i_y_ = diff_raan * sin(qns_oe_reference.GetInclination());
 }
 
 RelativeOrbitalElements::~RelativeOrbitalElements() {}
