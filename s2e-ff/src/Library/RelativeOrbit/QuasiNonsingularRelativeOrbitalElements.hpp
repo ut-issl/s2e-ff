@@ -16,17 +16,26 @@ class QuasiNonsingularRelativeOrbitalElements {
   ~QuasiNonsingularRelativeOrbitalElements();
   libra::Vector<3> CalcRelativePositionRtn_m(const double arg_lat_rad);  //!< Calculate relative position from ROE
 
+  // Getter
+  inline double GetSemiMajorRef_m() const { return semi_major_axis_ref_m_; }
+  inline double GetDeltaSemiMajor() const { return delta_semi_major_axis_; }
+  inline double GetDeltaMeanLongitude() const { return delta_mean_longitude_; }
+  inline double GetDeltaEccentricityX() const { return delta_eccentricity_x_; }
+  inline double GetDeltaEccentricityY() const { return delta_eccentricity_y_; }
+  inline double GetDeltaInclinationX() const { return delta_inclination_x_; }
+  inline double GetDeltaInclinationY() const { return delta_inclination_y_; }
+
  private:
   // Reference orbit information
-  double a_ref_m_;  //!< Semi major axis of reference orbit [m]
+  double semi_major_axis_ref_m_;  //!< Semi major axis of reference orbit [m]
 
   // Relative Orbital Elements
-  double delta_a_;       //!< Relative semi major axis [-]
-  double delta_lambda_;  //!< Relative mean longitude [-]
-  double delta_e_x_;     //!< Relative eccentricity vector X component [-]
-  double delta_e_y_;     //!< Relative eccentricity vector Y component [-]
-  double delta_i_x_;     //!< Relative inclination vector X component [-]
-  double delta_i_y_;     //!< Relative inclination vector Y component [-]
+  double delta_semi_major_axis_; //!< Relative semi major axis [-]
+  double delta_mean_longitude_;  //!< Relative mean longitude [-]
+  double delta_eccentricity_x_;  //!< Relative eccentricity vector X component [-]
+  double delta_eccentricity_y_;  //!< Relative eccentricity vector Y component [-]
+  double delta_inclination_x_;   //!< Relative inclination vector X component [-]
+  double delta_inclination_y_;   //!< Relative inclination vector Y component [-]
 };
 
 #endif
