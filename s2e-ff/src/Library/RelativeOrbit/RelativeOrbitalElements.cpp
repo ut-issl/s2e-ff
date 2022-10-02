@@ -7,7 +7,7 @@ RelativeOrbitalElements::RelativeOrbitalElements(const NonsingularOrbitalElement
 
   a_ref_m_ = noe_reference.GetSemiMajor();
   delta_a_ = (noe_target.GetSemiMajor() - a_ref_m_) / a_ref_m_;
-  delta_lambda_ = (noe_target.GetArgLonEpoch() - noe_reference.GetArgLonEpoch()) + diff_raan * cos(noe_reference.GetInclination());
+  delta_lambda_ = (noe_target.GetMeanArgLatEpoch() - noe_reference.GetMeanArgLatEpoch()) + diff_raan * cos(noe_reference.GetInclination());
 
   delta_e_x_ = noe_target.GetEccentricityX() - noe_reference.GetEccentricityX();
   delta_e_y_ = noe_target.GetEccentricityY() - noe_reference.GetEccentricityY();
