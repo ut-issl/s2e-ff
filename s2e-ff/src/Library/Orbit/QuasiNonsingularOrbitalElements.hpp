@@ -13,12 +13,12 @@ class QuasiNonsingularOrbitalElements {
   ~QuasiNonsingularOrbitalElements();
 
   // Getter
-  inline double GetSemiMajor() const { return semi_major_axis_m_; }
+  inline double GetSemiMajor_m() const { return semi_major_axis_m_; }
   inline double GetEccentricityX() const { return eccentricity_x_; }
   inline double GetEccentricityY() const { return eccentricity_y_; }
-  inline double GetInclination() const { return inclination_rad_; }
-  inline double GetRaan() const { return raan_rad_; }
-  inline double GetMeanArgLatEpoch() const { return mean_arg_latitude_epoch_rad_; }
+  inline double GetInclination_rad() const { return inclination_rad_; }
+  inline double GetRaan_rad() const { return raan_rad_; }
+  inline double GetMeanArgLatEpoch_rad() const { return mean_arg_latitude_epoch_rad_; }
 
  private:
   double semi_major_axis_m_;

@@ -3,16 +3,16 @@
 #include <cmath>
 
 QuasiNonsingularRelativeOrbitalElements::QuasiNonsingularRelativeOrbitalElements(const QuasiNonsingularOrbitalElements qns_oe_reference, const QuasiNonsingularOrbitalElements qns_oe_target) {
-  double diff_raan = qns_oe_target.GetRaan() - qns_oe_reference.GetRaan();
+  double diff_raan = qns_oe_target.GetRaan_rad() - qns_oe_reference.GetRaan_rad();
 
-  a_ref_m_ = qns_oe_reference.GetSemiMajor();
-  delta_a_ = (qns_oe_target.GetSemiMajor() - a_ref_m_) / a_ref_m_;
-  delta_lambda_ = (qns_oe_target.GetMeanArgLatEpoch() - qns_oe_reference.GetMeanArgLatEpoch()) + diff_raan * cos(qns_oe_reference.GetInclination());
+  a_ref_m_ = qns_oe_reference.GetSemiMajor_m();
+  delta_a_ = (qns_oe_target.GetSemiMajor_m() - a_ref_m_) / a_ref_m_;
+  delta_lambda_ = (qns_oe_target.GetMeanArgLatEpoch_rad() - qns_oe_reference.GetMeanArgLatEpoch_rad()) + diff_raan * cos(qns_oe_reference.GetInclination_rad());
 
   delta_e_x_ = qns_oe_target.GetEccentricityX() - qns_oe_reference.GetEccentricityX();
   delta_e_y_ = qns_oe_target.GetEccentricityY() - qns_oe_reference.GetEccentricityY();
-  delta_i_x_ = qns_oe_target.GetInclination() - qns_oe_reference.GetInclination();
-  delta_i_y_ = diff_raan * sin(qns_oe_reference.GetInclination());
+  delta_i_x_ = qns_oe_target.GetInclination_rad() - qns_oe_reference.GetInclination_rad();
+  delta_i_y_ = diff_raan * sin(qns_oe_reference.GetInclination_rad());
 }
 
 QuasiNonsingularRelativeOrbitalElements::~QuasiNonsingularRelativeOrbitalElements() {}
