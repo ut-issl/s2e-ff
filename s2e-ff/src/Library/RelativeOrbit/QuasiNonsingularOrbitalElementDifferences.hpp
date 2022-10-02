@@ -14,7 +14,9 @@ class QuasiNonsingularOrbitalElementDifferences {
  public:
   QuasiNonsingularOrbitalElementDifferences(const QuasiNonsingularOrbitalElements qns_oe_reference, const QuasiNonsingularOrbitalElements qns_oe_target);
   ~QuasiNonsingularOrbitalElementDifferences();
-  // libra::Vector<3> CalcRelativePositionRtn_m(const double arg_lat_rad);  //!< Calculate relative position from ROE
+  
+  // Calculation
+  libra::Vector<3> CalcRelativePositionCircularApprox_rtn_m(const double arg_lat_rad);  //!< Calculate relative position from OED when near circular chief orbit
 
   // Getter
   inline double GetDiffSemiMajor_m() const { return d_semi_major_axis_m_; }

@@ -12,3 +12,8 @@ QuasiNonsingularOrbitalElementDifferences::QuasiNonsingularOrbitalElementDiffere
 }
 
 QuasiNonsingularOrbitalElementDifferences::~QuasiNonsingularOrbitalElementDifferences() {}
+
+libra::Vector<3> QuasiNonsingularOrbitalElementDifferences::CalcRelativePositionCircularApprox_rtn_m(const double arg_lat_rad)
+{
+
+}
