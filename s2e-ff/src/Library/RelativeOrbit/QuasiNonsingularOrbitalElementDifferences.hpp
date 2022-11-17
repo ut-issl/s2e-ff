@@ -16,7 +16,7 @@ class QuasiNonsingularOrbitalElementDifferences {
   ~QuasiNonsingularOrbitalElementDifferences();
   
   // Calculation
-  libra::Vector<3> CalcRelativePositionCircularApprox_rtn_m(const double arg_lat_rad);  //!< Calculate relative position from OED when near circular chief orbit
+  libra::Vector<3> CalcRelativePositionCircularApprox_rtn_m(const double true_anomaly_rad);  //!< Calculate relative position from OED when near circular chief orbit
 
   // Getter
   inline double GetDiffSemiMajor_m() const { return d_semi_major_axis_m_; }
@@ -27,7 +27,10 @@ class QuasiNonsingularOrbitalElementDifferences {
   inline double GetDiffMeanArgLatEpoch_rad() const { return d_mean_arg_latitude_epoch_rad_; }
 
  private:
-  // Relative Orbital Elements
+  // Reference orbit information
+  double semi_major_axis_ref_m_;  //!< Semi major axis of reference orbit [m]
+
+  // Orbital Element Differences
   double d_semi_major_axis_m_;
   double d_eccentricity_x_;
   double d_eccentricity_y_;

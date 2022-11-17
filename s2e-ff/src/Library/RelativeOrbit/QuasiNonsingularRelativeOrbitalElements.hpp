@@ -19,7 +19,6 @@ class QuasiNonsingularRelativeOrbitalElements {
   libra::Vector<3> CalcRelativePositionCircularApprox_rtn_m(const double arg_lat_rad);  //!< Calculate relative position from ROE when near circular chief orbit
 
   // Getter
-  inline double GetSemiMajorRef_m() const { return semi_major_axis_ref_m_; }
   inline double GetDeltaSemiMajor() const { return d_semi_major_axis_; }
   inline double GetDeltaMeanLongitude() const { return d_mean_longitude_; }
   inline double GetDeltaEccentricityX() const { return d_eccentricity_x_; }

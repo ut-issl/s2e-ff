@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "../src/Library/math/TranslationFirstDualQuaternion.hpp"
+#include <iostream>
 
 TEST(TranslationFirstDualQuaternion, ConstructorFromRotationTranslation) {
   libra::Quaternion q_rot(1.0, 0.0, 0.0, 1.0);  // 90deg rotation around X axis
@@ -92,8 +93,18 @@ TEST(TranslationFirstDualQuaternion, Integral) {
   double dt = 0.01;
 
   // Integration
+  //std::cout << "time[sec],";
+  //std::cout << "dq_r_x, dq_r_y, dq_r_z, dq_r_w,";
+  //std::cout << "dq_d_x, dq_d_y, dq_d_z, dq_d_w,";
+  //std::cout << "v_x, v_y, v_z,";
+  //std::cout << std::endl;
   for (int i = 0; i < 9000; i++) {
     dq = dq.Integrate(omega, velocity, dt);
+    //std::cout << i * dt << ",";
+    //std::cout << dq.GetRealPart()[0] << "," << dq.GetRealPart()[1] << "," << dq.GetRealPart()[2] << "," << dq.GetRealPart()[3] << ",";
+    //std::cout << dq.GetDualPart()[0] << "," << dq.GetDualPart()[1] << "," << dq.GetDualPart()[2] << "," << dq.GetDualPart()[3] << ",";
+    //std::cout << dq.GetTranslationVector()[0] << "," << dq.GetTranslationVector()[1] << "," << dq.GetTranslationVector()[2] << ",";
+    //std::cout << std::endl;
   }
 
   // Check rotation
@@ -236,6 +247,21 @@ TEST(TranslationFirstDualQuaternion, SclerpXAxisRotXYAxisMove) {
   v2_translation[2] = 0.0;
   libra::TranslationFirstDualQuaternion dq2(v2_translation, q2_rot);
 
+  // debug
+  std::cout << "time[sec],";
+  std::cout << "dq_r_x, dq_r_y, dq_r_z, dq_r_w,";
+  std::cout << "dq_d_x, dq_d_y, dq_d_z, dq_d_w,";
+  std::cout << "v_x, v_y, v_z,";
+  std::cout << std::endl;
+  for (double duty = 0.005; duty <= 1; duty+=0.005)
+  {
+    libra::TranslationFirstDualQuaternion dq_test = libra::Sclerp(dq1, dq2, duty);
+    std::cout << duty << ",";
+    std::cout << dq_test.GetRealPart()[0] << "," << dq_test.GetRealPart()[1] << "," << dq_test.GetRealPart()[2] << "," << dq_test.GetRealPart()[3] << ",";
+    std::cout << dq_test.GetDualPart()[0] << "," << dq_test.GetDualPart()[1] << "," << dq_test.GetDualPart()[2] << "," << dq_test.GetDualPart()[3] << ",";
+    std::cout << dq_test.GetTranslationVector()[0] << "," << dq_test.GetTranslationVector()[1] << "," << dq_test.GetTranslationVector()[2] << ",";
+    std::cout << std::endl;
+  }
   // X 90deg rotation and X-Y axis translation
   libra::TranslationFirstDualQuaternion dq_out = libra::Sclerp(dq1, dq2, 0.5);
 
