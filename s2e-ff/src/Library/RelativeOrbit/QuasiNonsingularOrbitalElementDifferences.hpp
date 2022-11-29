@@ -42,47 +42,14 @@ class QuasiNonsingularOrbitalElementDifferences {
 
   // Getter
   /**
-   * @fn GetDiffSemiMajor_m
-   * @brief Return difference of semi-major axis [m]
+   * @fn GetDiffQuasiNonSingularOrbitalElements
+   * @brief Return difference of quasi-nonsingular orbital elements
    */
-  inline double GetDiffSemiMajor_m() const { return d_semi_major_axis_m_; }
-  /**
-   * @fn GetDiffEccentricityX
-   * @brief Return difference of eccentricity vector X component
-   */
-  inline double GetDiffEccentricityX() const { return d_eccentricity_x_; }
-  /**
-   * @fn GetDiffEccentricityY
-   * @brief Return difference of eccentricity vector Y component
-   */
-  inline double GetDiffEccentricityY() const { return d_eccentricity_y_; }
-  /**
-   * @fn GetDiffInclination_rad
-   * @brief Return difference of inclination [rad]
-   */
-  inline double GetDiffInclination_rad() const { return d_inclination_rad_; }
-  /**
-   * @fn GetDiffRaan_rad
-   * @brief Return difference of RAAN [rad]
-   */
-  inline double GetDiffRaan_rad() const { return d_raan_rad_; }
-  /**
-   * @fn GetDiffMeanArgLatEpoch_rad
-   * @brief Return difference of argument of latitude [rad]
-   */
-  inline double GetDiffMeanArgLatEpoch_rad() const { return d_mean_arg_latitude_epoch_rad_; }
+  inline QuasiNonsingularOrbitalElements GetDiffQuasiNonSingularOrbitalElements() const { return diff_qns_oe_; }
 
  private:
-  // Reference orbit information
-  double semi_major_axis_ref_m_;  //!< Semi major axis of reference orbit [m]
-
-  // Orbital Element Differences
-  double d_semi_major_axis_m_;            //!< Difference of semi major axis of reference orbit [m]
-  double d_eccentricity_x_;               //!< Difference of eccentricity vector X component
-  double d_eccentricity_y_;               //!< Difference of eccentricity vector Y component
-  double d_inclination_rad_;              //!< Difference of inclination [rad]
-  double d_raan_rad_;                     //!< Difference of RAAN [rad]
-  double d_mean_arg_latitude_epoch_rad_;  //!< Difference of argument of latitude [rad]
+  double semi_major_axis_ref_m_;                 //!< Semi major axis of reference orbit [m]
+  QuasiNonsingularOrbitalElements diff_qns_oe_;  //!< Difference of quasi-nonsingular orbital elements
 };
 
 #endif
