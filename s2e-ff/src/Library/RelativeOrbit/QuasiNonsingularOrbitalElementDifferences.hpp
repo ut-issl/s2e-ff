@@ -1,3 +1,8 @@
+/**
+ * @file QuasiNonsingularOrbitalElementDifferences.hpp
+ * @brief Orbital elements differences to avoid singularity when the eccentricity is near zero.
+ */
+
 #ifndef QUASI_NONSINGULAR_ORBITAL_ELEMENT_DIFFERENCES_H_
 #define QUASI_NONSINGULAR_ORBITAL_ELEMENT_DIFFERENCES_H_
 
@@ -12,18 +17,59 @@
  */
 class QuasiNonsingularOrbitalElementDifferences {
  public:
-  QuasiNonsingularOrbitalElementDifferences(const QuasiNonsingularOrbitalElements qns_oe_reference, const QuasiNonsingularOrbitalElements qns_oe_target);
+  /**
+   * @fn QuasiNonsingularOrbitalElementDifferences
+   * @brief Constructor initialized with tow quasi-nonsingular orbital elements
+   * @param qns_oe_reference: Quasi-nonsingular orbital elements of the reference spacecraft
+   * @param qns_oe_target: Quasi-nonsingular orbital elements of the target spacecraft
+   */
+  QuasiNonsingularOrbitalElementDifferences(const QuasiNonsingularOrbitalElements qns_oe_reference,
+                                            const QuasiNonsingularOrbitalElements qns_oe_target);
+  /**
+   * @fn ~QuasiNonsingularOrbitalElementDifferences
+   * @brief deconstructor
+   */
   ~QuasiNonsingularOrbitalElementDifferences();
-  
+
   // Calculation
-  libra::Vector<3> CalcRelativePositionCircularApprox_rtn_m(const double true_anomaly_rad);  //!< Calculate relative position from OED when near circular chief orbit
+  /**
+   * @fn CalcRelativePositionCircularApprox_rtn_m
+   * @brief Calculate the relative position of target spacecraft with circular approximation
+   * @params true_anomaly_rad: True anomaly [rad]
+   * @return Relative position vector in RTN frame of reference spacecraft
+   */
+  libra::Vector<3> CalcRelativePositionCircularApprox_rtn_m(const double true_anomaly_rad);
 
   // Getter
+  /**
+   * @fn GetDiffSemiMajor_m
+   * @brief Return difference of semi-major axis [m]
+   */
   inline double GetDiffSemiMajor_m() const { return d_semi_major_axis_m_; }
+  /**
+   * @fn GetDiffEccentricityX
+   * @brief Return difference of eccentricity vector X component
+   */
   inline double GetDiffEccentricityX() const { return d_eccentricity_x_; }
+  /**
+   * @fn GetDiffEccentricityY
+   * @brief Return difference of eccentricity vector Y component
+   */
   inline double GetDiffEccentricityY() const { return d_eccentricity_y_; }
+  /**
+   * @fn GetDiffInclination_rad
+   * @brief Return difference of inclination [rad]
+   */
   inline double GetDiffInclination_rad() const { return d_inclination_rad_; }
+  /**
+   * @fn GetDiffRaan_rad
+   * @brief Return difference of RAAN [rad]
+   */
   inline double GetDiffRaan_rad() const { return d_raan_rad_; }
+  /**
+   * @fn GetDiffMeanArgLatEpoch_rad
+   * @brief Return difference of argument of latitude [rad]
+   */
   inline double GetDiffMeanArgLatEpoch_rad() const { return d_mean_arg_latitude_epoch_rad_; }
 
  private:
@@ -31,12 +77,12 @@ class QuasiNonsingularOrbitalElementDifferences {
   double semi_major_axis_ref_m_;  //!< Semi major axis of reference orbit [m]
 
   // Orbital Element Differences
-  double d_semi_major_axis_m_;
-  double d_eccentricity_x_;
-  double d_eccentricity_y_;
-  double d_inclination_rad_;
-  double d_raan_rad_;
-  double d_mean_arg_latitude_epoch_rad_;
+  double d_semi_major_axis_m_;            //!< Difference of semi major axis of reference orbit [m]
+  double d_eccentricity_x_;               //!< Difference of eccentricity vector X component
+  double d_eccentricity_y_;               //!< Difference of eccentricity vector Y component
+  double d_inclination_rad_;              //!< Difference of inclination [rad]
+  double d_raan_rad_;                     //!< Difference of RAAN [rad]
+  double d_mean_arg_latitude_epoch_rad_;  //!< Difference of argument of latitude [rad]
 };
 
 #endif

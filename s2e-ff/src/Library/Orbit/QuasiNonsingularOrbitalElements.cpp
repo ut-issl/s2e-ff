@@ -1,3 +1,8 @@
+/**
+ * @file QuasiNonsingularOrbitalElements.cpp
+ * @brief Orbital elements avoid singularity when the eccentricity is near zero.
+ */
+
 #include "QuasiNonsingularOrbitalElements.hpp"
 
 QuasiNonsingularOrbitalElements::QuasiNonsingularOrbitalElements(const OrbitalElements oe) {
