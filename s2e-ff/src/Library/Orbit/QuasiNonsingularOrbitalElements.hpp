@@ -16,6 +16,11 @@ class QuasiNonsingularOrbitalElements {
  public:
   /**
    * @fn QuasiNonsingularOrbitalElements
+   * @brief Default Constructor
+   */
+  QuasiNonsingularOrbitalElements();
+  /**
+   * @fn QuasiNonsingularOrbitalElements
    * @brief Constructor initialized with values
    */
   QuasiNonsingularOrbitalElements(const double semi_major_axis_m, const double eccentricity_x, const double eccentricity_y,
@@ -75,7 +80,7 @@ class QuasiNonsingularOrbitalElements {
 
 /**
  * @fn Operator -
- * @brief Calculate subtract of two orbital elements
+ * @brief Calculate subtract of two quasi-nonsingular orbital elements
  */
 QuasiNonsingularOrbitalElements operator-(const QuasiNonsingularOrbitalElements lhs, const QuasiNonsingularOrbitalElements rhs);
 

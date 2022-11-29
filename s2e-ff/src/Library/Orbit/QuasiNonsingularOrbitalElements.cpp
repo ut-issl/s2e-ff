@@ -5,6 +5,15 @@
 
 #include "QuasiNonsingularOrbitalElements.hpp"
 
+QuasiNonsingularOrbitalElements::QuasiNonsingularOrbitalElements() {
+  semi_major_axis_m_ = 0.0;
+  mean_arg_latitude_epoch_rad_ = 0.0;
+  eccentricity_x_ = 0.0;
+  eccentricity_y_ = 0.0;
+  inclination_rad_ = 0.0;
+  raan_rad_ = 0.0;
+}
+
 QuasiNonsingularOrbitalElements::QuasiNonsingularOrbitalElements(const double semi_major_axis_m, const double eccentricity_x,
                                                                  const double eccentricity_y, const double inclination_rad, const double raan_rad,
                                                                  const double mean_arg_latitude_epoch_rad)
@@ -25,6 +34,8 @@ QuasiNonsingularOrbitalElements::QuasiNonsingularOrbitalElements(const OrbitalEl
   inclination_rad_ = oe.GetInclination();
   raan_rad_ = oe.GetRaan();
 }
+
+QuasiNonsingularOrbitalElements ::~QuasiNonsingularOrbitalElements() {}
 
 QuasiNonsingularOrbitalElements operator-(const QuasiNonsingularOrbitalElements lhs, const QuasiNonsingularOrbitalElements rhs) {
   double semi_major_axis_m = lhs.GetSemiMajor_m() - rhs.GetSemiMajor_m();
