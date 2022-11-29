@@ -16,6 +16,12 @@ class QuasiNonsingularOrbitalElements {
  public:
   /**
    * @fn QuasiNonsingularOrbitalElements
+   * @brief Constructor initialized with values
+   */
+  QuasiNonsingularOrbitalElements(const double semi_major_axis_m, const double eccentricity_x, const double eccentricity_y,
+                                  const double inclination_rad, const double raan_rad, const double mean_arg_latitude_epoch_rad);
+  /**
+   * @fn QuasiNonsingularOrbitalElements
    * @brief Constructor initialized with orbital elements
    * @param oe: Orbital Elements
    */
@@ -66,5 +72,11 @@ class QuasiNonsingularOrbitalElements {
   double raan_rad_;                     //!< Right Ascension of the Ascending Node [rad]
   double mean_arg_latitude_epoch_rad_;  //!< Mean argument of Latitude at epoch (arg_peri + mean anomaly) [rad]
 };
+
+/**
+ * @fn Operator -
+ * @brief Calculate subtract of two orbital elements
+ */
+QuasiNonsingularOrbitalElements operator-(const QuasiNonsingularOrbitalElements lhs, const QuasiNonsingularOrbitalElements rhs);
 
 #endif
