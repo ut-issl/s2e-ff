@@ -6,7 +6,7 @@
 #ifndef QUASI_NONSINGULAR_ORBITAL_ELEMENTS_H_
 #define QUASI_NONSINGULAR_ORBITAL_ELEMENTS_H_
 
-#include <Library/Orbit/OrbitalElements.h>
+#include <Library/math/Vector.hpp>
 
 /**
  * @class QuasiNonsingularOrbitalElements
@@ -25,6 +25,14 @@ class QuasiNonsingularOrbitalElements {
    */
   QuasiNonsingularOrbitalElements(const double semi_major_axis_m, const double eccentricity_x, const double eccentricity_y,
                                   const double inclination_rad, const double raan_rad, const double true_latitude_angle_rad);
+  /**
+   * @fn QuasiNonsingularOrbitalElements
+   * @brief Constructor initialized with position and velocity
+   * @param[in] mu_m3_s2: Gravity constant [m3/s2]
+   * @param[in] position_i_m: Position vector in the inertial frame [m]
+   * @param[in] velocity_i_m_s: Velocity vector in the inertial frame [m/s]
+   */
+  QuasiNonsingularOrbitalElements(const double mu_m3_s2, const libra::Vector<3> position_i_m, const libra::Vector<3> velocity_i_m_s);
   /**
    * @fn ~QuasiNonsingularOrbitalElements
    * @brief Destructor
