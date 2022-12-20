@@ -22,6 +22,12 @@ class QuasiNonsingularOrbitalElements {
   /**
    * @fn QuasiNonsingularOrbitalElements
    * @brief Constructor initialized with values
+   * @param[in] semi_major_axis_m: Semi major axis [m]
+   * @param[in] eccentricity_x: Eccentricity X component
+   * @param[in] eccentricity_y: Eccentricity Y component
+   * @param[in] inclination_rad: Inclination [rad]
+   * @param[in] raan_rad: Right Ascension of the Ascending Node [rad]
+   * @param[in] true_latitude_angle_rad: True latitude angle [rad]
    */
   QuasiNonsingularOrbitalElements(const double semi_major_axis_m, const double eccentricity_x, const double eccentricity_y,
                                   const double inclination_rad, const double raan_rad, const double true_latitude_angle_rad);
@@ -87,7 +93,7 @@ class QuasiNonsingularOrbitalElements {
   double eccentricity_y_;           //!< e * sin(arg_peri)
   double inclination_rad_;          //!< Inclination [rad]
   double raan_rad_;                 //!< Right Ascension of the Ascending Node [rad]
-  double true_latitude_angle_rad_;  //!< True latitude angle (arg_peri + true anomaly) [rad]
+  double true_latitude_angle_rad_;  //!< True latitude angle (argment of periapsis + true anomaly) [rad]
 
   // Orbit states
   double semi_latus_rectum_m_;  //!< Semi-latus rectum [m]
