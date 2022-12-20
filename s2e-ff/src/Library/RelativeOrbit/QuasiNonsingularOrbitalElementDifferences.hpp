@@ -20,14 +20,14 @@ class QuasiNonsingularOrbitalElementDifferences {
   /**
    * @fn QuasiNonsingularOrbitalElementDifferences
    * @brief Constructor initialized with tow quasi-nonsingular orbital elements
-   * @param qns_oe_reference: Quasi-nonsingular orbital elements of the reference spacecraft
-   * @param qns_oe_target: Quasi-nonsingular orbital elements of the target spacecraft
+   * @param [in] qns_oe_reference: Quasi-nonsingular orbital elements of the reference spacecraft
+   * @param [in] qns_oe_target: Quasi-nonsingular orbital elements of the target spacecraft
    */
   QuasiNonsingularOrbitalElementDifferences(const QuasiNonsingularOrbitalElements qns_oe_reference,
                                             const QuasiNonsingularOrbitalElements qns_oe_target);
   /**
    * @fn ~QuasiNonsingularOrbitalElementDifferences
-   * @brief deconstructor
+   * @brief Destructor
    */
   ~QuasiNonsingularOrbitalElementDifferences();
 
@@ -35,7 +35,7 @@ class QuasiNonsingularOrbitalElementDifferences {
   /**
    * @fn CalcRelativePositionCircularApprox_rtn_m
    * @brief Calculate the relative position of target spacecraft with circular approximation
-   * @params true_anomaly_rad: True anomaly [rad]
+   * @param [in] true_anomaly_rad: True anomaly [rad]
    * @return Relative position vector in RTN frame of reference spacecraft
    */
   libra::Vector<3> CalcRelativePositionCircularApprox_rtn_m(const double true_anomaly_rad);
