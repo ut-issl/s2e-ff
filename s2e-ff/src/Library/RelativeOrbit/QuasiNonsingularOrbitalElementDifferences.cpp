@@ -38,11 +38,10 @@ QuasiNonsingularOrbitalElementDifferences::QuasiNonsingularOrbitalElementDiffere
   const double r = p / (1.0 + ex * cos_theta + ey * sin_theta);
   const double v_r = h / p * (ex * sin_theta - ey * cos_theta);
   const double v_t = h / p * (1.0 + ex * cos_theta + ey * sin_theta);
-  const double current_r = r;  // FIXME: Check correctness
 
-  const double alpha = a / current_r;
+  const double alpha = a / r;
   const double nu = v_r / v_t;
-  const double rho = current_r / p;
+  const double rho = r / p;
   const double kappa_1 = alpha * (1.0 / rho - 1.0);
   const double kappa_2 = alpha * nu * nu / rho;
 
@@ -53,28 +52,28 @@ QuasiNonsingularOrbitalElementDifferences::QuasiNonsingularOrbitalElementDiffere
   conversion_to_oed[0][3] = 2.0 * alpha * alpha * nu * p / v_t;
   conversion_to_oed[0][4] = 2.0 * alpha * (1.0 + 2.0 * kappa_1 + kappa_2) / v_t;
   // For true latitude angle
-  conversion_to_oed[1][1] = 1.0 / current_r;
-  conversion_to_oed[1][2] = cot_i / current_r * (cos_theta + nu * sin_theta);
+  conversion_to_oed[1][1] = 1.0 / r;
+  conversion_to_oed[1][2] = cot_i / r * (cos_theta + nu * sin_theta);
   conversion_to_oed[1][5] = -1.0 * sin_theta * cot_i / v_t;
   // for inclination
-  conversion_to_oed[2][2] = (sin_theta - nu * cos_theta) / current_r;
+  conversion_to_oed[2][2] = (sin_theta - nu * cos_theta) / r;
   conversion_to_oed[2][5] = -1.0 * cos_theta / v_t;
   // For eccentricity vector X
-  conversion_to_oed[3][0] = (3.0 * cos_theta + 2.0 * nu * sin_theta) / (rho * current_r);
-  conversion_to_oed[3][1] = -1.0 * (nu * nu * sin_theta / rho + ex * sin_2theta - ey * cos_2theta) / current_r;
-  conversion_to_oed[3][2] = -1.0 * ey * cot_i * (cos_theta + nu * sin_theta) / current_r;
+  conversion_to_oed[3][0] = (3.0 * cos_theta + 2.0 * nu * sin_theta) / (rho * r);
+  conversion_to_oed[3][1] = -1.0 * (nu * nu * sin_theta / rho + ex * sin_2theta - ey * cos_2theta) / r;
+  conversion_to_oed[3][2] = -1.0 * ey * cot_i * (cos_theta + nu * sin_theta) / r;
   conversion_to_oed[3][3] = sin_theta / (rho * v_t);
   conversion_to_oed[3][4] = (2.0 * cos_theta + nu * sin_theta) / (rho * v_t);
   conversion_to_oed[3][5] = ey * cot_i * sin_theta / v_t;
   // For eccentricity vector Y
-  conversion_to_oed[4][0] = (3.0 * cos_theta - 2.0 * nu * sin_theta) / (rho * current_r);
-  conversion_to_oed[4][1] = (nu * nu * cos_theta / rho + ey * sin_2theta + ex * cos_2theta) / current_r;
-  conversion_to_oed[4][2] = ex * cot_i * (cos_theta + nu * sin_theta) / current_r;
+  conversion_to_oed[4][0] = (3.0 * cos_theta - 2.0 * nu * sin_theta) / (rho * r);
+  conversion_to_oed[4][1] = (nu * nu * cos_theta / rho + ey * sin_2theta + ex * cos_2theta) / r;
+  conversion_to_oed[4][2] = ex * cot_i * (cos_theta + nu * sin_theta) / r;
   conversion_to_oed[4][3] = -1.0 * cos_theta / (rho * v_t);
   conversion_to_oed[4][4] = (2.0 * sin_theta - nu * cos_theta) / (rho * v_t);
   conversion_to_oed[4][5] = -1.0 * ex * cot_i * sin_theta / v_t;
   // For RAAN
-  conversion_to_oed[5][2] = -1.0 * (cos_theta + nu * sin_theta) / (current_r * sin_i);
+  conversion_to_oed[5][2] = -1.0 * (cos_theta + nu * sin_theta) / (r * sin_i);
   conversion_to_oed[5][2] = sin_theta / (v_t * sin_i);
 
   // Output
