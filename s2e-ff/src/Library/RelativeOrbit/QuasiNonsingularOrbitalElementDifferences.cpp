@@ -15,7 +15,7 @@ QuasiNonsingularOrbitalElementDifferences::QuasiNonsingularOrbitalElementDiffere
 
 QuasiNonsingularOrbitalElementDifferences::~QuasiNonsingularOrbitalElementDifferences() {}
 
-libra::Vector<3> QuasiNonsingularOrbitalElementDifferences::CalcRelativePositionCircularApprox_rtn_m(const double true_anomaly_rad) {
+libra::Vector<3> QuasiNonsingularOrbitalElementDifferences::CalcRelativePositionCircularApprox_rtn_m() {
   // Reference orbit variables
   const double a = qns_oe_reference_.GetSemiMajor_m();
   const double ex = qns_oe_reference_.GetEccentricityX();
@@ -36,7 +36,7 @@ libra::Vector<3> QuasiNonsingularOrbitalElementDifferences::CalcRelativePosition
 
   // calculation
   const double r = p / (1.0 + ex * cos_theta + ey * sin_theta);
-  const double v_r = (ex * sin_theta - ey * cos_theta);
+  const double v_r = (ex * sin_theta - ey * cos_theta);  // without h/p since it will be cancelled in v_r / v_t
   const double v_t = (1.0 + ex * cos_theta + ey * sin_theta);
   const double d_r = r / a * d_a + v_r / v_t * r * d_theta - r / p * ((2.0 * a * ex + r * cos_theta) * d_ex + (2.0 * a * ey + r * sin_theta) * d_ey);
 
@@ -47,4 +47,40 @@ libra::Vector<3> QuasiNonsingularOrbitalElementDifferences::CalcRelativePosition
   relative_position_rtn_m[2] = r * (d_i * sin_theta - d_raan * cos_theta * sin(i));
 
   return relative_position_rtn_m;
+}
+
+libra::Vector<3> QuasiNonsingularOrbitalElementDifferences::CalcRelativeVelocityCircularApprox_rtn_m_s(const double mu) {
+  // Reference orbit variables
+  const double a = qns_oe_reference_.GetSemiMajor_m();
+  const double ex = qns_oe_reference_.GetEccentricityX();
+  const double ey = qns_oe_reference_.GetEccentricityY();
+  const double i = qns_oe_reference_.GetInclination_rad();
+  const double theta = qns_oe_reference_.GetMeanArgLatEpoch_rad();  // + some thing?
+  const double cos_theta = cos(theta);
+  const double sin_theta = sin(theta);
+  const double p = a * (1.0 - (ex * ex + ey * ey));  //!< Semilatus rectum
+  const double h = sqrt(mu * p);                     //!< Orbit angular momentum
+
+  // Relative orbit variables
+  const double d_a = diff_qns_oe_.GetSemiMajor_m();
+  const double d_ex = diff_qns_oe_.GetEccentricityX();
+  const double d_ey = diff_qns_oe_.GetEccentricityY();
+  const double d_theta = diff_qns_oe_.GetMeanArgLatEpoch_rad();
+  const double d_i = diff_qns_oe_.GetInclination_rad();
+  const double d_raan = diff_qns_oe_.GetRaan_rad();
+
+  // calculation
+  const double r = p / (1.0 + ex * cos_theta + ey * sin_theta);
+  const double v_r = h / p * (ex * sin_theta - ey * cos_theta);
+  const double v_t = h / p * (1.0 + ex * cos_theta + ey * sin_theta);
+
+  // Output
+  libra::Vector<3> relative_velocity_rtn_m_s;
+  relative_velocity_rtn_m_s[0] = -v_r / (2.0 * a) * d_a + (1.0 / r - 1.0 / p) * h * d_theta + (v_r * a * ex + h * sin_theta) * d_ex / p +
+                                 (v_r * a * ey - h * cos_theta) * d_ey / p;
+  relative_velocity_rtn_m_s[1] = -3.0 * v_t / (2.0 * a) * d_a + v_r * d_theta + (3.0 * v_t * a * ex + 2.0 * h * cos_theta) * d_ex / p +
+                                 (3.0 * v_t * a * ey + 2.0 * h * sin_theta) * d_ey / p + v_r * cos(i) * d_raan;
+  relative_velocity_rtn_m_s[2] = (v_t * cos_theta + v_r * sin_theta) * d_i + (v_t * sin_theta - v_r * cos_theta) * sin(i) * d_raan;
+
+  return relative_velocity_rtn_m_s;
 }
