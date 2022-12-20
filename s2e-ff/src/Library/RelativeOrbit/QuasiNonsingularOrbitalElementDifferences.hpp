@@ -48,8 +48,8 @@ class QuasiNonsingularOrbitalElementDifferences {
   inline QuasiNonsingularOrbitalElements GetDiffQuasiNonSingularOrbitalElements() const { return diff_qns_oe_; }
 
  private:
-  double semi_major_axis_ref_m_;                 //!< Semi major axis of reference orbit [m]
-  QuasiNonsingularOrbitalElements diff_qns_oe_;  //!< Difference of quasi-nonsingular orbital elements
+  QuasiNonsingularOrbitalElements qns_oe_reference_;  //!< Quasi-nonsingular orbital elements of reference spacecraft
+  QuasiNonsingularOrbitalElements diff_qns_oe_;       //!< Difference of quasi-nonsingular orbital elements
 };
 
 #endif
