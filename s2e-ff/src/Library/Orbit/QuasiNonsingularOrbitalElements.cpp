@@ -7,7 +7,7 @@
 
 QuasiNonsingularOrbitalElements::QuasiNonsingularOrbitalElements() {
   semi_major_axis_m_ = 0.0;
-  mean_arg_latitude_epoch_rad_ = 0.0;
+  true_latitude_angle_epoch_rad_ = 0.0;
   eccentricity_x_ = 0.0;
   eccentricity_y_ = 0.0;
   inclination_rad_ = 0.0;
@@ -23,15 +23,15 @@ QuasiNonsingularOrbitalElements::QuasiNonsingularOrbitalElements(const double se
       eccentricity_y_(eccentricity_y),
       inclination_rad_(inclination_rad),
       raan_rad_(raan_rad),
-      mean_arg_latitude_epoch_rad_(mean_arg_latitude_epoch_rad) {
+      true_latitude_angle_epoch_rad_(mean_arg_latitude_epoch_rad) {
   CalcOrbitConstants();
 }
 
 QuasiNonsingularOrbitalElements::QuasiNonsingularOrbitalElements(const OrbitalElements oe) {
-  double mean_anomaly_rad = 0.0;  // since the epoch is the perigee pass time
+  double true_anomaly_rad = 0.0;  // since the epoch is the perigee pass time
 
   semi_major_axis_m_ = oe.GetSemiMajor();
-  mean_arg_latitude_epoch_rad_ = oe.GetArgPerigee() + mean_anomaly_rad;
+  true_latitude_angle_epoch_rad_ = oe.GetArgPerigee() + true_anomaly_rad;
   eccentricity_x_ = oe.GetEccentricity() * cos(oe.GetArgPerigee());
   eccentricity_y_ = oe.GetEccentricity() * sin(oe.GetArgPerigee());
   inclination_rad_ = oe.GetInclination();
@@ -48,7 +48,7 @@ QuasiNonsingularOrbitalElements operator-(const QuasiNonsingularOrbitalElements 
   double eccentricity_y = lhs.GetEccentricityY() - rhs.GetEccentricityY();
   double inclination_rad = lhs.GetInclination_rad() - rhs.GetInclination_rad();
   double raan_rad = lhs.GetRaan_rad() - rhs.GetRaan_rad();
-  double mean_arg_latitude_epoch_rad = lhs.GetMeanArgLatEpoch_rad() - lhs.GetMeanArgLatEpoch_rad();
+  double mean_arg_latitude_epoch_rad = lhs.GetTrueLatAngEpoch_rad() - lhs.GetTrueLatAngEpoch_rad();
 
   QuasiNonsingularOrbitalElements out(semi_major_axis_m, eccentricity_x, eccentricity_y, inclination_rad, raan_rad, mean_arg_latitude_epoch_rad);
 

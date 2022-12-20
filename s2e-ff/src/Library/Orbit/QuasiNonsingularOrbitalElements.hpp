@@ -24,7 +24,7 @@ class QuasiNonsingularOrbitalElements {
    * @brief Constructor initialized with values
    */
   QuasiNonsingularOrbitalElements(const double semi_major_axis_m, const double eccentricity_x, const double eccentricity_y,
-                                  const double inclination_rad, const double raan_rad, const double mean_arg_latitude_epoch_rad);
+                                  const double inclination_rad, const double raan_rad, const double true_latitude_angle_epoch_rad);
   /**
    * @fn QuasiNonsingularOrbitalElements
    * @brief Constructor initialized with orbital elements
@@ -65,17 +65,17 @@ class QuasiNonsingularOrbitalElements {
   inline double GetRaan_rad() const { return raan_rad_; }
   /**
    * @fn GetMeanArgLatEpoch_rad
-   * @brief Return Mean argument of Latitude at epoch [rad]
+   * @brief Return True latitude angle at epoch [rad]
    */
-  inline double GetMeanArgLatEpoch_rad() const { return mean_arg_latitude_epoch_rad_; }
+  inline double GetTrueLatAngEpoch_rad() const { return true_latitude_angle_epoch_rad_; }
 
  private:
-  double semi_major_axis_m_;            //!< Semi major axis [m]
-  double eccentricity_x_;               //!< e * cos(arg_peri)
-  double eccentricity_y_;               //!< e * sin(arg_peri)
-  double inclination_rad_;              //!< Inclination [rad]
-  double raan_rad_;                     //!< Right Ascension of the Ascending Node [rad]
-  double mean_arg_latitude_epoch_rad_;  //!< Mean argument of Latitude at epoch (arg_peri + mean anomaly) [rad]
+  double semi_major_axis_m_;              //!< Semi major axis [m]
+  double eccentricity_x_;                 //!< e * cos(arg_peri)
+  double eccentricity_y_;                 //!< e * sin(arg_peri)
+  double inclination_rad_;                //!< Inclination [rad]
+  double raan_rad_;                       //!< Right Ascension of the Ascending Node [rad]
+  double true_latitude_angle_epoch_rad_;  //!< True latitude angle at epoch (arg_peri + true anomaly) [rad]
 
   // Orbit states
   double semi_latus_rectum_;  //!< Semi-latus rectum [m]
