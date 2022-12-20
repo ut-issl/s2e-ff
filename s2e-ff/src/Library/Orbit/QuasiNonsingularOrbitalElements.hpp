@@ -76,6 +76,16 @@ class QuasiNonsingularOrbitalElements {
   double inclination_rad_;              //!< Inclination [rad]
   double raan_rad_;                     //!< Right Ascension of the Ascending Node [rad]
   double mean_arg_latitude_epoch_rad_;  //!< Mean argument of Latitude at epoch (arg_peri + mean anomaly) [rad]
+
+  // Orbit states
+  double semi_latus_rectum_;  //!< Semi-latus rectum [m]
+  double radius_;             //!< Current radius [m]
+
+  /**
+   * @fn CalcOrbitConstants
+   * @brief Calculate constant values for orbit
+   */
+  void CalcOrbitConstants();
 };
 
 /**
