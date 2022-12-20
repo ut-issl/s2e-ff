@@ -58,10 +58,20 @@ class QuasiNonsingularOrbitalElements {
    */
   inline double GetRaan_rad() const { return raan_rad_; }
   /**
-   * @fn GetMeanArgLatEpoch_rad
+   * @fn GetTrueLatAng_rad
    * @brief Return True latitude angle [rad]
    */
   inline double GetTrueLatAng_rad() const { return true_latitude_angle_rad_; }
+  /**
+   * @fn GetSemiLatusRectum_m
+   * @brief Return Semi-latus rectum [m]
+   */
+  inline double GetSemiLatusRectum_m() const { return semi_latus_rectum_m_; }
+  /**
+   * @fn GetRadius_m
+   * @brief Return Current radius [m]
+   */
+  inline double GetRadius_m() const { return radius_m_; }
 
  private:
   double semi_major_axis_m_;        //!< Semi major axis [m]
@@ -72,14 +82,14 @@ class QuasiNonsingularOrbitalElements {
   double true_latitude_angle_rad_;  //!< True latitude angle (arg_peri + true anomaly) [rad]
 
   // Orbit states
-  double semi_latus_rectum_;  //!< Semi-latus rectum [m]
-  double radius_;             //!< Current radius [m]
+  double semi_latus_rectum_m_;  //!< Semi-latus rectum [m]
+  double radius_m_;             //!< Current radius [m]
 
   /**
-   * @fn CalcOrbitConstants
-   * @brief Calculate constant values for orbit
+   * @fn CalcOrbitParameters
+   * @brief Calculate parameters for orbit
    */
-  void CalcOrbitConstants();
+  void CalcOrbitParameters();
 };
 
 /**
