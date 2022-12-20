@@ -74,7 +74,7 @@ QuasiNonsingularOrbitalElementDifferences::QuasiNonsingularOrbitalElementDiffere
   conversion_to_oed[4][5] = -1.0 * ex * cot_i * sin_theta / v_t;
   // For RAAN
   conversion_to_oed[5][2] = -1.0 * (cos_theta + nu * sin_theta) / (r * sin_i);
-  conversion_to_oed[5][2] = sin_theta / (v_t * sin_i);
+  conversion_to_oed[5][5] = sin_theta / (v_t * sin_i);
 
   // Output
   libra::Vector<6> position_and_velocity;
