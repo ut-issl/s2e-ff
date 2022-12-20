@@ -33,7 +33,7 @@ class QuasiNonsingularOrbitalElements {
   QuasiNonsingularOrbitalElements(const OrbitalElements oe);
   /**
    * @fn ~QuasiNonsingularOrbitalElements
-   * @brief Deconstructor
+   * @brief Destructor
    */
   ~QuasiNonsingularOrbitalElements();
 

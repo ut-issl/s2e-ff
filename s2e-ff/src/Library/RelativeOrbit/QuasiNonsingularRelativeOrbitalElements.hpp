@@ -17,20 +17,59 @@
  */
 class QuasiNonsingularRelativeOrbitalElements {
  public:
+  /**
+   * @fn QuasiNonsingularRelativeOrbitalElements
+   * @brief Constructor initialized with tow quasi-nonsingular orbital elements
+   * @param [in] qns_oe_reference: Quasi-nonsingular orbital elements of the reference spacecraft
+   * @param [in] qns_oe_target: Quasi-nonsingular orbital elements of the target spacecraft
+   */
   QuasiNonsingularRelativeOrbitalElements(const QuasiNonsingularOrbitalElements qns_oe_reference,
                                           const QuasiNonsingularOrbitalElements qns_oe_target);
+  /**
+   * @fn ~QuasiNonsingularRelativeOrbitalElements
+   * @brief Destructor
+   */
   ~QuasiNonsingularRelativeOrbitalElements();
 
   // Calculation
-  libra::Vector<3> CalcRelativePositionCircularApprox_rtn_m(
-      const double arg_lat_rad);  //!< Calculate relative position from ROE when near circular chief orbit
+  /**
+   * @fn CalcRelativePositionCircularApprox_rtn_m
+   * @brief Calculate the relative position of target spacecraft with circular approximation
+   * @param [in] arg_lat_rad: Argument of latitude [rad]
+   * @return Relative position vector in RTN frame of reference spacecraft
+   */
+  libra::Vector<3> CalcRelativePositionCircularApprox_rtn_m(const double arg_lat_rad);
 
   // Getter
+  /**
+   * @fn GetDeltaSemiMajor
+   * @brief Return Relative semi major axis [-]
+   */
   inline double GetDeltaSemiMajor() const { return d_semi_major_axis_; }
+  /**
+   * @fn GetDeltaSemiMajor
+   * @brief Return Relative mean longitude [-]
+   */
   inline double GetDeltaMeanLongitude() const { return d_mean_longitude_; }
+  /**
+   * @fn GetDeltaSemiMajor
+   * @brief Return Relative eccentricity vector X component [-]
+   */
   inline double GetDeltaEccentricityX() const { return d_eccentricity_x_; }
+  /**
+   * @fn GetDeltaSemiMajor
+   * @brief Return Relative eccentricity vector Y component [-]
+   */
   inline double GetDeltaEccentricityY() const { return d_eccentricity_y_; }
+  /**
+   * @fn GetDeltaSemiMajor
+   * @brief Return Relative inclination vector X component [-]
+   */
   inline double GetDeltaInclinationX() const { return d_inclination_x_; }
+  /**
+   * @fn GetDeltaSemiMajor
+   * @brief Return Relative inclination vector Y component [-]
+   */
   inline double GetDeltaInclinationY() const { return d_inclination_y_; }
 
  private:
