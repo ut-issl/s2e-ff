@@ -31,11 +31,11 @@ QuasiNonsingularOrbitalElementDifferences::QuasiNonsingularOrbitalElementDiffere
   const double sin_theta = sin(theta);
   const double cos_2theta = cos(2.0 * theta);
   const double sin_2theta = sin(2.0 * theta);
-  const double p = a * (1.0 - (ex * ex + ey * ey));  //!< Semilatus rectum
-  const double h = sqrt(mu_m3_s2 * p);               //!< Orbit angular momentum
+  const double p = qns_oe_reference_.GetSemiLatusRectum_m();
+  const double h = sqrt(mu_m3_s2 * p);  //!< Orbit angular momentum
+  const double r = qns_oe_reference_.GetRadius_m();
 
   // Calculation
-  const double r = p / (1.0 + ex * cos_theta + ey * sin_theta);
   const double v_r = h / p * (ex * sin_theta - ey * cos_theta);
   const double v_t = h / p * (1.0 + ex * cos_theta + ey * sin_theta);
 
@@ -100,7 +100,8 @@ libra::Vector<3> QuasiNonsingularOrbitalElementDifferences::CalcRelativePosition
   const double theta = qns_oe_reference_.GetTrueLatAng_rad();
   const double cos_theta = cos(theta);
   const double sin_theta = sin(theta);
-  const double p = a * (1.0 - (ex * ex + ey * ey));  //!< Semilatus rectum
+  const double p = qns_oe_reference_.GetSemiLatusRectum_m();
+  const double r = qns_oe_reference_.GetRadius_m();
 
   // Relative orbit variables
   const double d_a = diff_qns_oe_.GetSemiMajor_m();
@@ -111,7 +112,6 @@ libra::Vector<3> QuasiNonsingularOrbitalElementDifferences::CalcRelativePosition
   const double d_raan = diff_qns_oe_.GetRaan_rad();
 
   // Calculation
-  const double r = p / (1.0 + ex * cos_theta + ey * sin_theta);
   const double v_r = (ex * sin_theta - ey * cos_theta);  // without h/p since it will be cancelled in v_r / v_t
   const double v_t = (1.0 + ex * cos_theta + ey * sin_theta);
   const double d_r = r / a * d_a + v_r / v_t * r * d_theta - r / p * ((2.0 * a * ex + r * cos_theta) * d_ex + (2.0 * a * ey + r * sin_theta) * d_ey);
@@ -134,8 +134,9 @@ libra::Vector<3> QuasiNonsingularOrbitalElementDifferences::CalcRelativeVelocity
   const double theta = qns_oe_reference_.GetTrueLatAng_rad();
   const double cos_theta = cos(theta);
   const double sin_theta = sin(theta);
-  const double p = a * (1.0 - (ex * ex + ey * ey));  //!< Semilatus rectum
-  const double h = sqrt(mu_m3_s2 * p);               //!< Orbit angular momentum
+  const double p = qns_oe_reference_.GetSemiLatusRectum_m();
+  const double h = sqrt(mu_m3_s2 * p);  //!< Orbit angular momentum
+  const double r = qns_oe_reference_.GetRadius_m();
 
   // Relative orbit variables
   const double d_a = diff_qns_oe_.GetSemiMajor_m();
@@ -146,7 +147,6 @@ libra::Vector<3> QuasiNonsingularOrbitalElementDifferences::CalcRelativeVelocity
   const double d_raan = diff_qns_oe_.GetRaan_rad();
 
   // Calculation
-  const double r = p / (1.0 + ex * cos_theta + ey * sin_theta);
   const double v_r = h / p * (ex * sin_theta - ey * cos_theta);
   const double v_t = h / p * (1.0 + ex * cos_theta + ey * sin_theta);
 
