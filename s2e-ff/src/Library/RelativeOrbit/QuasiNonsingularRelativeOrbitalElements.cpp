@@ -15,7 +15,7 @@ QuasiNonsingularRelativeOrbitalElements::QuasiNonsingularRelativeOrbitalElements
 
   d_semi_major_axis_ = (qns_oe_target.GetSemiMajor_m() - semi_major_axis_ref_m_) / semi_major_axis_ref_m_;
   d_mean_longitude_ =
-      (qns_oe_target.GetMeanArgLatEpoch_rad() - qns_oe_reference.GetMeanArgLatEpoch_rad()) + diff_raan * cos(qns_oe_reference.GetInclination_rad());
+      (qns_oe_target.GetTrueLatAng_rad() - qns_oe_reference.GetTrueLatAng_rad()) + diff_raan * cos(qns_oe_reference.GetInclination_rad());
 
   d_eccentricity_x_ = qns_oe_target.GetEccentricityX() - qns_oe_reference.GetEccentricityX();
   d_eccentricity_y_ = qns_oe_target.GetEccentricityY() - qns_oe_reference.GetEccentricityY();

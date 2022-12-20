@@ -24,13 +24,7 @@ class QuasiNonsingularOrbitalElements {
    * @brief Constructor initialized with values
    */
   QuasiNonsingularOrbitalElements(const double semi_major_axis_m, const double eccentricity_x, const double eccentricity_y,
-                                  const double inclination_rad, const double raan_rad, const double true_latitude_angle_epoch_rad);
-  /**
-   * @fn QuasiNonsingularOrbitalElements
-   * @brief Constructor initialized with orbital elements
-   * @param oe: Orbital Elements
-   */
-  QuasiNonsingularOrbitalElements(const OrbitalElements oe);
+                                  const double inclination_rad, const double raan_rad, const double true_latitude_angle_rad);
   /**
    * @fn ~QuasiNonsingularOrbitalElements
    * @brief Destructor
@@ -65,17 +59,17 @@ class QuasiNonsingularOrbitalElements {
   inline double GetRaan_rad() const { return raan_rad_; }
   /**
    * @fn GetMeanArgLatEpoch_rad
-   * @brief Return True latitude angle at epoch [rad]
+   * @brief Return True latitude angle [rad]
    */
-  inline double GetTrueLatAngEpoch_rad() const { return true_latitude_angle_epoch_rad_; }
+  inline double GetTrueLatAng_rad() const { return true_latitude_angle_rad_; }
 
  private:
-  double semi_major_axis_m_;              //!< Semi major axis [m]
-  double eccentricity_x_;                 //!< e * cos(arg_peri)
-  double eccentricity_y_;                 //!< e * sin(arg_peri)
-  double inclination_rad_;                //!< Inclination [rad]
-  double raan_rad_;                       //!< Right Ascension of the Ascending Node [rad]
-  double true_latitude_angle_epoch_rad_;  //!< True latitude angle at epoch (arg_peri + true anomaly) [rad]
+  double semi_major_axis_m_;        //!< Semi major axis [m]
+  double eccentricity_x_;           //!< e * cos(arg_peri)
+  double eccentricity_y_;           //!< e * sin(arg_peri)
+  double inclination_rad_;          //!< Inclination [rad]
+  double raan_rad_;                 //!< Right Ascension of the Ascending Node [rad]
+  double true_latitude_angle_rad_;  //!< True latitude angle (arg_peri + true anomaly) [rad]
 
   // Orbit states
   double semi_latus_rectum_;  //!< Semi-latus rectum [m]

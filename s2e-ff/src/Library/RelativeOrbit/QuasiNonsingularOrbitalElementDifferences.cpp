@@ -26,7 +26,7 @@ QuasiNonsingularOrbitalElementDifferences::QuasiNonsingularOrbitalElementDiffere
   const double i = qns_oe_reference_.GetInclination_rad();
   const double sin_i = sin(i);
   const double cot_i = cos(i) / sin_i;
-  const double theta = qns_oe_reference_.GetMeanArgLatEpoch_rad();  // + some thing?
+  const double theta = qns_oe_reference_.GetTrueLatAng_rad();
   const double cos_theta = cos(theta);
   const double sin_theta = sin(theta);
   const double cos_2theta = cos(2.0 * theta);
@@ -97,7 +97,7 @@ libra::Vector<3> QuasiNonsingularOrbitalElementDifferences::CalcRelativePosition
   const double ex = qns_oe_reference_.GetEccentricityX();
   const double ey = qns_oe_reference_.GetEccentricityY();
   const double i = qns_oe_reference_.GetInclination_rad();
-  const double theta = qns_oe_reference_.GetMeanArgLatEpoch_rad();  // + some thing?
+  const double theta = qns_oe_reference_.GetTrueLatAng_rad();
   const double cos_theta = cos(theta);
   const double sin_theta = sin(theta);
   const double p = a * (1.0 - (ex * ex + ey * ey));  //!< Semilatus rectum
@@ -106,7 +106,7 @@ libra::Vector<3> QuasiNonsingularOrbitalElementDifferences::CalcRelativePosition
   const double d_a = diff_qns_oe_.GetSemiMajor_m();
   const double d_ex = diff_qns_oe_.GetEccentricityX();
   const double d_ey = diff_qns_oe_.GetEccentricityY();
-  const double d_theta = diff_qns_oe_.GetMeanArgLatEpoch_rad();
+  const double d_theta = diff_qns_oe_.GetTrueLatAng_rad();
   const double d_i = diff_qns_oe_.GetInclination_rad();
   const double d_raan = diff_qns_oe_.GetRaan_rad();
 
@@ -131,7 +131,7 @@ libra::Vector<3> QuasiNonsingularOrbitalElementDifferences::CalcRelativeVelocity
   const double ex = qns_oe_reference_.GetEccentricityX();
   const double ey = qns_oe_reference_.GetEccentricityY();
   const double i = qns_oe_reference_.GetInclination_rad();
-  const double theta = qns_oe_reference_.GetMeanArgLatEpoch_rad();  // + some thing?
+  const double theta = qns_oe_reference_.GetTrueLatAng_rad();
   const double cos_theta = cos(theta);
   const double sin_theta = sin(theta);
   const double p = a * (1.0 - (ex * ex + ey * ey));  //!< Semilatus rectum
@@ -141,7 +141,7 @@ libra::Vector<3> QuasiNonsingularOrbitalElementDifferences::CalcRelativeVelocity
   const double d_a = diff_qns_oe_.GetSemiMajor_m();
   const double d_ex = diff_qns_oe_.GetEccentricityX();
   const double d_ey = diff_qns_oe_.GetEccentricityY();
-  const double d_theta = diff_qns_oe_.GetMeanArgLatEpoch_rad();
+  const double d_theta = diff_qns_oe_.GetTrueLatAng_rad();
   const double d_i = diff_qns_oe_.GetInclination_rad();
   const double d_raan = diff_qns_oe_.GetRaan_rad();
 
