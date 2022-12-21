@@ -2,7 +2,7 @@
 
 #include "../src/Library/RelativeOrbit/QuasiNonsingularOrbitalElementDifferences.hpp"
 
-TEST(QuasiNonsingularOrbitalElementDifference, Constructor) {
+TEST(QuasiNonsingularOrbitalElementDifferences, ConstructorWithOe) {
   // lhs
   const double reference_semi_major_axis_m = 6896e3;
   const double reference_eccentricity_x = 0.0;  // Test singular point

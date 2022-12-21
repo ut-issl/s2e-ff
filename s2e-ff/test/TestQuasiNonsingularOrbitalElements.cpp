@@ -2,7 +2,7 @@
 
 #include "../src/Library/Orbit/QuasiNonsingularOrbitalElements.hpp"
 
-TEST(QuasiNonsingularOrbitalElement, DefaultConstructor) {
+TEST(QuasiNonsingularOrbitalElements, DefaultConstructor) {
   QuasiNonsingularOrbitalElements qn_oe;
 
   // OEs
@@ -17,7 +17,7 @@ TEST(QuasiNonsingularOrbitalElement, DefaultConstructor) {
   EXPECT_DOUBLE_EQ(0.0, qn_oe.GetRadius_m());
 }
 
-TEST(QuasiNonsingularOrbitalElement, ConstructorWithSingularOE) {
+TEST(QuasiNonsingularOrbitalElements, ConstructorWithSingularOe) {
   const double semi_major_axis_m = 6896e3;
   const double eccentricity_x = 0.0;  // Test singular point
   const double eccentricity_y = 0.0;  // Test singular point
@@ -38,7 +38,7 @@ TEST(QuasiNonsingularOrbitalElement, ConstructorWithSingularOE) {
   EXPECT_DOUBLE_EQ(semi_major_axis_m, qn_oe.GetRadius_m());
 }
 
-TEST(QuasiNonsingularOrbitalElement, ConstructorWithOE) {
+TEST(QuasiNonsingularOrbitalElements, ConstructorWithOe) {
   const double semi_major_axis_m = 6896e3;
   const double eccentricity_x = 0.05;
   const double eccentricity_y = 0.03;
@@ -59,7 +59,7 @@ TEST(QuasiNonsingularOrbitalElement, ConstructorWithOE) {
   EXPECT_NEAR(6494189.8, qn_oe.GetRadius_m(), 1e-1);
 }
 
-TEST(QuasiNonsingularOrbitalElement, ConstructorWithPositionVelocity) {
+TEST(QuasiNonsingularOrbitalElements, ConstructorWithPositionVelocity) {
   const double mu_m3_s2 = 3.986008e14;
   libra::Vector<3> position_i_m;
   position_i_m[0] = -5659121.225;
@@ -84,7 +84,7 @@ TEST(QuasiNonsingularOrbitalElement, ConstructorWithPositionVelocity) {
   EXPECT_NEAR(r_norm_m, qn_oe.GetRadius_m(), 1e-1);
 }
 
-TEST(QuasiNonsingularOrbitalElement, Subtract) {
+TEST(QuasiNonsingularOrbitalElements, Subtract) {
   // lhs
   const double lhs_semi_major_axis_m = 6896e3;
   const double lhs_eccentricity_x = 0.0;  // Test singular point
