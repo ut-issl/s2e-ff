@@ -57,7 +57,7 @@ QuasiNonsingularOrbitalElementDifferences::QuasiNonsingularOrbitalElementDiffere
   conversion_to_oed[1][5] = -1.0 * sin_theta * cot_i / v_t;
   // for inclination
   conversion_to_oed[2][2] = (sin_theta - nu * cos_theta) / r;
-  conversion_to_oed[2][5] = -1.0 * cos_theta / v_t;
+  conversion_to_oed[2][5] = cos_theta / v_t;
   // For eccentricity vector X
   conversion_to_oed[3][0] = (3.0 * cos_theta + 2.0 * nu * sin_theta) / (rho * r);
   conversion_to_oed[3][1] = -1.0 * (nu * nu * sin_theta / rho + ex * sin_2theta - ey * cos_2theta) / r;
@@ -66,7 +66,7 @@ QuasiNonsingularOrbitalElementDifferences::QuasiNonsingularOrbitalElementDiffere
   conversion_to_oed[3][4] = (2.0 * cos_theta + nu * sin_theta) / (rho * v_t);
   conversion_to_oed[3][5] = ey * cot_i * sin_theta / v_t;
   // For eccentricity vector Y
-  conversion_to_oed[4][0] = (3.0 * cos_theta - 2.0 * nu * sin_theta) / (rho * r);
+  conversion_to_oed[4][0] = (3.0 * sin_theta - 2.0 * nu * cos_theta) / (rho * r);
   conversion_to_oed[4][1] = (nu * nu * cos_theta / rho + ey * sin_2theta + ex * cos_2theta) / r;
   conversion_to_oed[4][2] = ex * cot_i * (cos_theta + nu * sin_theta) / r;
   conversion_to_oed[4][3] = -1.0 * cos_theta / (rho * v_t);
@@ -154,7 +154,7 @@ libra::Vector<3> QuasiNonsingularOrbitalElementDifferences::CalcRelativeVelocity
   libra::Vector<3> relative_velocity_rtn_m_s;
   relative_velocity_rtn_m_s[0] = -v_r / (2.0 * a) * d_a + (1.0 / r - 1.0 / p) * h * d_theta + (v_r * a * ex + h * sin_theta) * d_ex / p +
                                  (v_r * a * ey - h * cos_theta) * d_ey / p;
-  relative_velocity_rtn_m_s[1] = -3.0 * v_t / (2.0 * a) * d_a + v_r * d_theta + (3.0 * v_t * a * ex + 2.0 * h * cos_theta) * d_ex / p +
+  relative_velocity_rtn_m_s[1] = -3.0 * v_t / (2.0 * a) * d_a - v_r * d_theta + (3.0 * v_t * a * ex + 2.0 * h * cos_theta) * d_ex / p +
                                  (3.0 * v_t * a * ey + 2.0 * h * sin_theta) * d_ey / p + v_r * cos(i) * d_raan;
   relative_velocity_rtn_m_s[2] = (v_t * cos_theta + v_r * sin_theta) * d_i + (v_t * sin_theta - v_r * cos_theta) * sin(i) * d_raan;
 
