@@ -7,6 +7,7 @@
 #define QUASI_NONSINGULAR_ORBITAL_ELEMENTS_H_
 
 #include <Library/math/Vector.hpp>
+#include <Library/math/s2e_math.hpp>
 
 /**
  * @class QuasiNonsingularOrbitalElements
@@ -86,6 +87,13 @@ class QuasiNonsingularOrbitalElements {
    * @brief Return Current radius [m]
    */
   inline double GetRadius_m() const { return radius_m_; }
+
+  // Setter
+  /**
+   * @fn SetTrueLAtAng_rad
+   * @brief Set True latitude angle [rad]
+   */
+  inline void GetTrueLatAng_rad(const double true_latitude_angle_rad) { true_latitude_angle_rad_ = libra::WrapTo2Pi(true_latitude_angle_rad); }
 
  private:
   double semi_major_axis_m_;        //!< Semi major axis [m]

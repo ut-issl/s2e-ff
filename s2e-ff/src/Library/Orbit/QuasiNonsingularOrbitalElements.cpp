@@ -5,7 +5,6 @@
 
 #include "QuasiNonsingularOrbitalElements.hpp"
 
-#include <Library/math/s2e_math.hpp>
 #include <cfloat>
 
 QuasiNonsingularOrbitalElements::QuasiNonsingularOrbitalElements() {
