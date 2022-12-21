@@ -5,6 +5,7 @@
 
 #include "QuasiNonsingularOrbitalElements.hpp"
 
+#include <Library/math/s2e_math.hpp>
 #include <cfloat>
 
 QuasiNonsingularOrbitalElements::QuasiNonsingularOrbitalElements() {
@@ -45,6 +46,7 @@ QuasiNonsingularOrbitalElements::QuasiNonsingularOrbitalElements(const double mu
   libra::Vector<3> h_direction = h;
   h_direction = normalize(h_direction);
   inclination_rad_ = acos(h_direction[2]);
+  inclination_rad_ = libra::WrapTo2Pi(inclination_rad_);
 
   // RAAN
   double norm_h = sqrt(h[0] * h[0] + h[1] * h[1]);
@@ -54,6 +56,7 @@ QuasiNonsingularOrbitalElements::QuasiNonsingularOrbitalElements(const double mu
   } else {
     raan_rad_ = asin(h[0] / sqrt(h[0] * h[0] + h[1] * h[1]));
   }
+  raan_rad_ = libra::WrapTo2Pi(raan_rad_);
 
   // position in plane
   double x_p_m = position_i_m[0] * cos(raan_rad_) + position_i_m[1] * sin(raan_rad_);
@@ -71,6 +74,7 @@ QuasiNonsingularOrbitalElements::QuasiNonsingularOrbitalElements(const double mu
 
   // true anomaly f_rad and eccentric anomaly u_rad
   true_latitude_angle_rad_ = atan2(y_p_m, x_p_m);
+  true_latitude_angle_rad_ = libra::WrapTo2Pi(true_latitude_angle_rad_);
 
   CalcOrbitParameters();
 }
