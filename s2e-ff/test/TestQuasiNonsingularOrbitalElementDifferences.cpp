@@ -3,7 +3,7 @@
 #include "../src/Library/RelativeOrbit/QuasiNonsingularOrbitalElementDifferences.hpp"
 
 TEST(QuasiNonsingularOrbitalElementDifferences, ConstructorWithOe) {
-  // lhs
+  // reference
   const double reference_semi_major_axis_m = 6896e3;
   const double reference_eccentricity_x = 0.0;  // Test singular point
   const double reference_eccentricity_y = 0.0;  // Test singular point
@@ -12,7 +12,7 @@ TEST(QuasiNonsingularOrbitalElementDifferences, ConstructorWithOe) {
   const double reference_true_latitude_angle_rad = 0.5;
   QuasiNonsingularOrbitalElements reference_qn_oe(reference_semi_major_axis_m, reference_eccentricity_x, reference_eccentricity_y,
                                                   reference_inclination_rad, reference_raan_rad, reference_true_latitude_angle_rad);
-  // rhs
+  // target
   const double target_semi_major_axis_m = 6896e3;
   const double target_eccentricity_x = 0.05;
   const double target_eccentricity_y = 0.03;
@@ -37,8 +37,8 @@ TEST(QuasiNonsingularOrbitalElementDifferences, ConstructorWithPositionVelocity)
   const double mu_m3_s2 = 3.986008e14;
   // reference satellite
   const double reference_semi_major_axis_m = 6896e3;
-  const double reference_eccentricity_x = 0.0;  // Test singular point
-  const double reference_eccentricity_y = 0.0;  // Test singular point
+  const double reference_eccentricity_x = 0.002;
+  const double reference_eccentricity_y = 0.004;
   const double reference_inclination_rad = 1.7;
   const double reference_raan_rad = 5.93;
   const double reference_true_latitude_angle_rad = 0.5;
