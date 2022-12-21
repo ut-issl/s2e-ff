@@ -9,8 +9,8 @@ project(S2E_FF
 cmake_minimum_required(VERSION 3.13)
 
 # build config
-option(BUILD_64BIT "Build 64bit" OFF)
-option(GOOGLE_TEST "Execute GoogleTest" OFF)
+option(BUILD_64BIT "Build 64bit" ON)
+option(GOOGLE_TEST "Execute GoogleTest" ON)
 if (NOT BUILD_64BIT)
   option(GOOGLE_TEST OFF) # GoogleTest supports 64bit only
 endif()
@@ -202,12 +202,16 @@ if(GOOGLE_TEST)
   ## Unit test
   set(TEST_PROJECT_NAME ${PROJECT_NAME}_TEST)
   set(TEST_FILES
+    # Dual Quaternion
     src/Library/math/DualQuaternion.cpp
     test/TestDualQuaternion.cpp
     src/Library/math/RotationFirstDualQuaternion.cpp
     test/TestRotationFirstDualQuaternion.cpp
     src/Library/math/TranslationFirstDualQuaternion.cpp
     test/TestTranslationFirstDualQuaternion.cpp
+    # Orbital elements
+    src/Library/Orbit/QuasiNonsingularOrbitalElements.cpp
+    test/TestQuasiNonsingularOrbitalElements.cpp
   )
   add_executable(${TEST_PROJECT_NAME} ${TEST_FILES})
   target_link_libraries(${TEST_PROJECT_NAME} gtest gtest_main)
