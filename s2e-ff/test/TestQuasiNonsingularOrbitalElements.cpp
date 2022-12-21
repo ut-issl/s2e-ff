@@ -83,3 +83,33 @@ TEST(QuasiNonsingularOrbitalElement, ConstructorWithPositionVelocity) {
   EXPECT_NEAR(6.8993218223e6, qn_oe.GetSemiLatusRectum_m(), 1e-1);
   EXPECT_NEAR(r_norm_m, qn_oe.GetRadius_m(), 1e-1);
 }
+
+TEST(QuasiNonsingularOrbitalElement, Subtract) {
+  // lhs
+  const double lhs_semi_major_axis_m = 6896e3;
+  const double lhs_eccentricity_x = 0.0;  // Test singular point
+  const double lhs_eccentricity_y = 0.0;  // Test singular point
+  const double lhs_inclination_rad = 1.7;
+  const double lhs_raan_rad = 5.93;
+  const double lhs_true_latitude_angle_rad = 0.5;
+  QuasiNonsingularOrbitalElements lhs_qn_oe(lhs_semi_major_axis_m, lhs_eccentricity_x, lhs_eccentricity_y, lhs_inclination_rad, lhs_raan_rad,
+                                            lhs_true_latitude_angle_rad);
+  // rhs
+  const double rhs_semi_major_axis_m = 6896e3;
+  const double rhs_eccentricity_x = 0.05;
+  const double rhs_eccentricity_y = 0.03;
+  const double rhs_inclination_rad = 1.7;
+  const double rhs_raan_rad = 5.93;
+  const double rhs_true_latitude_angle_rad = 0.5;
+  QuasiNonsingularOrbitalElements rhs_qn_oe(rhs_semi_major_axis_m, rhs_eccentricity_x, rhs_eccentricity_y, rhs_inclination_rad, rhs_raan_rad,
+                                            rhs_true_latitude_angle_rad);
+
+  QuasiNonsingularOrbitalElements qn_oe = lhs_qn_oe - rhs_qn_oe;
+  // OEs
+  EXPECT_NEAR(lhs_semi_major_axis_m - rhs_semi_major_axis_m, qn_oe.GetSemiMajor_m(), 1);
+  EXPECT_NEAR(lhs_eccentricity_x - rhs_eccentricity_x, qn_oe.GetEccentricityX(), 1e-6);
+  EXPECT_NEAR(lhs_eccentricity_y - rhs_eccentricity_y, qn_oe.GetEccentricityY(), 1e-6);
+  EXPECT_NEAR(lhs_inclination_rad - rhs_inclination_rad, qn_oe.GetInclination_rad(), 1e-3);
+  EXPECT_NEAR(lhs_raan_rad - rhs_raan_rad, qn_oe.GetRaan_rad(), 1e-3);
+  EXPECT_NEAR(lhs_true_latitude_angle_rad - rhs_true_latitude_angle_rad, qn_oe.GetTrueLatAng_rad(), 1e-3);
+}
