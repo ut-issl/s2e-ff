@@ -91,7 +91,7 @@ QuasiNonsingularOrbitalElementDifferences::QuasiNonsingularOrbitalElementDiffere
 
 QuasiNonsingularOrbitalElementDifferences::~QuasiNonsingularOrbitalElementDifferences() {}
 
-libra::Vector<3> QuasiNonsingularOrbitalElementDifferences::CalcRelativePositionCircularApprox_rtn_m() {
+libra::Vector<3> QuasiNonsingularOrbitalElementDifferences::CalcRelativePosition_rtn_m() {
   // Reference orbit variables
   const double a = qns_oe_reference_.GetSemiMajor_m();
   const double ex = qns_oe_reference_.GetEccentricityX();
@@ -125,7 +125,7 @@ libra::Vector<3> QuasiNonsingularOrbitalElementDifferences::CalcRelativePosition
   return relative_position_rtn_m;
 }
 
-libra::Vector<3> QuasiNonsingularOrbitalElementDifferences::CalcRelativeVelocityCircularApprox_rtn_m_s(const double mu_m3_s2) {
+libra::Vector<3> QuasiNonsingularOrbitalElementDifferences::CalcRelativeVelocity_rtn_m_s(const double mu_m3_s2) {
   // Reference orbit variables
   const double a = qns_oe_reference_.GetSemiMajor_m();
   const double ex = qns_oe_reference_.GetEccentricityX();

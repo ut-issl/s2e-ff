@@ -55,8 +55,8 @@ TEST(QuasiNonsingularOrbitalElementDifferences, ConstructorWithPositionVelocity)
   velocity_rtn_m_s[2] = 0.005298;
 
   QuasiNonsingularOrbitalElementDifferences qn_oe(reference_qn_oe, position_rtn_m, velocity_rtn_m_s, mu_m3_s2);
-  libra::Vector<3> calc_position_rtn_m = qn_oe.CalcRelativePositionCircularApprox_rtn_m();
-  libra::Vector<3> calc_velocity_rtn_m_s = qn_oe.CalcRelativeVelocityCircularApprox_rtn_m_s(mu_m3_s2);
+  libra::Vector<3> calc_position_rtn_m = qn_oe.CalcRelativePosition_rtn_m();
+  libra::Vector<3> calc_velocity_rtn_m_s = qn_oe.CalcRelativeVelocity_rtn_m_s(mu_m3_s2);
 
   // Compare position and velocity
   EXPECT_NEAR(calc_position_rtn_m[0], position_rtn_m[0], 1e-5);

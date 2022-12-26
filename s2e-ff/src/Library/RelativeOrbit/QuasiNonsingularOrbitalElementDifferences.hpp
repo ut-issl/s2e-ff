@@ -43,18 +43,18 @@ class QuasiNonsingularOrbitalElementDifferences {
 
   // Calculation
   /**
-   * @fn CalcRelativePositionCircularApprox_rtn_m
-   * @brief Calculate the relative position of target spacecraft with circular approximation
+   * @fn CalcRelativePosition_rtn_m
+   * @brief Calculate the relative position of target spacecraft with short distance approximation
    * @return Relative position vector in RTN frame of reference spacecraft [m]
    */
-  libra::Vector<3> CalcRelativePositionCircularApprox_rtn_m();
+  libra::Vector<3> CalcRelativePosition_rtn_m();
   /**
-   * @fn CalcRelativeVelocityCircularApprox_rtn_m_s
-   * @brief Calculate the relative velocity of target spacecraft with circular approximation
+   * @fn CalcRelativeVelocity_rtn_m_s
+   * @brief Calculate the relative velocity of target spacecraft with short distance approximation
    * @param [in] mu_m3_s2: Gravity constant of the center body [m3/s2]
    * @return Relative position vector in RTN frame of reference spacecraft [m/s]
    */
-  libra::Vector<3> CalcRelativeVelocityCircularApprox_rtn_m_s(const double mu_m3_s2);
+  libra::Vector<3> CalcRelativeVelocity_rtn_m_s(const double mu_m3_s2);
 
   // Getter
   /**
