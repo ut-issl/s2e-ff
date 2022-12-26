@@ -83,6 +83,16 @@ class QuasiNonsingularRelativeOrbitalElements {
   double d_eccentricity_y_;   //!< Relative eccentricity vector Y component [-]
   double d_inclination_x_;    //!< Relative inclination vector X component [-]
   double d_inclination_y_;    //!< Relative inclination vector Y component [-]
+
+  /**
+   * @fn CalcDiffMeanArgLat_rad
+   * @brief Calaculate difference of mean argument of latitude [rad]
+   * @note Mean argument of latitude = argument of periapsis + mean anomaly
+   * @param [in] qns_oe_reference: Quasi-nonsingular orbital elements of the reference spacecraft
+   * @param [in] qns_oe_target: Quasi-nonsingular orbital elements of the target spacecraft
+   * @return Difference of mean argment of latitude [rad]
+   */
+  double CalcDiffMeanArgLat_rad(const QuasiNonsingularOrbitalElements qns_oe_reference, const QuasiNonsingularOrbitalElements qns_oe_target);
 };
 
 #endif
