@@ -41,6 +41,23 @@ libra::Vector<3> QuasiNonsingularRelativeOrbitalElements::CalcRelativePositionCi
   return relative_position_rtn_m;
 }
 
+libra::Vector<3> QuasiNonsingularRelativeOrbitalElements::CalcRelativeVelocityCircularApprox_rtn_m_s(const double mean_arg_lat_rad,
+                                                                                                     const double mu_m3_s2) {
+  libra::Vector<3> relative_velocity_rtn_m_s;
+  const double cos_u = cos(mean_arg_lat_rad);
+  const double sin_u = sin(mean_arg_lat_rad);
+
+  const double a = semi_major_axis_ref_m_;
+  const double n = sqrt(mu_m3_s2 / (a * a * a));
+
+  relative_velocity_rtn_m_s[0] = d_eccentricity_x_ * sin_u - d_eccentricity_y_ * cos_u;
+  relative_velocity_rtn_m_s[1] = -1.5 * d_semi_major_axis_ + 2.0 * (d_eccentricity_x_ * cos_u + d_eccentricity_y_ * sin_u);
+  relative_velocity_rtn_m_s[2] = d_inclination_x_ * cos_u + d_inclination_y_ * sin_u;
+
+  relative_velocity_rtn_m_s *= (semi_major_axis_ref_m_ * n);
+  return relative_velocity_rtn_m_s;
+}
+
 double QuasiNonsingularRelativeOrbitalElements::CalcDiffMeanArgLat_rad(const QuasiNonsingularOrbitalElements qns_oe_reference,
                                                                        const QuasiNonsingularOrbitalElements qns_oe_target) {
   // Reference info
