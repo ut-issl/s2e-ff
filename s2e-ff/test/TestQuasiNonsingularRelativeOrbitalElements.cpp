@@ -21,6 +21,18 @@ TEST(QuasiNonsingularRelativeOrbitalElements, ConstructorWithOe) {
   const double target_true_latitude_angle_rad = 0.5;
   QuasiNonsingularOrbitalElements target_qn_oe(target_semi_major_axis_m, target_eccentricity_x, target_eccentricity_y, target_inclination_rad,
                                                target_raan_rad, target_true_latitude_angle_rad);
+
+  QuasiNonsingularRelativeOrbitalElements qn_roe(reference_qn_oe, target_qn_oe);
+
+  EXPECT_NEAR((target_semi_major_axis_m - reference_semi_major_axis_m) / reference_semi_major_axis_m, qn_roe.GetDeltaSemiMajor(), 1);
+  // When reference is circular orbit
+  EXPECT_NEAR(target_true_latitude_angle_rad - reference_true_latitude_angle_rad, qn_roe.GetDeltaMeanLongitude(), 1e-6);
+
+  EXPECT_NEAR(target_eccentricity_x - reference_eccentricity_x, qn_roe.GetDeltaEccentricityX(), 1e-6);
+  EXPECT_NEAR(target_eccentricity_y - reference_eccentricity_y, qn_roe.GetDeltaEccentricityY(), 1e-6);
+
+  EXPECT_NEAR(target_inclination_rad - reference_inclination_rad, qn_roe.GetDeltaInclinationX(), 1e-3);
+  EXPECT_NEAR((target_raan_rad - reference_raan_rad) * sin(reference_inclination_rad), qn_roe.GetDeltaInclinationY(), 1e-3);
 }
 
 TEST(QuasiNonsingularRelativeOrbitalElements, ConstructorWithPositionVelocity) {

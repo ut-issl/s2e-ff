@@ -91,13 +91,13 @@ double QuasiNonsingularRelativeOrbitalElements::CalcDiffMeanArgLat_rad(const Qua
   const double cos_theta = cos(qns_oe_reference.GetTrueLatAng_rad());
   const double sin_theta = sin(qns_oe_reference.GetTrueLatAng_rad());
   const double e_cos_f = q1 * cos_theta + q2 * sin_theta;
-  const double sin_f = (q1 * sin_theta - q2 * cos_theta) / e;
-
   const double denominator = (1.0 + e_cos_f) * (1.0 + e_cos_f);
 
-  // Difference Info
   const double arg_peri_ref_rad = atan2(qns_oe_reference.GetEccentricityY(), qns_oe_reference.GetEccentricityX());
   const double true_anomaly_ref_rad = qns_oe_reference.GetTrueLatAng_rad() - arg_peri_ref_rad;
+  const double sin_f = sin(true_anomaly_ref_rad);
+
+  // Difference Info
   const double arg_peri_target_rad = atan2(qns_oe_target.GetEccentricityY(), qns_oe_target.GetEccentricityX());
   const double true_anomaly_target_rad = qns_oe_target.GetTrueLatAng_rad() - arg_peri_target_rad;
   const double d_true_anomaly_rad = true_anomaly_target_rad - true_anomaly_ref_rad;
@@ -105,7 +105,6 @@ double QuasiNonsingularRelativeOrbitalElements::CalcDiffMeanArgLat_rad(const Qua
   const double q1_target = qns_oe_reference.GetEccentricityX();
   const double q2_target = qns_oe_reference.GetEccentricityY();
   const double e_target = sqrt(q1_target * q1_target + q2_target * q2_target);
-
   const double d_e = e_target - e;
 
   const double d_mean_arg_lat_rad = (eta / denominator) * (eta2 * d_true_anomaly_rad - sin_f * (2.0 + e_cos_f) * d_e);
