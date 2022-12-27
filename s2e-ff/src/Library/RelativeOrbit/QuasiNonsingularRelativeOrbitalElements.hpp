@@ -86,7 +86,7 @@ class QuasiNonsingularRelativeOrbitalElements {
 
   /**
    * @fn CalcDiffMeanArgLat_rad
-   * @brief Calaculate difference of mean argument of latitude [rad]
+   * @brief Calculate difference of mean argument of latitude [rad]
    * @note Mean argument of latitude = argument of periapsis + mean anomaly
    * @param [in] qns_oe_reference: Quasi-nonsingular orbital elements of the reference spacecraft
    * @param [in] qns_oe_target: Quasi-nonsingular orbital elements of the target spacecraft
