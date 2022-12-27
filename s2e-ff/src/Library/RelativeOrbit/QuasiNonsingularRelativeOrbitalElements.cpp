@@ -29,8 +29,8 @@ QuasiNonsingularRelativeOrbitalElements::~QuasiNonsingularRelativeOrbitalElement
 
 libra::Vector<3> QuasiNonsingularRelativeOrbitalElements::CalcRelativePositionCircularApprox_rtn_m(const double mean_arg_lat_rad) {
   libra::Vector<3> relative_position_rtn_m;
-  double cos_u = cos(mean_arg_lat_rad);
-  double sin_u = sin(mean_arg_lat_rad);
+  const double cos_u = cos(mean_arg_lat_rad);
+  const double sin_u = sin(mean_arg_lat_rad);
 
   relative_position_rtn_m[0] = d_semi_major_axis_ - (d_eccentricity_x_ * cos_u + d_eccentricity_y_ * sin_u);
   relative_position_rtn_m[1] =
