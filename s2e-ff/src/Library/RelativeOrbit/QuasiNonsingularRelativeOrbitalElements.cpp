@@ -69,8 +69,8 @@ double QuasiNonsingularRelativeOrbitalElements::CalcDiffMeanArgLat_rad(const Qua
   const double q2_target = qns_oe_reference.GetEccentricityY();
   const double e_target = sqrt(q1_target * q1_target + q2_target * q2_target);
 
-  const double d_eccentricity = e_target - e;
+  const double d_e = e_target - e;
 
-  const double d_mean_arg_lat_rad = (eta / denominator) * (eta2 * d_true_anomaly_rad - sin_f * (2.0 + e_cos_f) * d_eccentricity);
+  const double d_mean_arg_lat_rad = (eta / denominator) * (eta2 * d_true_anomaly_rad - sin_f * (2.0 + e_cos_f) * d_e);
   return (arg_peri_target_rad - arg_peri_ref_rad) + d_mean_arg_lat_rad;
 }
