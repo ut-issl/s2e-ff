@@ -27,14 +27,14 @@ QuasiNonsingularRelativeOrbitalElements::QuasiNonsingularRelativeOrbitalElements
 
 QuasiNonsingularRelativeOrbitalElements::~QuasiNonsingularRelativeOrbitalElements() {}
 
-libra::Vector<3> QuasiNonsingularRelativeOrbitalElements::CalcRelativePositionCircularApprox_rtn_m(const double arg_lat_rad) {
+libra::Vector<3> QuasiNonsingularRelativeOrbitalElements::CalcRelativePositionCircularApprox_rtn_m(const double mean_arg_lat_rad) {
   libra::Vector<3> relative_position_rtn_m;
-  double cos_u = cos(arg_lat_rad);
-  double sin_u = sin(arg_lat_rad);
+  double cos_u = cos(mean_arg_lat_rad);
+  double sin_u = sin(mean_arg_lat_rad);
 
   relative_position_rtn_m[0] = d_semi_major_axis_ - (d_eccentricity_x_ * cos_u + d_eccentricity_y_ * sin_u);
   relative_position_rtn_m[1] =
-      -1.5 * d_semi_major_axis_ * arg_lat_rad + d_mean_longitude_ + 2.0 * (d_eccentricity_x_ * sin_u - d_eccentricity_y_ * cos_u);
+      -1.5 * d_semi_major_axis_ * mean_arg_lat_rad + d_mean_longitude_ + 2.0 * (d_eccentricity_x_ * sin_u - d_eccentricity_y_ * cos_u);
   relative_position_rtn_m[2] = d_inclination_x_ * sin_u - d_inclination_y_ * cos_u;
 
   relative_position_rtn_m *= semi_major_axis_ref_m_;

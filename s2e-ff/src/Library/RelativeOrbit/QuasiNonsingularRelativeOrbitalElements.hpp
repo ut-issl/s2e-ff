@@ -35,10 +35,17 @@ class QuasiNonsingularRelativeOrbitalElements {
   /**
    * @fn CalcRelativePositionCircularApprox_rtn_m
    * @brief Calculate the relative position of target spacecraft with circular approximation
-   * @param [in] arg_lat_rad: Argument of latitude [rad]
-   * @return Relative position vector in RTN frame of reference spacecraft
+   * @param [in] mean_arg_lat_rad: Mean argument of latitude [rad]
+   * @return Relative position vector in RTN frame of reference spacecraft [m]
    */
-  libra::Vector<3> CalcRelativePositionCircularApprox_rtn_m(const double arg_lat_rad);
+  libra::Vector<3> CalcRelativePositionCircularApprox_rtn_m(const double mean_arg_lat_rad);
+  /**
+   * @fn CalcRelativeVelocityCircularApprox_rtn_m_s
+   * @brief Calculate the relative position of target spacecraft with circular approximation
+   * @param [in] mean_arg_lat_rad: Mean argument of latitude [rad]
+   * @return Relative velocity vector in RTN frame of reference spacecraft [m/s]
+   */
+  libra::Vector<3> CalcRelativeVelocityCircularApprox_rtn_m_s(const double mean_arg_lat_rad);
 
   // Getter
   /**
