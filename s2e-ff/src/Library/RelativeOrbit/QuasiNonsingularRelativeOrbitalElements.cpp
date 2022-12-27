@@ -39,7 +39,7 @@ QuasiNonsingularRelativeOrbitalElements::QuasiNonsingularRelativeOrbitalElements
   d_eccentricity_x_ = (3.0 * relative_position_rtn_m[0] + 2.0 * dv[1]) / a;
   d_eccentricity_y_ = (-1.0 * dv[0]) / a;
   d_inclination_x_ = (dv[2]) / a;
-  d_inclination_y_ = (relative_position_rtn_m[2]) / a;
+  d_inclination_y_ = (-1.0 * relative_position_rtn_m[2]) / a;
 
   // Reference info
   semi_major_axis_ref_m_ = a;

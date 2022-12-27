@@ -212,8 +212,11 @@ if(GOOGLE_TEST)
     # Orbital elements
     src/Library/Orbit/QuasiNonsingularOrbitalElements.cpp
     test/TestQuasiNonsingularOrbitalElements.cpp
+    # Relative orbital elements
     src/Library/RelativeOrbit/QuasiNonsingularOrbitalElementDifferences.cpp
     test/TestQuasiNonsingularOrbitalElementDifferences.cpp
+    src/Library/RelativeOrbit/QuasiNonsingularRelativeOrbitalElements.cpp
+    test/TestQuasiNonsingularRelativeOrbitalElements.cpp
   )
   add_executable(${TEST_PROJECT_NAME} ${TEST_FILES})
   target_link_libraries(${TEST_PROJECT_NAME} gtest gtest_main)
