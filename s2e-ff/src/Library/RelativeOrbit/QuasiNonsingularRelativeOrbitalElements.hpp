@@ -90,7 +90,7 @@ class QuasiNonsingularRelativeOrbitalElements {
    * @note Mean argument of latitude = argument of periapsis + mean anomaly
    * @param [in] qns_oe_reference: Quasi-nonsingular orbital elements of the reference spacecraft
    * @param [in] qns_oe_target: Quasi-nonsingular orbital elements of the target spacecraft
-   * @return Difference of mean argment of latitude [rad]
+   * @return Difference of mean argument of latitude [rad]
    */
   double CalcDiffMeanArgLat_rad(const QuasiNonsingularOrbitalElements qns_oe_reference, const QuasiNonsingularOrbitalElements qns_oe_target);
 };
