@@ -26,6 +26,16 @@ class QuasiNonsingularRelativeOrbitalElements {
   QuasiNonsingularRelativeOrbitalElements(const QuasiNonsingularOrbitalElements qns_oe_reference,
                                           const QuasiNonsingularOrbitalElements qns_oe_target);
   /**
+   * @fn QuasiNonsingularRelativeOrbitalElements
+   * @brief Constructor initialized with relative position and velocity
+   * @param [in] semi_major_axis_ref_m: Semi-major axis of the reference satellite orbit [m]
+   * @param [in] relative_position_rtn_m: Relative position of target satellite in the reference satellite's RTN frame [m]
+   * @param [in] relative_velocity_rtn_m_s: Relative velocity of target satellite in the reference satellite's RTN frame [m/s]
+   * @param [in] mu_m3_s2: Gravity constant of the center body [m3/s2]
+   */
+  QuasiNonsingularRelativeOrbitalElements(const double semi_major_axis_ref_m, const libra::Vector<3> relative_position_rtn_m,
+                                          const libra::Vector<3> relative_velocity_rtn_m_s, const double mu_m3_s2);
+  /**
    * @fn ~QuasiNonsingularRelativeOrbitalElements
    * @brief Destructor
    */

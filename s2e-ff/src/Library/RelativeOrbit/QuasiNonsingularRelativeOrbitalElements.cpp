@@ -25,6 +25,26 @@ QuasiNonsingularRelativeOrbitalElements::QuasiNonsingularRelativeOrbitalElements
   d_mean_longitude_ = d_mean_arg_lat_rad + diff_raan * cos(qns_oe_reference.GetInclination_rad());
 }
 
+QuasiNonsingularRelativeOrbitalElements::QuasiNonsingularRelativeOrbitalElements(const double semi_major_axis_ref_m,
+                                                                                 const libra::Vector<3> relative_position_rtn_m,
+                                                                                 const libra::Vector<3> relative_velocity_rtn_m_s,
+                                                                                 const double mu_m3_s2) {
+  const double a = semi_major_axis_ref_m;
+  const double n = sqrt(mu_m3_s2 / (a * a * a));
+  const libra::Vector<3> dv = (1.0 / n) * relative_velocity_rtn_m_s;
+
+  // Relative info
+  d_semi_major_axis_ = (4.0 * relative_position_rtn_m[0] + 2.0 * dv[1]) / a;
+  d_mean_longitude_ = (relative_position_rtn_m[1] - 2.0 * dv[0]) / a;
+  d_eccentricity_x_ = (3.0 * relative_position_rtn_m[0] + 2.0 * dv[1]) / a;
+  d_eccentricity_y_ = (-1.0 * dv[0]) / a;
+  d_inclination_x_ = (dv[2]) / a;
+  d_inclination_y_ = (relative_position_rtn_m[2]) / a;
+
+  // Reference info
+  semi_major_axis_ref_m_ = a;
+}
+
 QuasiNonsingularRelativeOrbitalElements::~QuasiNonsingularRelativeOrbitalElements() {}
 
 libra::Vector<3> QuasiNonsingularRelativeOrbitalElements::CalcRelativePositionCircularApprox_rtn_m(const double mean_arg_lat_rad) {
