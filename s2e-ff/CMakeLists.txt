@@ -95,6 +95,9 @@ set(SOURCE_FILES
   src/Library/math/DualQuaternion.cpp
   src/Library/math/RotationFirstDualQuaternion.cpp
   src/Library/math/TranslationFirstDualQuaternion.cpp
+  src/Library/Orbit/QuasiNonsingularOrbitalElements.cpp
+  src/Library/RelativeOrbit/QuasiNonsingularRelativeOrbitalElements.cpp
+  src/Library/RelativeOrbit/QuasiNonsingularOrbitalElementDifferences.cpp
   src/Simulation/Case/FfCase.cpp
   src/Simulation/Spacecraft/FfSat.cpp
   src/Simulation/Spacecraft/FfComponents.cpp
@@ -199,12 +202,21 @@ if(GOOGLE_TEST)
   ## Unit test
   set(TEST_PROJECT_NAME ${PROJECT_NAME}_TEST)
   set(TEST_FILES
+    # Dual Quaternion
     src/Library/math/DualQuaternion.cpp
     test/TestDualQuaternion.cpp
     src/Library/math/RotationFirstDualQuaternion.cpp
     test/TestRotationFirstDualQuaternion.cpp
     src/Library/math/TranslationFirstDualQuaternion.cpp
     test/TestTranslationFirstDualQuaternion.cpp
+    # Orbital elements
+    src/Library/Orbit/QuasiNonsingularOrbitalElements.cpp
+    test/TestQuasiNonsingularOrbitalElements.cpp
+    # Relative orbital elements
+    src/Library/RelativeOrbit/QuasiNonsingularOrbitalElementDifferences.cpp
+    test/TestQuasiNonsingularOrbitalElementDifferences.cpp
+    src/Library/RelativeOrbit/QuasiNonsingularRelativeOrbitalElements.cpp
+    test/TestQuasiNonsingularRelativeOrbitalElements.cpp
   )
   add_executable(${TEST_PROJECT_NAME} ${TEST_FILES})
   target_link_libraries(${TEST_PROJECT_NAME} gtest gtest_main)
