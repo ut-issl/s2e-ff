@@ -2,9 +2,10 @@
 
 #include <Interface/InitInput/IniAccess.h>
 
+#include <Component/IdealComponents/InitializeForceGenerator.hpp>
+
 #include "../../Components/AOCS/InitializeRelativeDistanceSensor.hpp"
 #include "../../Components/AOCS/InitializeRelativePositionSensor.hpp"
-#include "../../Components/IdealComponents/InitializeForceGenerator.hpp"
 #include "../../Components/IdealComponents/InitializeRelativeAttitudeController.hpp"
 
 FfComponents2::FfComponents2(const Dynamics* dynamics, const Structure* structure, const LocalEnvironment* local_env,
