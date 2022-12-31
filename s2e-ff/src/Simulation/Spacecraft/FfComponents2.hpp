@@ -8,9 +8,10 @@
 #include "Vector.hpp"
 
 // include for components
+#include <Component/IdealComponents/ForceGenerator.hpp>
+
 #include "../../Components/AOCS/RelativeDistanceSensor.hpp"
 #include "../../Components/AOCS/RelativePositionSensor.hpp"
-#include "../../Components/IdealComponents/ForceGenerator.hpp"
 #include "../../Components/IdealComponents/RelativeAttitudeController.hpp"
 #include "OBC.h"
 

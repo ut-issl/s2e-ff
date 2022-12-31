@@ -88,8 +88,6 @@ set(SOURCE_FILES
   src/Components/AOCS/InitializeRelativeDistanceSensor.cpp
   src/Components/AOCS/RelativePositionSensor.cpp
   src/Components/AOCS/InitializeRelativePositionSensor.cpp
-  src/Components/IdealComponents/ForceGenerator.cpp
-  src/Components/IdealComponents/InitializeForceGenerator.cpp
   src/Components/IdealComponents/RelativeAttitudeController.cpp
   src/Components/IdealComponents/InitializeRelativeAttitudeController.cpp
   src/Library/math/DualQuaternion.cpp
