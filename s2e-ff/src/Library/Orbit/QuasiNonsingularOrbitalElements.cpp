@@ -88,7 +88,7 @@ QuasiNonsingularOrbitalElements operator-(const QuasiNonsingularOrbitalElements 
   double eccentricity_y = lhs.GetEccentricityY() - rhs.GetEccentricityY();
   double raan_rad = lhs.GetRaan_rad() - rhs.GetRaan_rad();
 
-  QuasiNonsingularOrbitalElements out(semi_major_axis_m, eccentricity_x, eccentricity_y, inclination_rad, raan_rad, true_latitude_angle_rad);
+  QuasiNonsingularOrbitalElements out(semi_major_axis_m, true_latitude_angle_rad, inclination_rad, eccentricity_x, eccentricity_y, raan_rad);
 
   return out;
 }
