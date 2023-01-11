@@ -87,6 +87,21 @@ class QuasiNonsingularOrbitalElements {
    * @brief Return Current radius [m]
    */
   inline double GetRadius_m() const { return radius_m_; }
+  /**
+   * @fn GetAsVector
+   * @brief Return Orbital elements as vector expression
+   * @note Order is semi-major, true latitude, inclination, e_x, e_y, and RAAN
+   */
+  inline libra::Vector<6> GetAsVector() const {
+    libra::Vector<6> oe;
+    oe[0] = semi_major_axis_m_;
+    oe[1] = true_latitude_angle_rad_;
+    oe[2] = inclination_rad_;
+    oe[3] = eccentricity_x_;
+    oe[4] = eccentricity_y_;
+    oe[5] = raan_rad_;
+    return oe;
+  }
 
   // Setter
   /**
