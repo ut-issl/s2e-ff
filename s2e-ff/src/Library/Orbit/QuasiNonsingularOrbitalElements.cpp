@@ -78,7 +78,17 @@ QuasiNonsingularOrbitalElements::QuasiNonsingularOrbitalElements(const double mu
   CalcOrbitParameters();
 }
 
-QuasiNonsingularOrbitalElements ::~QuasiNonsingularOrbitalElements() {}
+QuasiNonsingularOrbitalElements::QuasiNonsingularOrbitalElements(const libra::Vector<6> oe_vector)
+    : semi_major_axis_m_(oe_vector[0]),
+      true_latitude_angle_rad_(oe_vector[1]),
+      inclination_rad_(oe_vector[2]),
+      eccentricity_x_(oe_vector[3]),
+      eccentricity_y_(oe_vector[4]),
+      raan_rad_(oe_vector[5]) {
+  CalcOrbitParameters();
+}
+
+QuasiNonsingularOrbitalElements::~QuasiNonsingularOrbitalElements() {}
 
 QuasiNonsingularOrbitalElements operator-(const QuasiNonsingularOrbitalElements lhs, const QuasiNonsingularOrbitalElements rhs) {
   double semi_major_axis_m = lhs.GetSemiMajor_m() - rhs.GetSemiMajor_m();

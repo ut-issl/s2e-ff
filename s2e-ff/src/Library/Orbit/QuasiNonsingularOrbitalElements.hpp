@@ -41,6 +41,12 @@ class QuasiNonsingularOrbitalElements {
    */
   QuasiNonsingularOrbitalElements(const double mu_m3_s2, const libra::Vector<3> position_i_m, const libra::Vector<3> velocity_i_m_s);
   /**
+   * @fn QuasiNonsingularOrbitalElements
+   * @brief Constructor initialized with orbital elements in Vector expression
+   * @note Order is semi-major, true latitude, inclination, e_x, e_y, and RAAN
+   */
+  QuasiNonsingularOrbitalElements(const libra::Vector<6> oe_vector);
+  /**
    * @fn ~QuasiNonsingularOrbitalElements
    * @brief Destructor
    */

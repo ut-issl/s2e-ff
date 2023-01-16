@@ -84,6 +84,27 @@ TEST(QuasiNonsingularOrbitalElements, ConstructorWithPositionVelocity) {
   EXPECT_NEAR(r_norm_m, qn_oe.GetRadius_m(), 1e-1);
 }
 
+TEST(QuasiNonsingularOrbitalElements, ConstructorWithOeVector) {
+  libra::Vector<6> oe_in;
+  oe_in[0] = 6896e3;
+  oe_in[1] = 0.5;
+  oe_in[2] = 1.7;
+  oe_in[3] = 0.0;  // Test singular point
+  oe_in[4] = 0.0;  // Test singular point
+  oe_in[5] = 5.93;
+  QuasiNonsingularOrbitalElements qn_oe(oe_in);
+
+  libra::Vector<6> oe_out = qn_oe.GetAsVector();
+
+  // OEs
+  for (size_t i = 0; i < 6; i++) {
+    EXPECT_DOUBLE_EQ(oe_out[i], oe_in[i]);
+  }
+  // Parameters
+  EXPECT_DOUBLE_EQ(oe_in[0], qn_oe.GetSemiLatusRectum_m());
+  EXPECT_DOUBLE_EQ(oe_in[0], qn_oe.GetRadius_m());
+}
+
 TEST(QuasiNonsingularOrbitalElements, Subtract) {
   // lhs
   const double lhs_semi_major_axis_m = 6896e3;
