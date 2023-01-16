@@ -90,6 +90,7 @@ set(SOURCE_FILES
   src/Components/AOCS/InitializeRelativePositionSensor.cpp
   src/Components/AOCS/RelativeVelocitySensor.cpp
   src/Components/AOCS/InitializeRelativeVelocitySensor.cpp
+  src/Components/Controller/RelativeOrbitController.cpp
   src/Components/IdealComponents/RelativeAttitudeController.cpp
   src/Components/IdealComponents/InitializeRelativeAttitudeController.cpp
   src/Library/math/DualQuaternion.cpp
