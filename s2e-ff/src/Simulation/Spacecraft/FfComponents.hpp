@@ -12,6 +12,7 @@
 
 #include "../../Components/AOCS/RelativeDistanceSensor.hpp"
 #include "../../Components/AOCS/RelativePositionSensor.hpp"
+#include "../../Components/AOCS/RelativeVelocitySensor.hpp"
 #include "../../Components/IdealComponents/RelativeAttitudeController.hpp"
 #include "OBC.h"
 
@@ -29,6 +30,7 @@ class FfComponents : public InstalledComponents {
   OBC* obc_;
   RelativeDistanceSensor* relative_distance_sensor_;
   RelativePositionSensor* relative_position_sensor_;
+  RelativeVelocitySensor* relative_velocity_sensor_;
   ForceGenerator* force_generator_;
   RelativeAttitudeController* relative_attitude_controller_;
 
