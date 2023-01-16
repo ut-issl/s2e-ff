@@ -13,8 +13,11 @@
 #include "../../Components/AOCS/RelativeDistanceSensor.hpp"
 #include "../../Components/AOCS/RelativePositionSensor.hpp"
 #include "../../Components/AOCS/RelativeVelocitySensor.hpp"
+#include "../../Components/Controller/RelativeOrbitController.hpp"
 #include "../../Components/IdealComponents/RelativeAttitudeController.hpp"
 #include "OBC.h"
+
+class RelativeOrbitController;
 
 class FfComponents : public InstalledComponents {
  public:
@@ -33,6 +36,7 @@ class FfComponents : public InstalledComponents {
   RelativeVelocitySensor* relative_velocity_sensor_;
   ForceGenerator* force_generator_;
   RelativeAttitudeController* relative_attitude_controller_;
+  RelativeOrbitController* relative_orbit_controller_;
 
   // References
   const Dynamics* dynamics_;

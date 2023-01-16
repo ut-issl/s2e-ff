@@ -37,6 +37,8 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
   relative_attitude_controller_ = new RelativeAttitudeController(
       InitializeRelativeAttitudeController(clock_gen, relative_attitude_controller_file, *rel_info_, local_env_->GetCelesInfo(), *dynamics_));
 
+  relative_orbit_controller_ = new RelativeOrbitController(1, clock_gen, *this);
+
   // Debug for actuator output
   libra::Vector<3> force_N;
   force_N[0] = 1.0;
@@ -51,6 +53,7 @@ FfComponents::~FfComponents() {
   delete relative_velocity_sensor_;
   delete force_generator_;
   delete relative_attitude_controller_;
+  delete relative_orbit_controller_;
   // OBC must be deleted the last since it has com ports
   delete obc_;
 }

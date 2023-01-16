@@ -1,6 +1,7 @@
 #include "RelativeOrbitController.hpp"
 
-RelativeOrbitController::RelativeOrbitController(const int prescaler, ClockGenerator* clock_gen) : ComponentBase(prescaler, clock_gen) {}
+RelativeOrbitController::RelativeOrbitController(const int prescaler, ClockGenerator* clock_gen, FfComponents& components)
+    : ComponentBase(prescaler, clock_gen), components_(components) {}
 
 RelativeOrbitController::~RelativeOrbitController() {}
 
