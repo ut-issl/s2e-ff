@@ -28,7 +28,7 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
 
   const std::string rel_vel_file = sat_file.ReadString("COMPONENTS_FILE", "relative_velocity_sensor_file");
   relative_velocity_sensor_ =
-      new RelativeVelocitySensor(InitializeRelativeVelocitySensor(clock_gen, rel_pos_file, compo_step_sec, *rel_info_, *dynamics_));
+      new RelativeVelocitySensor(InitializeRelativeVelocitySensor(clock_gen, rel_vel_file, compo_step_sec, *rel_info_, *dynamics_));
 
   const std::string force_generator_file = sat_file.ReadString("COMPONENTS_FILE", "force_generator_file");
   force_generator_ = new ForceGenerator(InitializeForceGenerator(clock_gen, force_generator_file, dynamics_));
