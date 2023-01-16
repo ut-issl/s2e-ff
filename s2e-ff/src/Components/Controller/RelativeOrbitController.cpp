@@ -15,9 +15,9 @@ void RelativeOrbitController::MainRoutine(int count) {
   a_m_ = 6928000.0;  // TODO: measure the latest semi major axis
   libra::Vector<3> measured_rel_pos_rtn_m = components_.GetRelativePositionSensor().GetMeasuredTargetPosition_rtn_m();
   libra::Vector<3> measured_rel_vel_rtn_m_s = components_.GetRelativeVelocitySensor().GetMeasuredTargetVelocity_rtn_m_s();
-  QuasiNonsingularRelativeOrbitalElements qns_roe(a_m_, measured_rel_pos_rtn_m, measured_rel_vel_rtn_m_s, mu_m3_s2_);
+  QuasiNonsingularRelativeOrbitalElements estimated_qns_roe(a_m_, measured_rel_pos_rtn_m, measured_rel_vel_rtn_m_s, mu_m3_s2_);
 
-  double relative_distance_m = qns_roe.GetDeltaMeanLongitude() * a_m_;
+  double estimated_relative_distance_m = estimated_qns_roe.GetDeltaMeanLongitude() * a_m_;
 }
 
 std::string RelativeOrbitController::GetLogHeader() const {
