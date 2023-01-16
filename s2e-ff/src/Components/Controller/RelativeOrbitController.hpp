@@ -4,6 +4,7 @@
 #include <Component/Abstract/ComponentBase.h>
 #include <Interface/LogOutput/ILoggable.h>
 
+#include "../../Library/RelativeOrbit/QuasiNonsingularRelativeOrbitalElements.hpp"
 #include "../../Simulation/Spacecraft/FfComponents.hpp"
 
 class FfComponents;
@@ -21,6 +22,11 @@ class RelativeOrbitController : public ComponentBase, public ILoggable {
 
  protected:
   FfComponents& components_;
+
+  // Internal variables
+  double a_m_;
+
+  double mu_m3_s2_;
 };
 
 #endif
