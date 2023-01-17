@@ -131,3 +131,11 @@ double QuasiNonsingularRelativeOrbitalElements::CalcDiffMeanArgLat_rad(const Qua
   const double d_mean_arg_lat_rad = (eta / denominator) * (eta2 * d_true_anomaly_rad - sin_f * (2.0 + e_cos_f) * d_e);
   return (arg_peri_target_rad - arg_peri_ref_rad) + d_mean_arg_lat_rad;
 }
+
+QuasiNonsingularRelativeOrbitalElements operator-(const QuasiNonsingularRelativeOrbitalElements lhs,
+                                                  const QuasiNonsingularRelativeOrbitalElements rhs) {
+  libra::Vector<6> out_roe = lhs.GetRelativeOrbitalElementsAsVector() - rhs.GetRelativeOrbitalElementsAsVector();
+  QuasiNonsingularRelativeOrbitalElements out(lhs.GetReferenceSemiMajor_m(), out_roe);
+
+  return out;
+}

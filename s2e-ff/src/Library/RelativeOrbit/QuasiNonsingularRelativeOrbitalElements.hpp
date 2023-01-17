@@ -73,6 +73,11 @@ class QuasiNonsingularRelativeOrbitalElements {
 
   // Getter
   /**
+   * @fn GetReferenceSemiMajor_m
+   * @brief Return reference semi-major axis [m]
+   */
+  inline double GetReferenceSemiMajor_m() const { return semi_major_axis_ref_m_; }
+  /**
    * @fn GetDeltaSemiMajor
    * @brief Return Relative semi major axis [-]
    */
@@ -139,5 +144,13 @@ class QuasiNonsingularRelativeOrbitalElements {
    */
   double CalcDiffMeanArgLat_rad(const QuasiNonsingularOrbitalElements qns_oe_reference, const QuasiNonsingularOrbitalElements qns_oe_target);
 };
+
+/**
+ * @fn Operator -
+ * @brief Calculate subtract of two quasi-nonsingular orbital elements
+ * @note Reference semi-major axis is copied from lhs
+ */
+QuasiNonsingularRelativeOrbitalElements operator-(const QuasiNonsingularRelativeOrbitalElements lhs,
+                                                  const QuasiNonsingularRelativeOrbitalElements rhs);
 
 #endif
