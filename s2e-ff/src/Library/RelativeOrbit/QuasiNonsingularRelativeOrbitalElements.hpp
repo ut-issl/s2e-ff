@@ -19,6 +19,12 @@ class QuasiNonsingularRelativeOrbitalElements {
  public:
   /**
    * @fn QuasiNonsingularRelativeOrbitalElements
+   * @brief Default Constructor
+   * @note All members are initialized as zero
+   */
+  QuasiNonsingularRelativeOrbitalElements();
+  /**
+   * @fn QuasiNonsingularRelativeOrbitalElements
    * @brief Constructor initialized with tow quasi-nonsingular orbital elements
    * @param [in] qns_oe_reference: Quasi-nonsingular orbital elements of the reference spacecraft
    * @param [in] qns_oe_target: Quasi-nonsingular orbital elements of the target spacecraft
@@ -89,6 +95,20 @@ class QuasiNonsingularRelativeOrbitalElements {
    * @brief Return Relative inclination vector Y component [-]
    */
   inline double GetDeltaInclinationY() const { return d_inclination_y_; }
+  /**
+   * @fn GetRelativeOrbitalElementsAsVector
+   * @brief Return Relative Orbital Elements as Vector expression
+   */
+  libra::Vector<6> GetRelativeOrbitalElementsAsVector() const {
+    libra::Vector<6> qns_roe;
+    qns_roe[0] = d_semi_major_axis_;
+    qns_roe[1] = d_mean_longitude_;
+    qns_roe[2] = d_eccentricity_x_;
+    qns_roe[3] = d_eccentricity_y_;
+    qns_roe[4] = d_inclination_x_;
+    qns_roe[5] = d_inclination_y_;
+    return qns_roe;
+  }
 
  private:
   // Reference orbit information

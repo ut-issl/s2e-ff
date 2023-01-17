@@ -7,6 +7,17 @@
 
 #include <cmath>
 
+QuasiNonsingularRelativeOrbitalElements::QuasiNonsingularRelativeOrbitalElements() {
+  semi_major_axis_ref_m_ = 0.0;
+
+  d_semi_major_axis_ = 0.0;
+  d_mean_longitude_ = 0.0;
+  d_eccentricity_x_ = 0.0;
+  d_eccentricity_y_ = 0.0;
+  d_inclination_x_ = 0.0;
+  d_inclination_y_ = 0.0;
+}
+
 QuasiNonsingularRelativeOrbitalElements::QuasiNonsingularRelativeOrbitalElements(const QuasiNonsingularOrbitalElements qns_oe_reference,
                                                                                  const QuasiNonsingularOrbitalElements qns_oe_target) {
   semi_major_axis_ref_m_ = qns_oe_reference.GetSemiMajor_m();
