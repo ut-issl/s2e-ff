@@ -25,6 +25,13 @@ class QuasiNonsingularRelativeOrbitalElements {
   QuasiNonsingularRelativeOrbitalElements();
   /**
    * @fn QuasiNonsingularRelativeOrbitalElements
+   * @brief Constructor initialized with raw value
+   * @param [in] semi_major_axis_ref_m: Semi-major axis of the reference satellite orbit [m]
+   * @param [in] roe_as_vector: Relative Orbital Elements as Vector form
+   */
+  QuasiNonsingularRelativeOrbitalElements(const double semi_major_axis_ref_m, const libra::Vector<6> roe_as_vector);
+  /**
+   * @fn QuasiNonsingularRelativeOrbitalElements
    * @brief Constructor initialized with tow quasi-nonsingular orbital elements
    * @param [in] qns_oe_reference: Quasi-nonsingular orbital elements of the reference spacecraft
    * @param [in] qns_oe_target: Quasi-nonsingular orbital elements of the target spacecraft
