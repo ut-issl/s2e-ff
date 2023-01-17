@@ -26,7 +26,16 @@ class RelativeOrbitController : public ComponentBase, public ILoggable {
   // Internal variables
   double a_m_;
 
+  QuasiNonsingularRelativeOrbitalElements target_qns_roe_with_semi_major_;  //!< Target QNS Relative OE with semi-major axis
+  QuasiNonsingularRelativeOrbitalElements estimated_qns_roe_;               //!< Estimated QNS Relative OE
+
+  double estimated_relative_distance_m_ = 0.0;  //!< Estimated relative distance
+
+  // Constants, parameters
   double mu_m3_s2_;
+
+  // Functions
+  void EstimateStates();
 };
 
 #endif

@@ -74,5 +74,6 @@ void FfComponents::LogSetup(Logger& logger) {
   logger.AddLoggable(relative_distance_sensor_);
   logger.AddLoggable(relative_position_sensor_);
   logger.AddLoggable(relative_velocity_sensor_);
+  logger.AddLoggable(relative_orbit_controller_);
   logger.AddLoggable(force_generator_);
 }
