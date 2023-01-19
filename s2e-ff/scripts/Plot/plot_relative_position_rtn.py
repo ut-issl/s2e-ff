@@ -65,9 +65,9 @@ ax.set_ylabel("Transverse [m]")
 ax.set_zlabel("Normal [m]")
 
 # Add plot settings if you need
-# ax.set_xlim(-30, 30)
-# ax.set_ylim(-30, 30)
-# ax.set_zlim(-20, 20)
+ax.set_xlim(-10, 10)
+ax.set_ylim(-30, 30)
+ax.set_zlim(-10, 10)
 
 ax.plot(0,0,0, marker="*", c="green", markersize=10, label="Sat0")
 ax.plot(d1['sat1 pos from sat0_rtn(X)[m]'].to_numpy(),d1['sat1 pos from sat0_rtn(Y)[m]'].to_numpy(),d1['sat1 pos from sat0_rtn(Z)[m]'].to_numpy(), marker="x", c="red", label="Sat1")
