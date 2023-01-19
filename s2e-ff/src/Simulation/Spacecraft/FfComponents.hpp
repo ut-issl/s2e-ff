@@ -13,6 +13,7 @@
 #include "../../Components/AOCS/RelativeDistanceSensor.hpp"
 #include "../../Components/AOCS/RelativePositionSensor.hpp"
 #include "../../Components/AOCS/RelativeVelocitySensor.hpp"
+#include "../../Components/Analyzer/RelativeOrbitAnalyzer.hpp"
 #include "../../Components/Controller/RelativeOrbitController.hpp"
 #include "../../Components/IdealComponents/RelativeAttitudeController.hpp"
 #include "OBC.h"
@@ -44,6 +45,7 @@ class FfComponents : public InstalledComponents {
 
   RelativeAttitudeController* relative_attitude_controller_;
   RelativeOrbitController* relative_orbit_controller_;
+  RelativeOrbitAnalyzer* relative_orbit_analyzer_;
 
   // References
   const Dynamics* dynamics_;
