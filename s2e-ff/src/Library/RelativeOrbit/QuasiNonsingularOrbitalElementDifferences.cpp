@@ -84,8 +84,8 @@ QuasiNonsingularOrbitalElementDifferences::QuasiNonsingularOrbitalElementDiffere
   }
   libra::Vector<6> relative_oed;
   relative_oed = conversion_to_oed * position_and_velocity;
-  QuasiNonsingularOrbitalElements relative_oed_tmp(relative_oed[0], relative_oed[3], relative_oed[4], relative_oed[2], relative_oed[5],
-                                                   relative_oed[1]);
+  QuasiNonsingularOrbitalElements relative_oed_tmp(relative_oed[0], relative_oed[1], relative_oed[2], relative_oed[3], relative_oed[4],
+                                                   relative_oed[5]);
   diff_qns_oe_ = relative_oed_tmp;
 }
 

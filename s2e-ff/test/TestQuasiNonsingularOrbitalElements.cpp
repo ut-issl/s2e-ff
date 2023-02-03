@@ -24,7 +24,7 @@ TEST(QuasiNonsingularOrbitalElements, ConstructorWithSingularOe) {
   const double inclination_rad = 1.7;
   const double raan_rad = 5.93;
   const double true_latitude_angle_rad = 0.5;
-  QuasiNonsingularOrbitalElements qn_oe(semi_major_axis_m, eccentricity_x, eccentricity_y, inclination_rad, raan_rad, true_latitude_angle_rad);
+  QuasiNonsingularOrbitalElements qn_oe(semi_major_axis_m, true_latitude_angle_rad, inclination_rad, eccentricity_x, eccentricity_y, raan_rad);
 
   // OEs
   EXPECT_DOUBLE_EQ(semi_major_axis_m, qn_oe.GetSemiMajor_m());
@@ -45,7 +45,7 @@ TEST(QuasiNonsingularOrbitalElements, ConstructorWithOe) {
   const double inclination_rad = 1.7;
   const double raan_rad = 5.93;
   const double true_latitude_angle_rad = 0.5;
-  QuasiNonsingularOrbitalElements qn_oe(semi_major_axis_m, eccentricity_x, eccentricity_y, inclination_rad, raan_rad, true_latitude_angle_rad);
+  QuasiNonsingularOrbitalElements qn_oe(semi_major_axis_m, true_latitude_angle_rad, inclination_rad, eccentricity_x, eccentricity_y, raan_rad);
 
   // OEs
   EXPECT_DOUBLE_EQ(semi_major_axis_m, qn_oe.GetSemiMajor_m());
@@ -84,6 +84,27 @@ TEST(QuasiNonsingularOrbitalElements, ConstructorWithPositionVelocity) {
   EXPECT_NEAR(r_norm_m, qn_oe.GetRadius_m(), 1e-1);
 }
 
+TEST(QuasiNonsingularOrbitalElements, ConstructorWithOeVector) {
+  libra::Vector<6> oe_in;
+  oe_in[0] = 6896e3;
+  oe_in[1] = 0.5;
+  oe_in[2] = 1.7;
+  oe_in[3] = 0.0;  // Test singular point
+  oe_in[4] = 0.0;  // Test singular point
+  oe_in[5] = 5.93;
+  QuasiNonsingularOrbitalElements qn_oe(oe_in);
+
+  libra::Vector<6> oe_out = qn_oe.GetAsVector();
+
+  // OEs
+  for (size_t i = 0; i < 6; i++) {
+    EXPECT_DOUBLE_EQ(oe_out[i], oe_in[i]);
+  }
+  // Parameters
+  EXPECT_DOUBLE_EQ(oe_in[0], qn_oe.GetSemiLatusRectum_m());
+  EXPECT_DOUBLE_EQ(oe_in[0], qn_oe.GetRadius_m());
+}
+
 TEST(QuasiNonsingularOrbitalElements, Subtract) {
   // lhs
   const double lhs_semi_major_axis_m = 6896e3;
@@ -92,8 +113,8 @@ TEST(QuasiNonsingularOrbitalElements, Subtract) {
   const double lhs_inclination_rad = 1.7;
   const double lhs_raan_rad = 5.93;
   const double lhs_true_latitude_angle_rad = 0.5;
-  QuasiNonsingularOrbitalElements lhs_qn_oe(lhs_semi_major_axis_m, lhs_eccentricity_x, lhs_eccentricity_y, lhs_inclination_rad, lhs_raan_rad,
-                                            lhs_true_latitude_angle_rad);
+  QuasiNonsingularOrbitalElements lhs_qn_oe(lhs_semi_major_axis_m, lhs_true_latitude_angle_rad, lhs_inclination_rad, lhs_eccentricity_x,
+                                            lhs_eccentricity_y, lhs_raan_rad);
   // rhs
   const double rhs_semi_major_axis_m = 6896e3;
   const double rhs_eccentricity_x = 0.05;
@@ -101,8 +122,8 @@ TEST(QuasiNonsingularOrbitalElements, Subtract) {
   const double rhs_inclination_rad = 1.7;
   const double rhs_raan_rad = 5.93;
   const double rhs_true_latitude_angle_rad = 0.5;
-  QuasiNonsingularOrbitalElements rhs_qn_oe(rhs_semi_major_axis_m, rhs_eccentricity_x, rhs_eccentricity_y, rhs_inclination_rad, rhs_raan_rad,
-                                            rhs_true_latitude_angle_rad);
+  QuasiNonsingularOrbitalElements rhs_qn_oe(rhs_semi_major_axis_m, rhs_true_latitude_angle_rad, rhs_inclination_rad, rhs_eccentricity_x,
+                                            rhs_eccentricity_y, rhs_raan_rad);
 
   QuasiNonsingularOrbitalElements qn_oe = lhs_qn_oe - rhs_qn_oe;
   // OEs
@@ -112,4 +133,23 @@ TEST(QuasiNonsingularOrbitalElements, Subtract) {
   EXPECT_NEAR(lhs_inclination_rad - rhs_inclination_rad, qn_oe.GetInclination_rad(), 1e-3);
   EXPECT_NEAR(lhs_raan_rad - rhs_raan_rad, qn_oe.GetRaan_rad(), 1e-3);
   EXPECT_NEAR(lhs_true_latitude_angle_rad - rhs_true_latitude_angle_rad, qn_oe.GetTrueLatAng_rad(), 1e-3);
+}
+
+TEST(QuasiNonsingularOrbitalElements, GetAsVector) {
+  const double semi_major_axis_m = 6896e3;
+  const double eccentricity_x = 0.0;  // Test singular point
+  const double eccentricity_y = 0.0;  // Test singular point
+  const double inclination_rad = 1.7;
+  const double raan_rad = 5.93;
+  const double true_latitude_angle_rad = 0.5;
+  QuasiNonsingularOrbitalElements qn_oe(semi_major_axis_m, true_latitude_angle_rad, inclination_rad, eccentricity_x, eccentricity_y, raan_rad);
+  libra::Vector<6> vector_value = qn_oe.GetAsVector();
+
+  // OEs
+  EXPECT_DOUBLE_EQ(vector_value[0], qn_oe.GetSemiMajor_m());
+  EXPECT_DOUBLE_EQ(vector_value[1], qn_oe.GetTrueLatAng_rad());
+  EXPECT_DOUBLE_EQ(vector_value[2], qn_oe.GetInclination_rad());
+  EXPECT_DOUBLE_EQ(vector_value[3], qn_oe.GetEccentricityX());
+  EXPECT_DOUBLE_EQ(vector_value[4], qn_oe.GetEccentricityY());
+  EXPECT_DOUBLE_EQ(vector_value[5], qn_oe.GetRaan_rad());
 }
