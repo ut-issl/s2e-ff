@@ -6,6 +6,7 @@
 
 #include "../../Components/AOCS/InitializeRelativeDistanceSensor.hpp"
 #include "../../Components/AOCS/InitializeRelativePositionSensor.hpp"
+#include "../../Components/AOCS/InitializeRelativeVelocitySensor.hpp"
 #include "../../Components/IdealComponents/InitializeRelativeAttitudeController.hpp"
 
 FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure, const LocalEnvironment* local_env, const GlobalEnvironment* glo_env,
@@ -25,6 +26,10 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
   relative_position_sensor_ =
       new RelativePositionSensor(InitializeRelativePositionSensor(clock_gen, rel_pos_file, compo_step_sec, *rel_info_, *dynamics_));
 
+  const std::string rel_vel_file = sat_file.ReadString("COMPONENTS_FILE", "relative_velocity_sensor_file");
+  relative_velocity_sensor_ =
+      new RelativeVelocitySensor(InitializeRelativeVelocitySensor(clock_gen, rel_vel_file, compo_step_sec, *rel_info_, *dynamics_));
+
   const std::string force_generator_file = sat_file.ReadString("COMPONENTS_FILE", "force_generator_file");
   force_generator_ = new ForceGenerator(InitializeForceGenerator(clock_gen, force_generator_file, dynamics_));
 
@@ -43,6 +48,7 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
 FfComponents::~FfComponents() {
   delete relative_distance_sensor_;
   delete relative_position_sensor_;
+  delete relative_velocity_sensor_;
   delete force_generator_;
   delete relative_attitude_controller_;
   // OBC must be deleted the last since it has com ports
@@ -64,5 +70,6 @@ Vector<3> FfComponents::GenerateTorque_Nm_b() {
 void FfComponents::LogSetup(Logger& logger) {
   logger.AddLoggable(relative_distance_sensor_);
   logger.AddLoggable(relative_position_sensor_);
+  logger.AddLoggable(relative_velocity_sensor_);
   logger.AddLoggable(force_generator_);
 }
