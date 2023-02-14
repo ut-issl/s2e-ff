@@ -53,7 +53,7 @@ FfComponents::~FfComponents() {
   delete relative_position_sensor_;
   delete relative_velocity_sensor_;
   delete force_generator_;
-  delete relative_attitude_controller_;
+  // delete relative_attitude_controller_;
   delete relative_orbit_controller_;
   delete relative_orbit_analyzer_;
   // OBC must be deleted the last since it has com ports
