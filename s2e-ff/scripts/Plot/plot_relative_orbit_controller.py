@@ -77,6 +77,9 @@ baseline_direction_img = np.array([csv_data['RelativeOrbitAnalyzer_baseline_dire
                                    csv_data['RelativeOrbitAnalyzer_baseline_direction_img(Y)[-]'].to_numpy(),
                                    csv_data['RelativeOrbitAnalyzer_baseline_direction_img(Z)[-]'].to_numpy()])
 
+csv_data = pandas.read_csv(read_file_name, skiprows=[1,3], sep=',', usecols=['airdrag_force_b(X)[N]',
+                                                                             'airdrag_force_b(Y)[N]',
+                                                                             'airdrag_force_b(Z)[N]'])                
 
 #
 # Plot
