@@ -14,24 +14,35 @@ RelativeOrbitAnalyzer::~RelativeOrbitAnalyzer() {}
 
 void RelativeOrbitAnalyzer::MainRoutine(int count) {
   UNUSED(count);
-  libra::Vector<3> r_chief_i_m = rel_info_.GetReferenceSatDynamics(0)->GetOrbit().GetSatPosition_i();
-  libra::Vector<3> r_target_i_m = rel_info_.GetReferenceSatDynamics(1)->GetOrbit().GetSatPosition_i();
 
-  libra::Vector<3> r_chief_to_target_i_m = rel_info_.GetRelativePosition_i_m(0, 1);
-  d_norm_chief_to_target_ = norm(r_chief_to_target_i_m);
-  libra::Vector<3> d_chief_to_target_i = normalize(r_chief_to_target_i_m);
-  d_chief_to_target_img_ = dcm_eci_to_img_ * d_chief_to_target_i;
+  // Target-1
+  libra::Vector<3> r_chief_to_target1_i_m = rel_info_.GetRelativePosition_i_m(0, 1);
+  d_norm_chief_to_target1_ = norm(r_chief_to_target1_i_m);
+  libra::Vector<3> d_chief_to_target1_i = normalize(r_chief_to_target1_i_m);
+  d_chief_to_target1_img_ = dcm_eci_to_img_ * d_chief_to_target1_i;
 
-  baseline_angle_in_img_rad_ = asin(d_chief_to_target_img_[2]);
+  baseline_angle1_in_img_rad_ = asin(d_chief_to_target1_img_[2]);
+
+  // Target-2
+  libra::Vector<3> r_chief_to_target2_i_m = rel_info_.GetRelativePosition_i_m(0, 2);
+  d_norm_chief_to_target2_ = norm(r_chief_to_target1_i_m);
+  libra::Vector<3> d_chief_to_target2_i = normalize(r_chief_to_target2_i_m);
+  d_chief_to_target2_img_ = dcm_eci_to_img_ * d_chief_to_target2_i;
+
+  baseline_angle2_in_img_rad_ = asin(d_chief_to_target2_img_[2]);
 }
 
 std::string RelativeOrbitAnalyzer::GetLogHeader() const {
   std::string str_tmp = "";
   std::string head = "RelativeOrbitAnalyzer_";
 
-  str_tmp += WriteVector(head + "baseline_direction", "img", "-", 3);
-  str_tmp += WriteScalar(head + "baseline_length", "m");
-  str_tmp += WriteScalar(head + "baseline_angle_in_img", "rad");
+  str_tmp += WriteVector(head + "baseline_direction_target1", "img", "-", 3);
+  str_tmp += WriteScalar(head + "intersat_length_target1", "m");
+  str_tmp += WriteScalar(head + "baseline_angle_in_img_target1", "rad");
+
+  str_tmp += WriteVector(head + "baseline_direction_target2", "img", "-", 3);
+  str_tmp += WriteScalar(head + "intersat_length_target2", "m");
+  str_tmp += WriteScalar(head + "baseline_angle_in_img_target2", "rad");
 
   return str_tmp;
 }
@@ -39,9 +50,13 @@ std::string RelativeOrbitAnalyzer::GetLogHeader() const {
 std::string RelativeOrbitAnalyzer::GetLogValue() const {
   std::string str_tmp = "";
 
-  str_tmp += WriteVector(d_chief_to_target_img_);
-  str_tmp += WriteScalar(d_norm_chief_to_target_);
-  str_tmp += WriteScalar(baseline_angle_in_img_rad_);
+  str_tmp += WriteVector(d_chief_to_target1_img_);
+  str_tmp += WriteScalar(d_norm_chief_to_target1_);
+  str_tmp += WriteScalar(baseline_angle1_in_img_rad_);
+
+  str_tmp += WriteVector(d_chief_to_target2_img_);
+  str_tmp += WriteScalar(d_norm_chief_to_target2_);
+  str_tmp += WriteScalar(baseline_angle2_in_img_rad_);
 
   return str_tmp;
 }

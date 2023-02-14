@@ -22,9 +22,14 @@ class RelativeOrbitAnalyzer : public ComponentBase, public ILoggable {
   const RelativeInformation& rel_info_;
 
   libra::Matrix<3, 3> dcm_eci_to_img_{0.0};
-  libra::Vector<3> d_chief_to_target_img_{0.0};
-  double d_norm_chief_to_target_ = 0.0;
-  double baseline_angle_in_img_rad_ = 0.0;
+  // Target-1
+  libra::Vector<3> d_chief_to_target1_img_{0.0};
+  double d_norm_chief_to_target1_ = 0.0;
+  double baseline_angle1_in_img_rad_ = 0.0;
+  // Target-2
+  libra::Vector<3> d_chief_to_target2_img_{0.0};
+  double d_norm_chief_to_target2_ = 0.0;
+  double baseline_angle2_in_img_rad_ = 0.0;
 
   libra::Matrix<3, 3> MakeDcmEciToImg(const double dec_deg, const double ra_deg);
 };
