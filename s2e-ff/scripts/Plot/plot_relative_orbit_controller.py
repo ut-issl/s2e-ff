@@ -12,6 +12,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 # local function
 from common import find_latest_log_tag
+from common import read_3d_vector_from_csv
 # csv read
 import pandas
 # arguments
@@ -63,23 +64,11 @@ roe_d1 = np.array([csv_data['RelativeOrbitController_roe_est_-(0)[-]'].to_numpy(
                    csv_data['RelativeOrbitController_roe_est_-(4)[-]'].to_numpy(),
                    csv_data['RelativeOrbitController_roe_est_-(5)[-]'].to_numpy()])
 
-csv_data = pandas.read_csv(read_file_name, skiprows=[1,3], sep=',', usecols=['sat1 pos from sat0_rtn(X)[m]',
-                                                                             'sat1 pos from sat0_rtn(Y)[m]',
-                                                                             'sat1 pos from sat0_rtn(Z)[m]'])
-rel_pos_d1 = np.array([csv_data['sat1 pos from sat0_rtn(X)[m]'].to_numpy(),
-                       csv_data['sat1 pos from sat0_rtn(Y)[m]'].to_numpy(),
-                       csv_data['sat1 pos from sat0_rtn(Z)[m]'].to_numpy()])
+rel_pos_d1 = read_3d_vector_from_csv(read_file_name, 'sat1 pos from sat0_rtn', 'm', [1,3])
+rel_pos_d2 = read_3d_vector_from_csv(read_file_name, 'sat2 pos from sat0_rtn', 'm', [1,3])
 
-csv_data = pandas.read_csv(read_file_name, skiprows=[1,3], sep=',', usecols=['RelativeOrbitAnalyzer_baseline_direction_img(X)[-]',
-                                                                             'RelativeOrbitAnalyzer_baseline_direction_img(Y)[-]',
-                                                                             'RelativeOrbitAnalyzer_baseline_direction_img(Z)[-]'])
-baseline_direction_img = np.array([csv_data['RelativeOrbitAnalyzer_baseline_direction_img(X)[-]'].to_numpy(),
-                                   csv_data['RelativeOrbitAnalyzer_baseline_direction_img(Y)[-]'].to_numpy(),
-                                   csv_data['RelativeOrbitAnalyzer_baseline_direction_img(Z)[-]'].to_numpy()])
-
-csv_data = pandas.read_csv(read_file_name, skiprows=[1,3], sep=',', usecols=['airdrag_force_b(X)[N]',
-                                                                             'airdrag_force_b(Y)[N]',
-                                                                             'airdrag_force_b(Z)[N]'])                
+baseline_direction_target1_img = read_3d_vector_from_csv(read_file_name, 'RelativeOrbitAnalyzer_baseline_direction_target1_img', '-', [1,3])
+baseline_direction_target2_img = read_3d_vector_from_csv(read_file_name, 'RelativeOrbitAnalyzer_baseline_direction_target2_img', '-', [1,3])
 
 #
 # Plot
@@ -97,9 +86,12 @@ plt.ylabel("Estimated Relative ROE [-]")
 plt.legend()
 
 plt.figure(1)
-plt.plot(time[0], rel_pos_d1[0], marker="o", c="red",   label="x_d1")
-plt.plot(time[0], rel_pos_d1[1], marker="o", c="green", label="y_d1")
-plt.plot(time[0], rel_pos_d1[2], marker="o", c="blue",  label="z_d1")
+plt.plot(time[0], rel_pos_d1[0], markersize=5, linestyle='None', marker="x", c="red",   label="x_d1")
+plt.plot(time[0], rel_pos_d1[1], markersize=5, linestyle='None', marker="x", c="green", label="y_d1")
+plt.plot(time[0], rel_pos_d1[2], markersize=5, linestyle='None', marker="x", c="blue",  label="z_d1")
+plt.plot(time[0], rel_pos_d2[0], markersize=5, linestyle='None', marker="+", c="orange",   label="x_d2")
+plt.plot(time[0], rel_pos_d2[1], markersize=5, linestyle='None', marker="+", c="yellow", label="y_d2")
+plt.plot(time[0], rel_pos_d2[2], markersize=5, linestyle='None', marker="+", c="black",  label="z_d2")
 plt.title("Relative Position RTN")
 plt.xlabel("Time [s]")
 plt.ylabel("Relative Position [m]")
@@ -114,9 +106,12 @@ plt.ylabel("Normal direction [m]")
 plt.legend()
 
 plt.figure(3)
-plt.plot(time[0], baseline_direction_img[0], marker="o", c="red",   label="x")
-plt.plot(time[0], baseline_direction_img[1], marker="o", c="green", label="y")
-plt.plot(time[0], baseline_direction_img[2], marker="o", c="blue",  label="z")
+plt.plot(time[0], baseline_direction_target1_img[0], markersize=5, linestyle='None', marker="x", c="red",   label="x_d1")
+plt.plot(time[0], baseline_direction_target1_img[1], markersize=5, linestyle='None', marker="x", c="green", label="y_d1")
+plt.plot(time[0], baseline_direction_target1_img[2], markersize=5, linestyle='None', marker="x", c="blue",  label="z_d1")
+plt.plot(time[0], baseline_direction_target2_img[0], markersize=5, linestyle='None', marker="+", c="orange",   label="x_d2")
+plt.plot(time[0], baseline_direction_target2_img[1], markersize=5, linestyle='None', marker="+", c="yellow", label="y_d2")
+plt.plot(time[0], baseline_direction_target2_img[2], markersize=5, linestyle='None', marker="+", c="black",  label="z_d2")
 plt.title("Baseline direction in IMG frame")
 plt.xlabel("Time [s]")
 plt.ylabel("Direction vector [-]")
