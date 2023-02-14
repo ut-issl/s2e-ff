@@ -29,7 +29,7 @@ def read_3d_vector_from_csv(read_file_name, header_name, unit, skiprows=[1,1]):
                      csv_data[name_z].to_numpy()])
   return vector
 
-def read_scalar_from_csv(read_file_name, header_name):
-  csv_data = pandas.read_csv(read_file_name, sep=',', usecols=[header_name])
+def read_scalar_from_csv(read_file_name, header_name, skiprows=[1,1]):
+  csv_data = pandas.read_csv(read_file_name, skiprows=skiprows, sep=',', usecols=[header_name])
   vector = np.array([csv_data[header_name].to_numpy()])
   return vector

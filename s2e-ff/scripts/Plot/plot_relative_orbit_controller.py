@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 # local function
 from common import find_latest_log_tag
 from common import read_3d_vector_from_csv
+from common import read_scalar_from_csv
 # csv read
 import pandas
 # arguments
@@ -48,8 +49,7 @@ read_file_name  = path_to_logs + '/' + 'logs_' + read_file_tag + '/' + read_file
 # Data read and edit
 #
 # Read S2E CSV
-csv_data = pandas.read_csv(read_file_name, skiprows=[1,3], sep=',', usecols=['time[sec]'])
-time = np.array([csv_data['time[sec]'].to_numpy()])
+time = read_scalar_from_csv(read_file_name, 'time[sec]', [1,3])
 
 csv_data = pandas.read_csv(read_file_name, skiprows=[1,3], sep=',', usecols=['RelativeOrbitController_roe_est_-(0)[-]',
                                                                              'RelativeOrbitController_roe_est_-(1)[-]',
@@ -69,6 +69,10 @@ rel_pos_d2 = read_3d_vector_from_csv(read_file_name, 'sat2 pos from sat0_rtn', '
 
 baseline_direction_target1_img = read_3d_vector_from_csv(read_file_name, 'RelativeOrbitAnalyzer_baseline_direction_target1_img', '-', [1,3])
 baseline_direction_target2_img = read_3d_vector_from_csv(read_file_name, 'RelativeOrbitAnalyzer_baseline_direction_target2_img', '-', [1,3])
+
+inter_sat_distance_01 = read_scalar_from_csv(read_file_name, 'RelativeOrbitAnalyzer_intersat_length_target1[m]', [1,3])
+inter_sat_distance_02 = read_scalar_from_csv(read_file_name, 'RelativeOrbitAnalyzer_intersat_length_target2[m]', [1,3])
+diff_inter_sat_distance = inter_sat_distance_02 - inter_sat_distance_01
 
 #
 # Plot
@@ -115,6 +119,15 @@ plt.plot(time[0], baseline_direction_target2_img[2], markersize=5, linestyle='No
 plt.title("Baseline direction in IMG frame")
 plt.xlabel("Time [s]")
 plt.ylabel("Direction vector [-]")
+plt.legend()
+
+plt.figure(4)
+plt.plot(time[0], inter_sat_distance_01[0], markersize=5, linestyle='None', marker="x", c="red",   label="distance_0-1")
+plt.plot(time[0], inter_sat_distance_02[0], markersize=5, linestyle='None', marker="x", c="green",   label="distance_0-2")
+plt.plot(time[0], diff_inter_sat_distance[0], markersize=5, linestyle='None', marker="x", c="blue",   label="diff_distance")
+plt.title("Inter-satellite distance")
+plt.xlabel("Time [s]")
+plt.ylabel("Inter satellite distance")
 plt.legend()
 
 if args.no_gui:

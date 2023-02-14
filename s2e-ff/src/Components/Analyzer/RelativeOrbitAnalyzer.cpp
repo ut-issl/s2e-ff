@@ -25,7 +25,7 @@ void RelativeOrbitAnalyzer::MainRoutine(int count) {
 
   // Target-2
   libra::Vector<3> r_chief_to_target2_i_m = rel_info_.GetRelativePosition_i_m(0, 2);
-  d_norm_chief_to_target2_ = norm(r_chief_to_target1_i_m);
+  d_norm_chief_to_target2_ = norm(r_chief_to_target2_i_m);
   libra::Vector<3> d_chief_to_target2_i = normalize(r_chief_to_target2_i_m);
   d_chief_to_target2_img_ = dcm_eci_to_img_ * d_chief_to_target2_i;
 
