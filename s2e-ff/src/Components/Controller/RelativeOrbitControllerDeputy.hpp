@@ -5,13 +5,13 @@
 #include <Interface/LogOutput/ILoggable.h>
 
 #include "../../Library/RelativeOrbit/QuasiNonsingularRelativeOrbitalElements.hpp"
-#include "../../Simulation/Spacecraft/FfComponents.hpp"
+#include "../../Simulation/Spacecraft/FfComponents2.hpp"
 
-class FfComponents;
+class FfComponents2;
 
 class RelativeOrbitController : public ComponentBase, public ILoggable {
  public:
-  RelativeOrbitController(const int prescaler, ClockGenerator* clock_gen, FfComponents& components);
+  RelativeOrbitController(const int prescaler, ClockGenerator* clock_gen, FfComponents2& components);
   ~RelativeOrbitController();
   // ComponentBase
   void MainRoutine(int count) override;
@@ -21,7 +21,7 @@ class RelativeOrbitController : public ComponentBase, public ILoggable {
   virtual std::string GetLogValue() const;
 
  protected:
-  FfComponents& components_;
+  FfComponents2& components_;
 
   // Internal variables
   double a_m_;

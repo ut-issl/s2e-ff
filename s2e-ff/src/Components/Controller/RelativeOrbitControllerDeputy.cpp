@@ -1,9 +1,9 @@
-#include "RelativeOrbitController.hpp"
+#include "RelativeOrbitControllerDeputy.hpp"
 
 #include <Environment/Global/PhysicalConstants.hpp>
 #include <Library/math/Constant.hpp>
 
-RelativeOrbitController::RelativeOrbitController(const int prescaler, ClockGenerator* clock_gen, FfComponents& components)
+RelativeOrbitController::RelativeOrbitController(const int prescaler, ClockGenerator* clock_gen, FfComponents2& components)
     : ComponentBase(prescaler, clock_gen), components_(components) {
   mu_m3_s2_ = environment::earth_gravitational_constant_m3_s2;
   a_m_ = 6928000.0;  // FIXME
