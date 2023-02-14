@@ -24,6 +24,7 @@ class RelativeOrbitAnalyzer : public ComponentBase, public ILoggable {
   libra::Matrix<3, 3> dcm_eci_to_img_{0.0};
   libra::Vector<3> d_chief_to_target_img_{0.0};
   double d_norm_chief_to_target_ = 0.0;
+  double baseline_angle_in_img_rad_ = 0.0;
 
   libra::Matrix<3, 3> MakeDcmEciToImg(const double dec_deg, const double ra_deg);
 };

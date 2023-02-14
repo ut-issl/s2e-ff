@@ -5,7 +5,7 @@
 
 RelativeOrbitAnalyzer::RelativeOrbitAnalyzer(const int prescaler, ClockGenerator* clock_gen, const RelativeInformation& rel_info)
     : ComponentBase(prescaler, clock_gen), rel_info_(rel_info) {
-  double target_ra_deg = 10.0;  // TODO: Input parameter
+  double target_ra_deg = 0.0;   // TODO: Input parameter
   double target_dec_deg = 0.0;  // TODO: Input parameter
   dcm_eci_to_img_ = MakeDcmEciToImg(target_dec_deg, target_ra_deg);
 }
@@ -21,6 +21,8 @@ void RelativeOrbitAnalyzer::MainRoutine(int count) {
   d_norm_chief_to_target_ = norm(r_chief_to_target_i_m);
   libra::Vector<3> d_chief_to_target_i = normalize(r_chief_to_target_i_m);
   d_chief_to_target_img_ = dcm_eci_to_img_ * d_chief_to_target_i;
+
+  baseline_angle_in_img_rad_ = asin(d_chief_to_target_img_[2]);
 }
 
 std::string RelativeOrbitAnalyzer::GetLogHeader() const {
@@ -29,6 +31,7 @@ std::string RelativeOrbitAnalyzer::GetLogHeader() const {
 
   str_tmp += WriteVector(head + "baseline_direction", "img", "-", 3);
   str_tmp += WriteScalar(head + "baseline_length", "m");
+  str_tmp += WriteScalar(head + "baseline_angle_in_img", "rad");
 
   return str_tmp;
 }
@@ -38,6 +41,7 @@ std::string RelativeOrbitAnalyzer::GetLogValue() const {
 
   str_tmp += WriteVector(d_chief_to_target_img_);
   str_tmp += WriteScalar(d_norm_chief_to_target_);
+  str_tmp += WriteScalar(baseline_angle_in_img_rad_);
 
   return str_tmp;
 }
