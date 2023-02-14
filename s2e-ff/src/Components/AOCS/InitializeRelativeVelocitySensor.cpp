@@ -5,7 +5,8 @@
 #include "../Abstract/InitializeSensorBase.hpp"
 
 RelativeVelocitySensor InitializeRelativeVelocitySensor(ClockGenerator* clock_gen, const std::string file_name, const double compo_step_time_s,
-                                                        const RelativeInformation& rel_info, const Dynamics& dynamics) {
+                                                        const RelativeInformation& rel_info, const Dynamics& dynamics,
+                                                        const int reference_sat_id_input) {
   // General
   IniAccess ini_file(file_name);
 
@@ -20,6 +21,9 @@ RelativeVelocitySensor InitializeRelativeVelocitySensor(ClockGenerator* clock_ge
   char section[30] = "RelativeVelocitySensor";
   int target_sat_id = ini_file.ReadInt(section, "target_sat_id");
   int reference_sat_id = ini_file.ReadInt(section, "reference_sat_id");
+  if (reference_sat_id < 0) {
+    reference_sat_id = reference_sat_id_input;
+  }
   std::string error_frame_string = ini_file.ReadString(section, "error_frame");
   RelativeVelocitySensorErrorFrame error_frame;
 
