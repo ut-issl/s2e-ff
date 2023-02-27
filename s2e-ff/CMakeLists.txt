@@ -91,6 +91,7 @@ set(SOURCE_FILES
   src/Components/AOCS/RelativeVelocitySensor.cpp
   src/Components/AOCS/InitializeRelativeVelocitySensor.cpp
   src/Components/Controller/RelativeOrbitControllerDeputy.cpp
+  src/Components/Controller/RelativeOrbitControllerChief.cpp
   src/Components/Analyzer/RelativeOrbitAnalyzer.cpp
   src/Components/IdealComponents/RelativeAttitudeController.cpp
   src/Components/IdealComponents/InitializeRelativeAttitudeController.cpp
