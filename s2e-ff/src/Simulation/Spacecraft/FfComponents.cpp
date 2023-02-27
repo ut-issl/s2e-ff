@@ -35,10 +35,6 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
   const std::string force_generator_file = sat_file.ReadString("COMPONENTS_FILE", "force_generator_file");
   force_generator_ = new ForceGenerator(InitializeForceGenerator(clock_gen, force_generator_file, dynamics_));
 
-  // relative_attitude_controller_ = new RelativeAttitudeController(
-  //     InitializeRelativeAttitudeController(clock_gen, relative_attitude_controller_file, *rel_info_, local_env_->GetCelesInfo(), *dynamics_,
-  //     sat_id));
-
   relative_orbit_analyzer_ = new RelativeOrbitAnalyzer(1, clock_gen, *rel_info_);
 
   // Debug for actuator output
@@ -54,7 +50,6 @@ FfComponents::~FfComponents() {
   delete relative_position_sensor_;
   delete relative_velocity_sensor_;
   delete force_generator_;
-  // delete relative_attitude_controller_;
   delete relative_orbit_analyzer_;
   // OBC must be deleted the last since it has com ports
   delete obc_;

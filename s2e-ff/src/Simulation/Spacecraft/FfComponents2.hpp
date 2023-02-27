@@ -45,7 +45,6 @@ class FfComponents2 : public InstalledComponents {
 
   RelativeAttitudeController* relative_attitude_controller_;
   RelativeOrbitController* relative_orbit_controller_;
-  RelativeOrbitAnalyzer* relative_orbit_analyzer_;
 
   // References
   const Dynamics* dynamics_;

@@ -40,7 +40,6 @@ class FfComponents : public InstalledComponents {
   RelativeVelocitySensor* relative_velocity_sensor_;
   ForceGenerator* force_generator_;
 
-  RelativeAttitudeController* relative_attitude_controller_;
   RelativeOrbitAnalyzer* relative_orbit_analyzer_;
 
   // References
