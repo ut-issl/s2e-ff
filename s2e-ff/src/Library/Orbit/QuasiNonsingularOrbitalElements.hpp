@@ -24,14 +24,14 @@ class QuasiNonsingularOrbitalElements {
    * @fn QuasiNonsingularOrbitalElements
    * @brief Constructor initialized with values
    * @param[in] semi_major_axis_m: Semi major axis [m]
+   * @param[in] true_latitude_angle_rad: True latitude angle [rad]
+   * @param[in] inclination_rad: Inclination [rad]
    * @param[in] eccentricity_x: Eccentricity X component
    * @param[in] eccentricity_y: Eccentricity Y component
-   * @param[in] inclination_rad: Inclination [rad]
    * @param[in] raan_rad: Right Ascension of the Ascending Node [rad]
-   * @param[in] true_latitude_angle_rad: True latitude angle [rad]
    */
-  QuasiNonsingularOrbitalElements(const double semi_major_axis_m, const double eccentricity_x, const double eccentricity_y,
-                                  const double inclination_rad, const double raan_rad, const double true_latitude_angle_rad);
+  QuasiNonsingularOrbitalElements(const double semi_major_axis_m, const double true_latitude_angle_rad, const double inclination_rad,
+                                  const double eccentricity_x, const double eccentricity_y, const double raan_rad);
   /**
    * @fn QuasiNonsingularOrbitalElements
    * @brief Constructor initialized with position and velocity
@@ -40,6 +40,12 @@ class QuasiNonsingularOrbitalElements {
    * @param[in] velocity_i_m_s: Velocity vector in the inertial frame [m/s]
    */
   QuasiNonsingularOrbitalElements(const double mu_m3_s2, const libra::Vector<3> position_i_m, const libra::Vector<3> velocity_i_m_s);
+  /**
+   * @fn QuasiNonsingularOrbitalElements
+   * @brief Constructor initialized with orbital elements in Vector expression
+   * @note Order is semi-major, true latitude, inclination, e_x, e_y, and RAAN
+   */
+  QuasiNonsingularOrbitalElements(const libra::Vector<6> oe_vector);
   /**
    * @fn ~QuasiNonsingularOrbitalElements
    * @brief Destructor
@@ -87,6 +93,21 @@ class QuasiNonsingularOrbitalElements {
    * @brief Return Current radius [m]
    */
   inline double GetRadius_m() const { return radius_m_; }
+  /**
+   * @fn GetAsVector
+   * @brief Return Orbital elements as vector expression
+   * @note Order is semi-major, true latitude, inclination, e_x, e_y, and RAAN
+   */
+  inline libra::Vector<6> GetAsVector() const {
+    libra::Vector<6> oe;
+    oe[0] = semi_major_axis_m_;
+    oe[1] = true_latitude_angle_rad_;
+    oe[2] = inclination_rad_;
+    oe[3] = eccentricity_x_;
+    oe[4] = eccentricity_y_;
+    oe[5] = raan_rad_;
+    return oe;
+  }
 
   // Setter
   /**
@@ -97,11 +118,11 @@ class QuasiNonsingularOrbitalElements {
 
  private:
   double semi_major_axis_m_;        //!< Semi major axis [m]
+  double true_latitude_angle_rad_;  //!< True latitude angle (argment of periapsis + true anomaly) [rad]
+  double inclination_rad_;          //!< Inclination [rad]
   double eccentricity_x_;           //!< e * cos(arg_peri)
   double eccentricity_y_;           //!< e * sin(arg_peri)
-  double inclination_rad_;          //!< Inclination [rad]
   double raan_rad_;                 //!< Right Ascension of the Ascending Node [rad]
-  double true_latitude_angle_rad_;  //!< True latitude angle (argment of periapsis + true anomaly) [rad]
 
   // Orbit states
   double semi_latus_rectum_m_;  //!< Semi-latus rectum [m]

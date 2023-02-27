@@ -10,8 +10,8 @@ TEST(QuasiNonsingularRelativeOrbitalElements, ConstructorWithOe) {
   const double reference_inclination_rad = 1.7;
   const double reference_raan_rad = 5.93;
   const double reference_true_latitude_angle_rad = 0.5;
-  QuasiNonsingularOrbitalElements reference_qn_oe(reference_semi_major_axis_m, reference_eccentricity_x, reference_eccentricity_y,
-                                                  reference_inclination_rad, reference_raan_rad, reference_true_latitude_angle_rad);
+  QuasiNonsingularOrbitalElements reference_qn_oe(reference_semi_major_axis_m, reference_true_latitude_angle_rad, reference_inclination_rad,
+                                                  reference_eccentricity_x, reference_eccentricity_y, reference_raan_rad);
   // target
   const double target_semi_major_axis_m = 6896e3;
   const double target_eccentricity_x = 0.05;
@@ -19,8 +19,8 @@ TEST(QuasiNonsingularRelativeOrbitalElements, ConstructorWithOe) {
   const double target_inclination_rad = 1.7;
   const double target_raan_rad = 5.93;
   const double target_true_latitude_angle_rad = 0.5;
-  QuasiNonsingularOrbitalElements target_qn_oe(target_semi_major_axis_m, target_eccentricity_x, target_eccentricity_y, target_inclination_rad,
-                                               target_raan_rad, target_true_latitude_angle_rad);
+  QuasiNonsingularOrbitalElements target_qn_oe(target_semi_major_axis_m, target_true_latitude_angle_rad, target_inclination_rad,
+                                               target_eccentricity_x, target_eccentricity_y, target_raan_rad);
 
   QuasiNonsingularRelativeOrbitalElements qn_roe(reference_qn_oe, target_qn_oe);
 
