@@ -3,15 +3,19 @@
 #include <Environment/Global/PhysicalConstants.hpp>
 #include <Library/math/Constant.hpp>
 
-RelativeOrbitControllerDeputy::RelativeOrbitControllerDeputy(const int prescaler, ClockGenerator* clock_gen, FfComponents2& components)
-    : ComponentBase(prescaler, clock_gen), components_(components) {
+RelativeOrbitControllerDeputy::RelativeOrbitControllerDeputy(const int prescaler, ClockGenerator* clock_gen, const int sc_id,
+                                                             FfComponents2& components)
+    : ComponentBase(prescaler, clock_gen), components_(components), sc_id_(sc_id) {
   mu_m3_s2_ = environment::earth_gravitational_constant_m3_s2;
-  a_m_ = 6928000.0;  // FIXME
 
   // TODO: set target
   Vector<6> target_roe;
   target_roe[0] = 0.0;
-  target_roe[1] = -0.00000289;
+  if (sc_id_ == 1) {
+    target_roe[1] = -0.00000433;
+  } else {
+    target_roe[1] = 0.00000433;
+  }
   target_roe[2] = 0.0;
   target_roe[3] = 0.0;
   target_roe[4] = 0.000000001;
@@ -23,42 +27,43 @@ RelativeOrbitControllerDeputy::~RelativeOrbitControllerDeputy() {}
 
 void RelativeOrbitControllerDeputy::MainRoutine(int count) {
   UNUSED(count);
+
   EstimateStates();
   QuasiNonsingularRelativeOrbitalElements diff_qns_roe = target_qns_roe_ - estimated_qns_roe_;
   static double dv_start_s;
   static double dv_timing_s;
+
   if (count > 1840 && count < 2000) {  // FIXME: set maneuver timing
+    // Calc Maneuver output
     dv_rtn_m_s_ = DoubleImpulse_seirios(dv_start_s, dv_timing_s, diff_qns_roe);
   }
-  // Generate
-  double compo_step_sec = 0.1;  // FIXME
-  int first_start_timing = 3000 + (int)(dv_start_s / compo_step_sec);
-  // First
+
+  // Generate First impulse
+  int first_start_timing = 3000 + (int)(dv_start_s / component_update_sec_);
   if (count > first_start_timing && (first_thrust_done_ == false)) {
-    double mass_kg = 14.0;  // FIXME
-    double output_sec = 10.0;
-    libra::Vector<3> f_rtn_N = (mass_kg / output_sec) * dv_rtn_m_s_;
-    int finish_timing = first_start_timing + int(output_sec / compo_step_sec);
+    libra::Vector<3> f_rtn_N = (mass_kg_ / impulse_output_duration_sec_) * dv_rtn_m_s_;
+    int finish_timing = first_start_timing + int(impulse_output_duration_sec_ / component_update_sec_);
     if (count > finish_timing) {
       first_thrust_done_ = true;
       f_rtn_N = libra::Vector<3>{0.0};
     }
-    // components_.GetForceGenerator().SetForce_rtn_N(f_rtn_N);
+    components_.GetForceGenerator().SetForce_rtn_N(f_rtn_N);
   }
-  // Second
-  int second_start_timing = first_start_timing + (int)(dv_timing_s / compo_step_sec);
+
+  // Generate Second impulse
+  int second_start_timing = first_start_timing + (int)(dv_timing_s / component_update_sec_);
   if (count > second_start_timing && (second_thrust_done_ == false)) {
-    double mass_kg = 14.0;        // FIXME
-    double compo_step_sec = 0.1;  // FIXME
-    double output_sec = 10.0;
-    libra::Vector<3> f_rtn_N = (mass_kg / output_sec) * dv_rtn_m_s_;
-    f_rtn_N[2] = -f_rtn_N[2];  // FIXME
-    int finish_timing = second_start_timing + int(output_sec / compo_step_sec);
+    double impulse_output_duration_sec_ = 10.0;
+    libra::Vector<3> f_rtn_N = (mass_kg_ / impulse_output_duration_sec_) * dv_rtn_m_s_;
+
+    f_rtn_N[2] = f_rtn_N[2];  // FIXME
+
+    int finish_timing = second_start_timing + int(impulse_output_duration_sec_ / component_update_sec_);
     if (count > finish_timing) {
       second_thrust_done_ = true;
       f_rtn_N = libra::Vector<3>{0.0};
     }
-    // components_.GetForceGenerator().SetForce_rtn_N(f_rtn_N);
+    components_.GetForceGenerator().SetForce_rtn_N(f_rtn_N);
   }
 }
 

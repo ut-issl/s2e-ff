@@ -5,8 +5,8 @@ FfSat::FfSat(SimulationConfig* sim_config, const GlobalEnvironment* glo_env, Rel
   if (sat_id == 0) {
     components_ = new FfComponents(dynamics_, structure_, local_env_, glo_env, sim_config, &clock_gen_, relative_information);  // Chief
   } else if (sat_id == 1) {
-    components_ = new FfComponents2(dynamics_, structure_, local_env_, glo_env, sim_config, &clock_gen_, relative_information);  // Deputy1
+    components_ = new FfComponents2(dynamics_, structure_, local_env_, glo_env, sim_config, &clock_gen_, relative_information, sat_id);  // Deputy1
   } else {
-    components_ = new FfComponents2(dynamics_, structure_, local_env_, glo_env, sim_config, &clock_gen_, relative_information);  // Deputy2
+    components_ = new FfComponents2(dynamics_, structure_, local_env_, glo_env, sim_config, &clock_gen_, relative_information, sat_id);  // Deputy2
   }
 }

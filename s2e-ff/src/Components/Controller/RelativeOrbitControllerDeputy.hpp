@@ -11,7 +11,7 @@ class FfComponents2;
 
 class RelativeOrbitControllerDeputy : public ComponentBase, public ILoggable {
  public:
-  RelativeOrbitControllerDeputy(const int prescaler, ClockGenerator* clock_gen, FfComponents2& components);
+  RelativeOrbitControllerDeputy(const int prescaler, ClockGenerator* clock_gen, const int sc_id, FfComponents2& components);
   ~RelativeOrbitControllerDeputy();
   // ComponentBase
   void MainRoutine(int count) override;
@@ -24,8 +24,12 @@ class RelativeOrbitControllerDeputy : public ComponentBase, public ILoggable {
   FfComponents2& components_;
 
   // Internal variables
-  double a_m_;
+  double a_m_ = 6928000.0;
+  double mass_kg_ = 10.0;
+  double impulse_output_duration_sec_ = 10.0;
+  double component_update_sec_ = 0.1;
 
+  int sc_id_;                                                  // Spacecraft ID
   QuasiNonsingularRelativeOrbitalElements target_qns_roe_;     //!< Target QNS Relative OE with semi-major axis
   QuasiNonsingularRelativeOrbitalElements estimated_qns_roe_;  //!< Estimated QNS Relative OE
 

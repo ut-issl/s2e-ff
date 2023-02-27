@@ -23,7 +23,7 @@ class RelativeOrbitControllerDeputy;
 class FfComponents2 : public InstalledComponents {
  public:
   FfComponents2(const Dynamics* dynamics, const Structure* structure, const LocalEnvironment* local_env, const GlobalEnvironment* glo_env,
-                const SimulationConfig* config, ClockGenerator* clock_gen, const RelativeInformation* rel_info);
+                const SimulationConfig* config, ClockGenerator* clock_gen, const RelativeInformation* rel_info, const int sat_id);
   ~FfComponents2();
   libra::Vector<3> GenerateForce_N_b();
   libra::Vector<3> GenerateTorque_Nm_b();
