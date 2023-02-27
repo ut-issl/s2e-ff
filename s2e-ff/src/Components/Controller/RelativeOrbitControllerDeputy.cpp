@@ -60,11 +60,6 @@ void RelativeOrbitControllerDeputy::MainRoutine(int count) {
     }
     // components_.GetForceGenerator().SetForce_rtn_N(f_rtn_N);
   }
-
-  // Feed forward thrust
-  libra::Vector<3> f_continuous_rtn_N{0.0};
-  f_continuous_rtn_N[1] = 3e-7;
-  // components_.GetForceGenerator().SetForce_rtn_N(f_continuous_rtn_N);
 }
 
 std::string RelativeOrbitControllerDeputy::GetLogHeader() const {

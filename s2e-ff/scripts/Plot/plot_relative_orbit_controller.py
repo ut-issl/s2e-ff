@@ -51,18 +51,18 @@ read_file_name  = path_to_logs + '/' + 'logs_' + read_file_tag + '/' + read_file
 # Read S2E CSV
 time = read_scalar_from_csv(read_file_name, 'time[sec]', [1,3])
 
-csv_data = pandas.read_csv(read_file_name, skiprows=[1,3], sep=',', usecols=['RelativeOrbitController_roe_est_-(0)[-]',
-                                                                             'RelativeOrbitController_roe_est_-(1)[-]',
-                                                                             'RelativeOrbitController_roe_est_-(2)[-]',
-                                                                             'RelativeOrbitController_roe_est_-(3)[-]',
-                                                                             'RelativeOrbitController_roe_est_-(4)[-]',
-                                                                             'RelativeOrbitController_roe_est_-(5)[-]'])
-roe_d1 = np.array([csv_data['RelativeOrbitController_roe_est_-(0)[-]'].to_numpy(),
-                   csv_data['RelativeOrbitController_roe_est_-(1)[-]'].to_numpy(),
-                   csv_data['RelativeOrbitController_roe_est_-(2)[-]'].to_numpy(),
-                   csv_data['RelativeOrbitController_roe_est_-(3)[-]'].to_numpy(),
-                   csv_data['RelativeOrbitController_roe_est_-(4)[-]'].to_numpy(),
-                   csv_data['RelativeOrbitController_roe_est_-(5)[-]'].to_numpy()])
+csv_data = pandas.read_csv(read_file_name, skiprows=[1,3], sep=',', usecols=['RelativeOrbitControllerDeputy_roe_est_-(0)[-]',
+                                                                             'RelativeOrbitControllerDeputy_roe_est_-(1)[-]',
+                                                                             'RelativeOrbitControllerDeputy_roe_est_-(2)[-]',
+                                                                             'RelativeOrbitControllerDeputy_roe_est_-(3)[-]',
+                                                                             'RelativeOrbitControllerDeputy_roe_est_-(4)[-]',
+                                                                             'RelativeOrbitControllerDeputy_roe_est_-(5)[-]'])
+roe_d1 = np.array([csv_data['RelativeOrbitControllerDeputy_roe_est_-(0)[-]'].to_numpy(),
+                   csv_data['RelativeOrbitControllerDeputy_roe_est_-(1)[-]'].to_numpy(),
+                   csv_data['RelativeOrbitControllerDeputy_roe_est_-(2)[-]'].to_numpy(),
+                   csv_data['RelativeOrbitControllerDeputy_roe_est_-(3)[-]'].to_numpy(),
+                   csv_data['RelativeOrbitControllerDeputy_roe_est_-(4)[-]'].to_numpy(),
+                   csv_data['RelativeOrbitControllerDeputy_roe_est_-(5)[-]'].to_numpy()])
 
 rel_pos_d1 = read_3d_vector_from_csv(read_file_name, 'sat1 pos from sat0_rtn', 'm', [1,3])
 rel_pos_d2 = read_3d_vector_from_csv(read_file_name, 'sat2 pos from sat0_rtn', 'm', [1,3])
