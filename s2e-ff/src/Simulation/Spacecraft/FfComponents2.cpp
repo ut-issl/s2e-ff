@@ -38,7 +38,7 @@ FfComponents2::FfComponents2(const Dynamics* dynamics, const Structure* structur
   // relative_attitude_controller_ = new RelativeAttitudeController(
   //     InitializeRelativeAttitudeController(clock_gen, relative_attitude_controller_file, *rel_info_, local_env_->GetCelesInfo(), *dynamics_));
 
-  relative_orbit_controller_ = new RelativeOrbitController(1, clock_gen, *this);
+  relative_orbit_controller_ = new RelativeOrbitControllerDeputy(1, clock_gen, *this);
 
   // Debug for actuator output
   libra::Vector<3> force_N;

@@ -18,7 +18,7 @@
 #include "../../Components/IdealComponents/RelativeAttitudeController.hpp"
 #include "OBC.h"
 
-class RelativeOrbitController;
+class RelativeOrbitControllerDeputy;
 
 class FfComponents2 : public InstalledComponents {
  public:
@@ -44,7 +44,7 @@ class FfComponents2 : public InstalledComponents {
   ForceGenerator* force_generator_;
 
   RelativeAttitudeController* relative_attitude_controller_;
-  RelativeOrbitController* relative_orbit_controller_;
+  RelativeOrbitControllerDeputy* relative_orbit_controller_;
 
   // References
   const Dynamics* dynamics_;

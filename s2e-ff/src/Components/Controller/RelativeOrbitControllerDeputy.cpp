@@ -3,7 +3,7 @@
 #include <Environment/Global/PhysicalConstants.hpp>
 #include <Library/math/Constant.hpp>
 
-RelativeOrbitController::RelativeOrbitController(const int prescaler, ClockGenerator* clock_gen, FfComponents2& components)
+RelativeOrbitControllerDeputy::RelativeOrbitControllerDeputy(const int prescaler, ClockGenerator* clock_gen, FfComponents2& components)
     : ComponentBase(prescaler, clock_gen), components_(components) {
   mu_m3_s2_ = environment::earth_gravitational_constant_m3_s2;
   a_m_ = 6928000.0;  // FIXME
@@ -19,9 +19,9 @@ RelativeOrbitController::RelativeOrbitController(const int prescaler, ClockGener
   target_qns_roe_ = QuasiNonsingularRelativeOrbitalElements(a_m_, target_roe);
 }
 
-RelativeOrbitController::~RelativeOrbitController() {}
+RelativeOrbitControllerDeputy::~RelativeOrbitControllerDeputy() {}
 
-void RelativeOrbitController::MainRoutine(int count) {
+void RelativeOrbitControllerDeputy::MainRoutine(int count) {
   UNUSED(count);
   EstimateStates();
   QuasiNonsingularRelativeOrbitalElements diff_qns_roe = target_qns_roe_ - estimated_qns_roe_;
@@ -67,9 +67,9 @@ void RelativeOrbitController::MainRoutine(int count) {
   // components_.GetForceGenerator().SetForce_rtn_N(f_continuous_rtn_N);
 }
 
-std::string RelativeOrbitController::GetLogHeader() const {
+std::string RelativeOrbitControllerDeputy::GetLogHeader() const {
   std::string str_tmp = "";
-  std::string head = "RelativeOrbitController_";
+  std::string head = "RelativeOrbitControllerDeputy_";
 
   str_tmp += WriteVector(head + "roe_est", "-", "-", 6);
   str_tmp += WriteScalar(head + "rel_dist_est", "m");
@@ -80,7 +80,7 @@ std::string RelativeOrbitController::GetLogHeader() const {
   return str_tmp;
 }
 
-std::string RelativeOrbitController::GetLogValue() const {
+std::string RelativeOrbitControllerDeputy::GetLogValue() const {
   std::string str_tmp = "";
 
   str_tmp += WriteVector(estimated_qns_roe_.GetRelativeOrbitalElementsAsVector());
@@ -92,7 +92,7 @@ std::string RelativeOrbitController::GetLogValue() const {
   return str_tmp;
 }
 
-void RelativeOrbitController::EstimateStates() {
+void RelativeOrbitControllerDeputy::EstimateStates() {
   a_m_ = 6928000.0;  // TODO: measure the latest semi major axis
   libra::Vector<3> measured_rel_pos_rtn_m = components_.GetRelativePositionSensor().GetMeasuredTargetPosition_rtn_m();
   libra::Vector<3> measured_rel_vel_rtn_m_s = components_.GetRelativeVelocitySensor().GetMeasuredTargetVelocity_rtn_m_s();
@@ -104,7 +104,8 @@ void RelativeOrbitController::EstimateStates() {
   estimated_inc_vec_angle_ = atan2(estimated_qns_roe_.GetDeltaInclinationY(), estimated_qns_roe_.GetDeltaInclinationX());
 }
 
-libra::Vector<3> RelativeOrbitController::InPlaneSingleImpulse(double& maneuver_timing_rad, QuasiNonsingularRelativeOrbitalElements diff_qns_roe) {
+libra::Vector<3> RelativeOrbitControllerDeputy::InPlaneSingleImpulse(double& maneuver_timing_rad,
+                                                                     QuasiNonsingularRelativeOrbitalElements diff_qns_roe) {
   // Reference information
   const double a = diff_qns_roe.GetReferenceSemiMajor_m();
   const double n = sqrt(mu_m3_s2_ / pow(a, 3.0));
@@ -123,7 +124,8 @@ libra::Vector<3> RelativeOrbitController::InPlaneSingleImpulse(double& maneuver_
   return dv_rtn_N;
 }
 
-libra::Vector<3> RelativeOrbitController::OutPlaneSingleImpulse(double& maneuver_timing_rad, QuasiNonsingularRelativeOrbitalElements diff_qns_roe) {
+libra::Vector<3> RelativeOrbitControllerDeputy::OutPlaneSingleImpulse(double& maneuver_timing_rad,
+                                                                      QuasiNonsingularRelativeOrbitalElements diff_qns_roe) {
   // Reference information
   const double a = diff_qns_roe.GetReferenceSemiMajor_m();
   const double n = sqrt(mu_m3_s2_ / pow(a, 3.0));
@@ -140,8 +142,8 @@ libra::Vector<3> RelativeOrbitController::OutPlaneSingleImpulse(double& maneuver
   return dv_rtn_N;
 }
 
-libra::Vector<3> RelativeOrbitController::DoubleImpulse_seirios(double& first_maneuver_s, double& delta_maneuver_s,
-                                                                QuasiNonsingularRelativeOrbitalElements diff_qns_roe) {
+libra::Vector<3> RelativeOrbitControllerDeputy::DoubleImpulse_seirios(double& first_maneuver_s, double& delta_maneuver_s,
+                                                                      QuasiNonsingularRelativeOrbitalElements diff_qns_roe) {
   // Reference information
   const double a = diff_qns_roe.GetReferenceSemiMajor_m();
   const double n = sqrt(mu_m3_s2_ / pow(a, 3.0));

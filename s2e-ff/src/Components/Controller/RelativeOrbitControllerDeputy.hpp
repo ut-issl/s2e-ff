@@ -9,10 +9,10 @@
 
 class FfComponents2;
 
-class RelativeOrbitController : public ComponentBase, public ILoggable {
+class RelativeOrbitControllerDeputy : public ComponentBase, public ILoggable {
  public:
-  RelativeOrbitController(const int prescaler, ClockGenerator* clock_gen, FfComponents2& components);
-  ~RelativeOrbitController();
+  RelativeOrbitControllerDeputy(const int prescaler, ClockGenerator* clock_gen, FfComponents2& components);
+  ~RelativeOrbitControllerDeputy();
   // ComponentBase
   void MainRoutine(int count) override;
 
