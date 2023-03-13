@@ -9,9 +9,9 @@ RelativeOrbitControllerDeputy::RelativeOrbitControllerDeputy(const int prescaler
   mu_m3_s2_ = environment::earth_gravitational_constant_m3_s2;
 
   // TODO: set target
-  double d_lambda = 0.00000433;
+  double d_lambda = 0.00000289;
   double d_ix = 0.00000001;
-  double d_iy = 0.0;  // 0.00000076;
+  double d_iy = 0.00000051;
 
   Vector<6> target_roe{0.0};
   if (sc_id_ == 1) {  // deputy-1
@@ -33,18 +33,18 @@ void RelativeOrbitControllerDeputy::MainRoutine(int count) {
 
   EstimateStates();
   QuasiNonsingularRelativeOrbitalElements diff_qns_roe = target_qns_roe_ - estimated_qns_roe_;
-  static double dv_start_s;
-  static double dv_timing_s;
 
   if (count > 1840 && count < 2000) {  // FIXME: set maneuver timing
     // Calc Maneuver output
-    dv_rtn_m_s_ = DoubleImpulse_seirios(dv_start_s, dv_timing_s, diff_qns_roe);
+    dv_rtn_m_s_ = DoubleImpulse_seirios(dv_start_s_, dv_timing_s_, diff_qns_roe);
   }
 
   // Generate First impulse
-  int first_start_timing = 3000 + (int)(dv_start_s / component_update_sec_);
+  int first_start_timing = 3000 + (int)(dv_start_s_ / component_update_sec_);
   if (count > first_start_timing && (first_thrust_done_ == false)) {
     libra::Vector<3> f_rtn_N = (mass_kg_ / impulse_output_duration_sec_) * dv_rtn_m_s_;
+    if (sc_id_ == 2) f_rtn_N[2] = -f_rtn_N[2];  // FIXME
+
     int finish_timing = first_start_timing + int(impulse_output_duration_sec_ / component_update_sec_);
     if (count > finish_timing) {
       first_thrust_done_ = true;
@@ -54,12 +54,10 @@ void RelativeOrbitControllerDeputy::MainRoutine(int count) {
   }
 
   // Generate Second impulse
-  int second_start_timing = first_start_timing + (int)(dv_timing_s / component_update_sec_);
+  int second_start_timing = first_start_timing + (int)(dv_timing_s_ / component_update_sec_);
   if (count > second_start_timing && (second_thrust_done_ == false)) {
-    double impulse_output_duration_sec_ = 10.0;
     libra::Vector<3> f_rtn_N = (mass_kg_ / impulse_output_duration_sec_) * dv_rtn_m_s_;
-
-    f_rtn_N[2] = -f_rtn_N[2];  // FIXME
+    if (sc_id_ == 1) f_rtn_N[2] = -f_rtn_N[2];  // FIXME
 
     int finish_timing = second_start_timing + int(impulse_output_duration_sec_ / component_update_sec_);
     if (count > finish_timing) {
@@ -164,8 +162,8 @@ libra::Vector<3> RelativeOrbitControllerDeputy::DoubleImpulse_seirios(double& fi
   // Timing
   double first_maneuver_rad = atan2(d_iy, d_ix);
   double delta_maneuver_rad = libra::pi;
-  first_maneuver_s = first_maneuver_rad / n;
-  delta_maneuver_s = delta_maneuver_rad / n;
+  first_maneuver_s = abs(first_maneuver_rad) / n;
+  delta_maneuver_s = abs(delta_maneuver_rad) / n;
 
   return dv_rtn_N;
 }

@@ -5,8 +5,8 @@
 
 RelativeOrbitAnalyzer::RelativeOrbitAnalyzer(const int prescaler, ClockGenerator* clock_gen, const RelativeInformation& rel_info)
     : ComponentBase(prescaler, clock_gen), rel_info_(rel_info) {
-  double target_ra_deg = 10.0;  // TODO: Input parameter
-  double target_dec_deg = 0.0;  // TODO: Input parameter
+  double target_ra_deg = 0.0;    // TODO: Input parameter
+  double target_dec_deg = 10.0;  // TODO: Input parameter
   dcm_eci_to_img_ = MakeDcmEciToImg(target_dec_deg, target_ra_deg);
 }
 
@@ -16,7 +16,7 @@ void RelativeOrbitAnalyzer::MainRoutine(int count) {
   UNUSED(count);
 
   // Target-1
-  libra::Vector<3> r_chief_to_target1_i_m = rel_info_.GetRelativePosition_i_m(0, 1);
+  libra::Vector<3> r_chief_to_target1_i_m = rel_info_.GetRelativePosition_i_m(1, 0);
   d_norm_chief_to_target1_ = norm(r_chief_to_target1_i_m);
   libra::Vector<3> d_chief_to_target1_i = normalize(r_chief_to_target1_i_m);
   d_chief_to_target1_img_ = dcm_eci_to_img_ * d_chief_to_target1_i;
@@ -24,7 +24,7 @@ void RelativeOrbitAnalyzer::MainRoutine(int count) {
   baseline_angle1_in_img_rad_ = asin(d_chief_to_target1_img_[2]);
 
   // Target-2
-  libra::Vector<3> r_chief_to_target2_i_m = rel_info_.GetRelativePosition_i_m(0, 2);
+  libra::Vector<3> r_chief_to_target2_i_m = rel_info_.GetRelativePosition_i_m(2, 0);
   d_norm_chief_to_target2_ = norm(r_chief_to_target2_i_m);
   libra::Vector<3> d_chief_to_target2_i = normalize(r_chief_to_target2_i_m);
   d_chief_to_target2_img_ = dcm_eci_to_img_ * d_chief_to_target2_i;
