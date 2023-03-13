@@ -9,17 +9,20 @@ RelativeOrbitControllerDeputy::RelativeOrbitControllerDeputy(const int prescaler
   mu_m3_s2_ = environment::earth_gravitational_constant_m3_s2;
 
   // TODO: set target
-  Vector<6> target_roe;
-  target_roe[0] = 0.0;
+  double d_lambda = 0.00000433;
+  double d_ix = 0.00000001;
+  double d_iy = 0.0;  // 0.00000076;
+
+  Vector<6> target_roe{0.0};
   if (sc_id_ == 1) {
-    target_roe[1] = -0.00000433;
+    target_roe[1] = -d_lambda;
+    target_roe[4] = -d_ix;
+    target_roe[5] = d_iy;
   } else {
-    target_roe[1] = 0.00000433;
+    target_roe[1] = d_lambda;
+    target_roe[4] = d_ix;
+    target_roe[5] = -d_iy;
   }
-  target_roe[2] = 0.0;
-  target_roe[3] = 0.0;
-  target_roe[4] = 0.000000001;
-  target_roe[5] = 0.0;
   target_qns_roe_ = QuasiNonsingularRelativeOrbitalElements(a_m_, target_roe);
 }
 
@@ -56,7 +59,7 @@ void RelativeOrbitControllerDeputy::MainRoutine(int count) {
     double impulse_output_duration_sec_ = 10.0;
     libra::Vector<3> f_rtn_N = (mass_kg_ / impulse_output_duration_sec_) * dv_rtn_m_s_;
 
-    f_rtn_N[2] = f_rtn_N[2];  // FIXME
+    f_rtn_N[2] = -f_rtn_N[2];  // FIXME
 
     int finish_timing = second_start_timing + int(impulse_output_duration_sec_ / component_update_sec_);
     if (count > finish_timing) {

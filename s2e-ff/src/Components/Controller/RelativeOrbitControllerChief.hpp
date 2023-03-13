@@ -24,7 +24,10 @@ class RelativeOrbitControllerChief : public ComponentBase, public ILoggable {
   FfComponents& components_;
 
   // Internal variables
-  double a_m_;
+  double a_m_ = 6928000.0;
+  double mass_kg_ = 40.0;
+  double impulse_output_duration_sec_ = 10.0;
+  double component_update_sec_ = 0.1;
 
   QuasiNonsingularRelativeOrbitalElements target_qns_roe_;     //!< Target QNS Relative OE with semi-major axis
   QuasiNonsingularRelativeOrbitalElements estimated_qns_roe_;  //!< Estimated QNS Relative OE

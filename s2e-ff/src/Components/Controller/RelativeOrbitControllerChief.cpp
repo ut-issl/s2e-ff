@@ -6,15 +6,14 @@
 RelativeOrbitControllerChief::RelativeOrbitControllerChief(const int prescaler, ClockGenerator* clock_gen, FfComponents& components)
     : ComponentBase(prescaler, clock_gen), components_(components) {
   mu_m3_s2_ = environment::earth_gravitational_constant_m3_s2;
-  a_m_ = 6928000.0;  // FIXME
 
   // TODO: set target
   Vector<6> target_roe;
   target_roe[0] = 0.0;
-  target_roe[1] = -0.00000289;
+  target_roe[1] = 0.0;
   target_roe[2] = 0.0;
   target_roe[3] = 0.0;
-  target_roe[4] = 0.000000001;
+  target_roe[4] = 0.0;
   target_roe[5] = 0.0;
   target_qns_roe_ = QuasiNonsingularRelativeOrbitalElements(a_m_, target_roe);
 }
@@ -26,9 +25,7 @@ void RelativeOrbitControllerChief::MainRoutine(int count) {
   EstimateStates();
   QuasiNonsingularRelativeOrbitalElements diff_qns_roe = target_qns_roe_ - estimated_qns_roe_;
 
-  // Feed forward thrust
   libra::Vector<3> f_continuous_rtn_N{0.0};
-  f_continuous_rtn_N[1] = 3e-7;
   components_.GetForceGenerator().SetForce_rtn_N(f_continuous_rtn_N);
 }
 
