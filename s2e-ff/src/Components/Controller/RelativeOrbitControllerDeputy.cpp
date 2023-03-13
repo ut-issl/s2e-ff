@@ -14,11 +14,11 @@ RelativeOrbitControllerDeputy::RelativeOrbitControllerDeputy(const int prescaler
   double d_iy = 0.0;  // 0.00000076;
 
   Vector<6> target_roe{0.0};
-  if (sc_id_ == 1) {
+  if (sc_id_ == 1) {  // deputy-1
     target_roe[1] = -d_lambda;
     target_roe[4] = -d_ix;
     target_roe[5] = d_iy;
-  } else {
+  } else {  // deputy-2
     target_roe[1] = d_lambda;
     target_roe[4] = d_ix;
     target_roe[5] = -d_iy;
