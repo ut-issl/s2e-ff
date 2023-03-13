@@ -25,8 +25,9 @@ void RelativeOrbitControllerChief::MainRoutine(int count) {
   EstimateStates();
   QuasiNonsingularRelativeOrbitalElements diff_qns_roe = target_qns_roe_ - estimated_qns_roe_;
 
-  libra::Vector<3> f_continuous_rtn_N{0.0};
-  components_.GetForceGenerator().SetForce_rtn_N(f_continuous_rtn_N);
+  libra::Vector<3> f_rtn_N{0.0};
+  // Add control algorithm to decide force
+  components_.GetForceGenerator().SetForce_rtn_N(f_rtn_N);
 }
 
 std::string RelativeOrbitControllerChief::GetLogHeader() const {

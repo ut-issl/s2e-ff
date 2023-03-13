@@ -9,9 +9,9 @@ RelativeOrbitControllerDeputy::RelativeOrbitControllerDeputy(const int prescaler
   mu_m3_s2_ = environment::earth_gravitational_constant_m3_s2;
 
   // TODO: set target
-  double d_lambda = 0.00000289;
+  double d_lambda = 0.00000433;  // 0.00000289;
   double d_ix = 0.00000001;
-  double d_iy = 0.00000051;
+  double d_iy = 0.00000076;  // 0.00000051;
 
   Vector<6> target_roe{0.0};
   if (sc_id_ == 1) {  // deputy-1
@@ -50,7 +50,7 @@ void RelativeOrbitControllerDeputy::MainRoutine(int count) {
       first_thrust_done_ = true;
       f_rtn_N = libra::Vector<3>{0.0};
     }
-    components_.GetForceGenerator().SetForce_rtn_N(f_rtn_N);
+    if (enable_thruster_) components_.GetForceGenerator().SetForce_rtn_N(f_rtn_N);
   }
 
   // Generate Second impulse
@@ -64,7 +64,7 @@ void RelativeOrbitControllerDeputy::MainRoutine(int count) {
       second_thrust_done_ = true;
       f_rtn_N = libra::Vector<3>{0.0};
     }
-    components_.GetForceGenerator().SetForce_rtn_N(f_rtn_N);
+    if (enable_thruster_) components_.GetForceGenerator().SetForce_rtn_N(f_rtn_N);
   }
 }
 

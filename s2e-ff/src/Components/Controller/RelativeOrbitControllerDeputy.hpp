@@ -28,8 +28,9 @@ class RelativeOrbitControllerDeputy : public ComponentBase, public ILoggable {
   double mass_kg_ = 10.0;
   double impulse_output_duration_sec_ = 10.0;
   double component_update_sec_ = 0.1;
-  double dv_start_s_ = 1e5;   // TODO: Fix the value
-  double dv_timing_s_ = 1e5;  // TODO: Fix the value
+  double dv_start_s_ = 1e5;       // TODO: Fix the value
+  double dv_timing_s_ = 1e5;      // TODO: Fix the value
+  bool enable_thruster_ = false;  // Change true if you want to test control algorithm
 
   int sc_id_;                                                  // Spacecraft ID
   QuasiNonsingularRelativeOrbitalElements target_qns_roe_;     //!< Target QNS Relative OE with semi-major axis
