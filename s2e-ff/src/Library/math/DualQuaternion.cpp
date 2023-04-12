@@ -37,15 +37,15 @@ DualQuaternion DualQuaternion::DualNumberConjugate() const {
 }
 
 DualQuaternion DualQuaternion::QuaternionConjugate() const {
-  Quaternion q_real_out = q_real_.conjugate();
-  Quaternion q_dual_out = q_dual_.conjugate();
+  Quaternion q_real_out = q_real_.Conjugate();
+  Quaternion q_dual_out = q_dual_.Conjugate();
   DualQuaternion dq_out(q_real_out, q_dual_out);
   return dq_out;
 }
 
 DualQuaternion DualQuaternion::DualQuaternionConjugate() const {
-  Quaternion q_real_out = q_real_.conjugate();
-  Quaternion q_dual_out = -1.0 * q_dual_.conjugate();
+  Quaternion q_real_out = q_real_.Conjugate();
+  Quaternion q_dual_out = -1.0 * q_dual_.Conjugate();
   DualQuaternion dq_out(q_real_out, q_dual_out);
   return dq_out;
 }
@@ -81,7 +81,7 @@ ScrewParameters DualQuaternion::CalcScrewParameters() const {
   for (int i = 0; i < 3; i++) dual_vector_part[i] = this->GetDualPart()[i];
   double dual_scalar_part = this->GetDualPart()[3];
 
-  double norm_real_vector = norm(real_vector_part);
+  double norm_real_vector = real_vector_part.CalcNorm();
   if (norm_real_vector < 0.0 + DBL_MIN) {
     // We cannot define skrew parameters
     out.angle_rad_ = 0.0;
@@ -97,7 +97,7 @@ ScrewParameters DualQuaternion::CalcScrewParameters() const {
 
   // rotation axis
   for (int i = 0; i < 3; i++) out.axis_[i] = real_vector_part[i];
-  normalize(out.axis_);
+  out.axis_ = out.axis_.CalcNormalizedVector();
 
   // rotation angle
   out.angle_rad_ = 2.0 * atan2(norm_real_vector, real_scalar_part);
