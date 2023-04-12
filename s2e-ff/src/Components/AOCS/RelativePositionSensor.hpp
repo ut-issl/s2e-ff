@@ -1,16 +1,16 @@
 #ifndef RELATIVE_POSITION_SENSOR_H_
 #define RELATIVE_POSITION_SENSOR_H_
 
-#include <Component/Abstract/ComponentBase.h>
-#include <Component/Abstract/SensorBase.h>
-#include <Interface/LogOutput/ILoggable.h>
-#include <RelativeInformation/RelativeInformation.h>
+#include <components/base/component.hpp>
+#include <components/base/sensor.hpp>
+#include <library/logger/logger.hpp>
+#include <simulation/multiple_spacecraft/relative_information.hpp>
 
 enum class RelativePositionSensorErrorFrame { INERTIAL, RTN, BODY };
 
-class RelativePositionSensor : public ComponentBase, public SensorBase<3>, public ILoggable {
+class RelativePositionSensor : public Component, public Sensor<3>, public ILoggable {
  public:
-  RelativePositionSensor(const int prescaler, ClockGenerator* clock_gen, SensorBase& sensor_base, const int target_sat_id, const int reference_sat_id,
+  RelativePositionSensor(const int prescaler, ClockGenerator* clock_gen, Sensor& sensor_base, const int target_sat_id, const int reference_sat_id,
                          const RelativePositionSensorErrorFrame error_frame, const RelativeInformation& rel_info, const Dynamics& dynamics);
   ~RelativePositionSensor();
   // ComponentBase

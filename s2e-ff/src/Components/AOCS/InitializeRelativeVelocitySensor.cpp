@@ -1,8 +1,7 @@
 #include "InitializeRelativeVelocitySensor.hpp"
 
-#include <Interface/InitInput/IniAccess.h>
-
-#include "../Abstract/InitializeSensorBase.hpp"
+#include <components/base/initialize_sensor.hpp>
+#include <library/initialize/initialize_file_access.hpp>
 
 RelativeVelocitySensor InitializeRelativeVelocitySensor(ClockGenerator* clock_gen, const std::string file_name, const double compo_step_time_s,
                                                         const RelativeInformation& rel_info, const Dynamics& dynamics,
@@ -15,7 +14,7 @@ RelativeVelocitySensor InitializeRelativeVelocitySensor(ClockGenerator* clock_ge
   if (prescaler <= 1) prescaler = 1;
 
   // SensorBase
-  SensorBase<3> sensor_base = ReadSensorBaseInformation<3>(file_name, compo_step_time_s * (double)(prescaler));
+  Sensor<3> sensor_base = ReadSensorInformation<3>(file_name, compo_step_time_s * (double)(prescaler), "RelativeVelocitySensor");
 
   // RelativeVelocitySensor
   char section[30] = "RelativeVelocitySensor";

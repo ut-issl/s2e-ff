@@ -1,16 +1,16 @@
 #ifndef RELATIVE_VELOCITY_SENSOR_H_
 #define RELATIVE_VELOCITY_SENSOR_H_
 
-#include <Component/Abstract/ComponentBase.h>
-#include <Component/Abstract/SensorBase.h>
-#include <Interface/LogOutput/ILoggable.h>
-#include <RelativeInformation/RelativeInformation.h>
+#include <components/base/component.hpp>
+#include <components/base/sensor.hpp>
+#include <library/logger/logger.hpp>
+#include <simulation/multiple_spacecraft/relative_information.hpp>
 
 enum class RelativeVelocitySensorErrorFrame { INERTIAL, RTN };
 
-class RelativeVelocitySensor : public ComponentBase, public SensorBase<3>, public ILoggable {
+class RelativeVelocitySensor : public Component, public Sensor<3>, public ILoggable {
  public:
-  RelativeVelocitySensor(const int prescaler, ClockGenerator* clock_gen, SensorBase& sensor_base, const int target_sat_id, const int reference_sat_id,
+  RelativeVelocitySensor(const int prescaler, ClockGenerator* clock_gen, Sensor& sensor_base, const int target_sat_id, const int reference_sat_id,
                          const RelativeVelocitySensorErrorFrame error_frame, const RelativeInformation& rel_info, const Dynamics& dynamics);
   ~RelativeVelocitySensor();
   // ComponentBase

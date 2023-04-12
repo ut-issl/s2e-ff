@@ -1,10 +1,10 @@
 #include "RelativePositionSensor.hpp"
 
-RelativePositionSensor::RelativePositionSensor(const int prescaler, ClockGenerator* clock_gen, SensorBase& sensor_base, const int target_sat_id,
+RelativePositionSensor::RelativePositionSensor(const int prescaler, ClockGenerator* clock_gen, Sensor& sensor_base, const int target_sat_id,
                                                const int reference_sat_id, const RelativePositionSensorErrorFrame error_frame,
                                                const RelativeInformation& rel_info, const Dynamics& dynamics)
-    : ComponentBase(prescaler, clock_gen),
-      SensorBase(sensor_base),
+    : Component(prescaler, clock_gen),
+      Sensor(sensor_base),
       target_sat_id_(target_sat_id),
       reference_sat_id_(reference_sat_id),
       error_frame_(error_frame),

@@ -1,8 +1,9 @@
 #pragma once
 
+#include <simulation/case/simulation_case.hpp>
+#include <simulation/multiple_spacecraft/relative_information.hpp>
+
 #include "../Spacecraft/FfSat.hpp"
-#include "RelativeInformation.h"
-#include "SimulationCase.h"
 
 class FfCase : public SimulationCase {
  public:

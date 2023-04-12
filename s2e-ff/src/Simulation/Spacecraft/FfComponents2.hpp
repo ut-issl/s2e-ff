@@ -1,19 +1,14 @@
 #pragma once
 
-#include <Simulation/Spacecraft/InstalledComponents.hpp>
-
-#include "Dynamics.h"
-#include "GlobalEnvironment.h"
-#include "LocalEnvironment.h"
-#include "Vector.hpp"
+#include <simulation/spacecraft/installed_components.hpp>
 
 // include for components
-#include <Component/IdealComponents/ForceGenerator.hpp>
+#include <components/ideal/force_generator.hpp>
+#include <components/real/cdh/on_board_computer.hpp>
 
 #include "../../Components/AOCS/RelativeDistanceSensor.hpp"
 #include "../../Components/AOCS/RelativePositionSensor.hpp"
 #include "../../Components/IdealComponents/RelativeAttitudeController.hpp"
-#include "OBC.h"
 
 class FfComponents2 : public InstalledComponents {
  public:
@@ -26,7 +21,7 @@ class FfComponents2 : public InstalledComponents {
 
  private:
   // Components
-  OBC* obc_;
+  OnBoardComputer* obc_;
 
   // References
   const Dynamics* dynamics_;

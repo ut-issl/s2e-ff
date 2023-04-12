@@ -1,5 +1,5 @@
 // Simulator includes
-#include "Interface/LogOutput/Logger.h"
+#include <library/logger/logger.hpp>
 
 // Add custom include files
 #include "./Simulation/Case/FfCase.hpp"

@@ -1,6 +1,6 @@
 #include "RelativeAttitudeController.hpp"
 
-#include <Library/math/Matrix.hpp>
+#include <library/math/matrix.hpp>
 
 #define THRESHOLD_CA cos(30.0 / 180.0 * libra::pi)  // fix me
 
@@ -10,7 +10,7 @@ RelativeAttitudeController::RelativeAttitudeController(const int prescaler, Cloc
                                                        const libra::Vector<3> sub_target_direction_b, const int target_sat_id,
                                                        const int reference_sat_id, const RelativeInformation& rel_info,
                                                        const LocalCelestialInformation& local_celes_info, const Dynamics& dynamics)
-    : ComponentBase(prescaler, clock_gen),
+    : Component(prescaler, clock_gen),
       main_mode_(main_mode),
       sub_mode_(sub_mode),
       target_sat_id_(target_sat_id),
