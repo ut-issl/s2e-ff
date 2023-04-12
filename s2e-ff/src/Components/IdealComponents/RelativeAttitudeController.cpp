@@ -68,9 +68,9 @@ void RelativeAttitudeController::Initialize(void) {
     return;
   }
   // pointing direction check
-  normalize(main_target_direction_b_);
-  normalize(sub_target_direction_b_);
-  double tmp = inner_product(main_target_direction_b_, sub_target_direction_b_);
+  main_target_direction_b_ = main_target_direction_b_.CalcNormalizedVector();
+  sub_target_direction_b_ = sub_target_direction_b_.CalcNormalizedVector();
+  double tmp = libra::InnerProduct(main_target_direction_b_, sub_target_direction_b_);
   tmp = std::abs(tmp);
   if (tmp > THRESHOLD_CA) {
     std::cout << "sub target direction should separate from the main target direction. \n";
@@ -88,24 +88,23 @@ libra::Vector<3> RelativeAttitudeController::CalcTargetDirection_i(RelativeAttit
       direction_i = rel_info_.GetRelativePosition_i_m(target_sat_id_, my_sat_id_);
       break;
     case RelativeAttitudeControlMode::SUN_POINTING:
-      direction_i = local_celes_info_.GetPosFromSC_i("SUN");
+      direction_i = local_celes_info_.GetPositionFromSpacecraft_i_m("SUN");
       break;
     case RelativeAttitudeControlMode::EARTH_CENTER_POINTING:
-      direction_i = local_celes_info_.GetPosFromSC_i("EARTH");
+      direction_i = local_celes_info_.GetPositionFromSpacecraft_i_m("EARTH");
       break;
     case RelativeAttitudeControlMode::VELOCITY_DIRECTION_POINTING:
-      direction_i = dynamics_.GetOrbit().GetSatVelocity_i();
+      direction_i = dynamics_.GetOrbit().GetVelocity_i_m_s();
       break;
     case RelativeAttitudeControlMode::ORBIT_NORMAL_POINTING:
-      direction_i = outer_product(dynamics_.GetOrbit().GetSatPosition_i(), dynamics_.GetOrbit().GetSatVelocity_i());
+      direction_i = libra::OuterProduct(dynamics_.GetOrbit().GetPosition_i_m(), dynamics_.GetOrbit().GetVelocity_i_m_s());
       break;
     default:
       // Not Reached
       break;
   }
 
-  normalize(direction_i);
-  return direction_i;
+  return direction_i.CalcNormalizedVector();
 }
 
 libra::Quaternion RelativeAttitudeController::CalcTargetQuaternion(const libra::Vector<3> main_direction_i, const libra::Vector<3> sub_direction_i) {
@@ -114,16 +113,16 @@ libra::Quaternion RelativeAttitudeController::CalcTargetQuaternion(const libra::
   // Calc DCM Target->body
   libra::Matrix<3, 3> DCM_t2b = CalcDcmFromVectors(main_target_direction_b_, sub_target_direction_b_);
   // Calc DCM ECI->body
-  libra::Matrix<3, 3> DCM_i2b = DCM_t2b * transpose(DCM_t2i);
+  libra::Matrix<3, 3> DCM_i2b = DCM_t2b * DCM_t2i.Transpose();
   // Convert to Quaternion
-  return libra::Quaternion::fromDCM(DCM_i2b);
+  return libra::Quaternion::ConvertFromDcm(DCM_i2b);
 }
 
 libra::Matrix<3, 3> RelativeAttitudeController::CalcDcmFromVectors(const libra::Vector<3> main_direction, const libra::Vector<3> sub_direction) {
-  libra::Matrix<3, 3> dcm = libra::eye<3>();
+  libra::Matrix<3, 3> dcm = libra::MakeIdentityMatrix<3>();
 
   // Check vector
-  double tmp = inner_product(main_direction, sub_direction);
+  double tmp = libra::InnerProduct(main_direction, sub_direction);
   tmp = std::abs(tmp);
   if (tmp > 0.99999) {
     return dcm;
@@ -132,11 +131,11 @@ libra::Matrix<3, 3> RelativeAttitudeController::CalcDcmFromVectors(const libra::
   // Calc basis vectors
   libra::Vector<3> ex, ey, ez;
   ex = main_direction;
-  libra::Vector<3> tmp1 = outer_product(ex, sub_direction);
-  libra::Vector<3> tmp2 = outer_product(tmp1, ex);
-  ey = normalize(tmp2);
-  libra::Vector<3> tmp3 = outer_product(ex, ey);
-  ez = normalize(tmp3);
+  libra::Vector<3> tmp1 = libra::OuterProduct(ex, sub_direction);
+  libra::Vector<3> tmp2 = libra::OuterProduct(tmp1, ex);
+  ey = tmp2.CalcNormalizedVector();
+  libra::Vector<3> tmp3 = libra::OuterProduct(ex, ey);
+  ez = tmp3.CalcNormalizedVector();
 
   // Generate DCM
   for (int i = 0; i < 3; i++) {
