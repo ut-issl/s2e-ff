@@ -1,5 +1,7 @@
 #pragma once
 
+#include <environment/global/global_environment.hpp>
+#include <environment/local/local_environment.hpp>
 #include <simulation/spacecraft/installed_components.hpp>
 
 // include for components
@@ -13,7 +15,7 @@
 class FfComponents2 : public InstalledComponents {
  public:
   FfComponents2(const Dynamics* dynamics, const Structure* structure, const LocalEnvironment* local_env, const GlobalEnvironment* glo_env,
-                const SimulationConfig* config, ClockGenerator* clock_gen, const RelativeInformation* rel_info);
+                const SimulationConfiguration* config, ClockGenerator* clock_gen, const RelativeInformation* rel_info);
   ~FfComponents2();
   libra::Vector<3> GenerateForce_N_b();
   libra::Vector<3> GenerateTorque_Nm_b();
@@ -28,6 +30,6 @@ class FfComponents2 : public InstalledComponents {
   const Structure* structure_;
   const LocalEnvironment* local_env_;
   const GlobalEnvironment* glo_env_;
-  const SimulationConfig* config_;
+  const SimulationConfiguration* config_;
   const RelativeInformation* rel_info_;
 };

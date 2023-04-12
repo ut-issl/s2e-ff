@@ -1,8 +1,7 @@
 #include "FfComponents.hpp"
 
-#include <Interface/InitInput/IniAccess.h>
-
-#include <Component/IdealComponents/InitializeForceGenerator.hpp>
+#include <components/ideal/initialize_force_generator.hpp>
+#include <library/initialize/initialize_file_access.hpp>
 
 #include "../../Components/AOCS/InitializeRelativeDistanceSensor.hpp"
 #include "../../Components/AOCS/InitializeRelativePositionSensor.hpp"
@@ -10,7 +9,7 @@
 #include "../../Components/IdealComponents/InitializeRelativeAttitudeController.hpp"
 
 FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure, const LocalEnvironment* local_env, const GlobalEnvironment* glo_env,
-                           const SimulationConfig* config, ClockGenerator* clock_gen, const RelativeInformation* rel_info)
+                           const SimulationConfiguration* config, ClockGenerator* clock_gen, const RelativeInformation* rel_info)
     : dynamics_(dynamics), structure_(structure), local_env_(local_env), glo_env_(glo_env), config_(config), rel_info_(rel_info) {
   // General
   const int sat_id = 0;
