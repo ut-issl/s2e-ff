@@ -12,10 +12,10 @@ FfComponents2::FfComponents2(const Dynamics* dynamics, const Structure* structur
                              const RelativeInformation* rel_info)
     : dynamics_(dynamics), structure_(structure), local_env_(local_env), glo_env_(glo_env), config_(config), rel_info_(rel_info) {
   // General
-  IniAccess sat_file = IniAccess(config->sat_file_[0]);
+  IniAccess sat_file = IniAccess(config->spacecraft_file_list_[0]);
 
   // Component Instantiation
-  obc_ = new OBC(clock_gen);
+  obc_ = new OnBoardComputer(clock_gen);
 
   // Debug for actuator output
   libra::Vector<3> force_N;

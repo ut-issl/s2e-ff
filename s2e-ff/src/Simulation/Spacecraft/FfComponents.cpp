@@ -13,11 +13,11 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
     : dynamics_(dynamics), structure_(structure), local_env_(local_env), glo_env_(glo_env), config_(config), rel_info_(rel_info) {
   // General
   const int sat_id = 0;
-  IniAccess sat_file = IniAccess(config->sat_file_[sat_id]);
-  double compo_step_sec = glo_env_->GetSimTime().GetCompoStepSec();
+  IniAccess sat_file = IniAccess(config->spacecraft_file_list_[sat_id]);
+  double compo_step_sec = glo_env_->GetSimulationTime().GetComponentStepTime_s();
 
   // Component Instantiation
-  obc_ = new OBC(clock_gen);
+  obc_ = new OnBoardComputer(clock_gen);
 
   const std::string rel_dist_file = sat_file.ReadString("COMPONENTS_FILE", "relative_distance_sensor_file");
   relative_distance_sensor_ =
@@ -35,8 +35,8 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
   force_generator_ = new ForceGenerator(InitializeForceGenerator(clock_gen, force_generator_file, dynamics_));
 
   const std::string relative_attitude_controller_file = sat_file.ReadString("COMPONENTS_FILE", "relative_attitude_controller_file");
-  relative_attitude_controller_ = new RelativeAttitudeController(
-      InitializeRelativeAttitudeController(clock_gen, relative_attitude_controller_file, *rel_info_, local_env_->GetCelesInfo(), *dynamics_, sat_id));
+  relative_attitude_controller_ = new RelativeAttitudeController(InitializeRelativeAttitudeController(
+      clock_gen, relative_attitude_controller_file, *rel_info_, local_env_->GetCelestialInformation(), *dynamics_, sat_id));
 
   // Debug for actuator output
   libra::Vector<3> force_N;
@@ -69,8 +69,8 @@ Vector<3> FfComponents::GenerateTorque_Nm_b() {
 }
 
 void FfComponents::LogSetup(Logger& logger) {
-  logger.AddLoggable(relative_distance_sensor_);
-  logger.AddLoggable(relative_position_sensor_);
-  logger.AddLoggable(relative_velocity_sensor_);
-  logger.AddLoggable(force_generator_);
+  logger.AddLogList(relative_distance_sensor_);
+  logger.AddLogList(relative_position_sensor_);
+  logger.AddLogList(relative_velocity_sensor_);
+  logger.AddLogList(force_generator_);
 }
