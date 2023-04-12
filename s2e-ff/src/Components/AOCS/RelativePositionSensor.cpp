@@ -20,28 +20,28 @@ void RelativePositionSensor::MainRoutine(int count) {
   measured_target_position_i_m_ = rel_info_.GetRelativePosition_i_m(target_sat_id_, reference_sat_id_);
   measured_target_position_rtn_m_ = rel_info_.GetRelativePosition_rtn_m(target_sat_id_, reference_sat_id_);
   libra::Quaternion q_i2b = dynamics_.GetAttitude().GetQuaternion_i2b();
-  measured_target_position_body_m_ = q_i2b.frame_conv(measured_target_position_i_m_);
+  measured_target_position_body_m_ = q_i2b.FrameConversion(measured_target_position_i_m_);
 
   // Add noise at body frame and frame conversion
-  libra::Quaternion q_i2rtn = dynamics_.GetOrbit().CalcQuaternionI2LVLH();
+  libra::Quaternion q_i2rtn = dynamics_.GetOrbit().CalcQuaternion_i2lvlh();
   switch (error_frame_) {
     case RelativePositionSensorErrorFrame::INERTIAL:
       measured_target_position_i_m_ = Measure(measured_target_position_i_m_);
       // Frame conversion
-      measured_target_position_rtn_m_ = q_i2rtn.frame_conv(measured_target_position_i_m_);
-      measured_target_position_body_m_ = q_i2b.frame_conv(measured_target_position_i_m_);
+      measured_target_position_rtn_m_ = q_i2rtn.FrameConversion(measured_target_position_i_m_);
+      measured_target_position_body_m_ = q_i2b.FrameConversion(measured_target_position_i_m_);
       break;
     case RelativePositionSensorErrorFrame::RTN:
       measured_target_position_rtn_m_ = Measure(measured_target_position_rtn_m_);
       // Frame conversion
-      measured_target_position_i_m_ = q_i2rtn.frame_conv_inv(measured_target_position_rtn_m_);
-      measured_target_position_body_m_ = q_i2b.frame_conv(measured_target_position_i_m_);
+      measured_target_position_i_m_ = q_i2rtn.InverseFrameConversion(measured_target_position_rtn_m_);
+      measured_target_position_body_m_ = q_i2b.FrameConversion(measured_target_position_i_m_);
       break;
     case RelativePositionSensorErrorFrame::BODY:
       measured_target_position_body_m_ = Measure(measured_target_position_body_m_);
       // Frame conversion
-      measured_target_position_i_m_ = q_i2b.frame_conv_inv(measured_target_position_body_m_);
-      measured_target_position_rtn_m_ = q_i2rtn.frame_conv(measured_target_position_i_m_);
+      measured_target_position_i_m_ = q_i2b.InverseFrameConversion(measured_target_position_body_m_);
+      measured_target_position_rtn_m_ = q_i2rtn.FrameConversion(measured_target_position_i_m_);
       break;
     default:
       break;
