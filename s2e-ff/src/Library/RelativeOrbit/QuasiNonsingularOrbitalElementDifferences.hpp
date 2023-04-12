@@ -6,7 +6,7 @@
 #ifndef QUASI_NONSINGULAR_ORBITAL_ELEMENT_DIFFERENCES_H_
 #define QUASI_NONSINGULAR_ORBITAL_ELEMENT_DIFFERENCES_H_
 
-#include <Library/math/Vector.hpp>
+#include <library/math/vector.hpp>
 
 #include "../Orbit/QuasiNonsingularOrbitalElements.hpp"
 
