@@ -10,7 +10,7 @@ RotationFirstDualQuaternion::RotationFirstDualQuaternion(const DualQuaternion dq
 
 RotationFirstDualQuaternion::RotationFirstDualQuaternion(const Quaternion q_rot, const Vector<3> v_translation) {
   q_real_ = q_rot;
-  q_real_.normalize();
+  q_real_.Normalize();
 
   // TODO: Make vector * quaternion function in core's Quaternion class
   Quaternion q_v(v_translation[0], v_translation[1], v_translation[2], 0.0);
@@ -20,7 +20,7 @@ RotationFirstDualQuaternion::RotationFirstDualQuaternion(const Quaternion q_rot,
 RotationFirstDualQuaternion RotationFirstDualQuaternion::CalcNormalizedRotationQauternion() const {
   Quaternion q_rot = q_real_;
   Vector<3> v_translation = this->GetTranslationVector();
-  q_rot.normalize();
+  q_rot.Normalize();
 
   RotationFirstDualQuaternion dq_out(q_rot, v_translation);
   return dq_out;
@@ -28,7 +28,7 @@ RotationFirstDualQuaternion RotationFirstDualQuaternion::CalcNormalizedRotationQ
 
 void RotationFirstDualQuaternion::NormalizeRotationQauternion() {
   Vector<3> v_translation = this->GetTranslationVector();
-  q_real_.normalize();
+  q_real_.Normalize();
 
   RotationFirstDualQuaternion dq_out(q_real_, v_translation);
   q_dual_ = dq_out.GetDualPart();
@@ -55,7 +55,7 @@ RotationFirstDualQuaternion RotationFirstDualQuaternion::Integrate(const Vector<
 }
 
 Vector<3> RotationFirstDualQuaternion::GetTranslationVector() const {
-  Quaternion q_out = 2.0 * q_dual_ * q_real_.conjugate();
+  Quaternion q_out = 2.0 * q_dual_ * q_real_.Conjugate();
   Vector<3> v_out;
   for (int i = 0; i < 3; i++) v_out[i] = q_out[i];
   return v_out;
