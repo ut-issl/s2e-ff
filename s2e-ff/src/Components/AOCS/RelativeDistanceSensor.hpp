@@ -1,16 +1,14 @@
 #ifndef RELATIVE_DISTANCE_SENSOR_H_
 #define RELATIVE_DISTANCE_SENSOR_H_
 
+#include <Component/Abstract/ComponentBase.h>
+#include <Component/Abstract/SensorBase.h>
 #include <Interface/LogOutput/ILoggable.h>
 #include <RelativeInformation/RelativeInformation.h>
 
-#include <Component/Abstract/ComponentBase.h>
-#include <Component/Abstract/SensorBase.h>
-
 class RelativeDistanceSensor : public ComponentBase, public SensorBase<1>, public ILoggable {
  public:
-  RelativeDistanceSensor(const int prescaler, ClockGenerator* clock_gen, SensorBase& sensor_base,
-                         const int target_sat_id, const int reference_sat_id,
+  RelativeDistanceSensor(const int prescaler, ClockGenerator* clock_gen, SensorBase& sensor_base, const int target_sat_id, const int reference_sat_id,
                          const RelativeInformation& rel_info);
   ~RelativeDistanceSensor();
   // ComponentBase

@@ -6,11 +6,7 @@
 #include <Interface/LogOutput/ILoggable.h>
 #include <RelativeInformation/RelativeInformation.h>
 
-enum class RelativePositionSensorErrorFrame {
-  INERTIAL,
-  RTN,
-  BODY
-};
+enum class RelativePositionSensorErrorFrame { INERTIAL, RTN, BODY };
 
 class RelativePositionSensor : public ComponentBase, public SensorBase<3>, public ILoggable {
  public:
