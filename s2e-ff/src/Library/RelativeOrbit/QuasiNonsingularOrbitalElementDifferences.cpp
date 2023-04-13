@@ -5,8 +5,8 @@
 
 #include "QuasiNonsingularOrbitalElementDifferences.hpp"
 
-#include <Library/math/MatVec.hpp>
 #include <cmath>
+#include <library/math/matrix_vector.hpp>
 
 QuasiNonsingularOrbitalElementDifferences::QuasiNonsingularOrbitalElementDifferences(const QuasiNonsingularOrbitalElements qns_oe_reference,
                                                                                      const QuasiNonsingularOrbitalElements qns_oe_target)

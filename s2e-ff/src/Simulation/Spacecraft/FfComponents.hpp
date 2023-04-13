@@ -1,25 +1,22 @@
 #pragma once
 
-#include <Simulation/Spacecraft/InstalledComponents.hpp>
-
-#include "Dynamics.h"
-#include "GlobalEnvironment.h"
-#include "LocalEnvironment.h"
-#include "Vector.hpp"
+#include <environment/global/global_environment.hpp>
+#include <environment/local/local_environment.hpp>
+#include <simulation/spacecraft/installed_components.hpp>
 
 // include for components
-#include <Component/IdealComponents/ForceGenerator.hpp>
+#include <components/ideal/force_generator.hpp>
+#include <components/real/cdh/on_board_computer.hpp>
 
 #include "../../Components/AOCS/RelativeDistanceSensor.hpp"
 #include "../../Components/AOCS/RelativePositionSensor.hpp"
 #include "../../Components/AOCS/RelativeVelocitySensor.hpp"
 #include "../../Components/IdealComponents/RelativeAttitudeController.hpp"
-#include "OBC.h"
 
 class FfComponents : public InstalledComponents {
  public:
   FfComponents(const Dynamics* dynamics, const Structure* structure, const LocalEnvironment* local_env, const GlobalEnvironment* glo_env,
-               const SimulationConfig* config, ClockGenerator* clock_gen, const RelativeInformation* rel_info);
+               const SimulationConfiguration* config, ClockGenerator* clock_gen, const RelativeInformation* rel_info);
   ~FfComponents();
   libra::Vector<3> GenerateForce_N_b();
   libra::Vector<3> GenerateTorque_Nm_b();
@@ -27,7 +24,7 @@ class FfComponents : public InstalledComponents {
 
  private:
   // Components
-  OBC* obc_;
+  OnBoardComputer* obc_;
   RelativeDistanceSensor* relative_distance_sensor_;
   RelativePositionSensor* relative_position_sensor_;
   RelativeVelocitySensor* relative_velocity_sensor_;
@@ -39,6 +36,6 @@ class FfComponents : public InstalledComponents {
   const Structure* structure_;
   const LocalEnvironment* local_env_;
   const GlobalEnvironment* glo_env_;
-  const SimulationConfig* config_;
+  const SimulationConfiguration* config_;
   const RelativeInformation* rel_info_;
 };

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Component/Abstract/ComponentBase.h>
-#include <Interface/LogOutput/Logger.h>
-#include <RelativeInformation/RelativeInformation.h>
+#include <components/base/component.hpp>
+#include <library/logger/logger.hpp>
+#include <simulation/multiple_spacecraft/relative_information.hpp>
 
 enum class RelativeAttitudeControlMode {
   TARGET_SATELLITE_POINTING,
@@ -15,7 +15,7 @@ enum class RelativeAttitudeControlMode {
 
 RelativeAttitudeControlMode ConvertStringToRelativeAttitudeControlMode(const std::string mode_name);
 
-class RelativeAttitudeController : public ComponentBase, public ILoggable {
+class RelativeAttitudeController : public Component, public ILoggable {
  public:
   RelativeAttitudeController(const int prescaler, ClockGenerator* clock_gen, const RelativeAttitudeControlMode main_mode,
                              const RelativeAttitudeControlMode sub_mode, const libra::Vector<3> main_target_direction_b,

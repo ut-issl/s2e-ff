@@ -8,47 +8,26 @@ FfCase::~FfCase() {
   }
 }
 
-void FfCase::Initialize() {
+void FfCase::InitializeTargetObjects() {
   // Instantiate the target of the simulation
-  for (int sat_id = 0; sat_id < sim_config_.num_of_simulated_spacecraft_; sat_id++) {
-    FfSat* sc = new FfSat(&sim_config_, glo_env_, &relative_information_, sat_id);
+  for (unsigned int sat_id = 0; sat_id < simulation_configuration_.number_of_simulated_spacecraft_; sat_id++) {
+    FfSat* sc = new FfSat(&simulation_configuration_, global_environment_, &relative_information_, sat_id);
     satellites_.push_back(sc);
   }
   // Register the log output
-  glo_env_->LogSetup(*(sim_config_.main_logger_));
   for (auto& sc : satellites_) {
-    sc->LogSetup(*(sim_config_.main_logger_));
+    sc->LogSetup(*(simulation_configuration_.main_logger_));
   }
-  relative_information_.LogSetup(*(sim_config_.main_logger_));
-
-  // Write headers to the log
-  sim_config_.main_logger_->WriteHeaders();
-
-  // Start the simulation
-  std::cout << "\nSimulationDateTime \n";
-  glo_env_->GetSimTime().PrintStartDateTime();
+  relative_information_.LogSetup(*(simulation_configuration_.main_logger_));
 }
 
-void FfCase::Main() {
-  glo_env_->Reset();  // for MonteCarlo Sim
-  while (!glo_env_->GetSimTime().GetState().finish) {
-    // Logging
-    if (glo_env_->GetSimTime().GetState().log_output) {
-      sim_config_.main_logger_->WriteValues();
-    }
-    // Global Environment Update
-    glo_env_->Update();
-    // Spacecraft Update
-    for (auto& sc : satellites_) {
-      sc->Update(&(glo_env_->GetSimTime()));
-    }
-    // Relative Information
-    relative_information_.Update();
-    // Debug output
-    if (glo_env_->GetSimTime().GetState().disp_output) {
-      std::cout << "Progresss: " << glo_env_->GetSimTime().GetProgressionRate() << "%\r";
-    }
+void FfCase::UpdateTargetObjects() {
+  // Spacecraft Update
+  for (auto& sc : satellites_) {
+    sc->Update(&(global_environment_->GetSimulationTime()));
   }
+  // Relative Information
+  relative_information_.Update();
 }
 
 std::string FfCase::GetLogHeader() const {

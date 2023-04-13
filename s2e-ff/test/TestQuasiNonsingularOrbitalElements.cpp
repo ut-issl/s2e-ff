@@ -65,7 +65,7 @@ TEST(QuasiNonsingularOrbitalElements, ConstructorWithPositionVelocity) {
   position_i_m[0] = -5659121.225;
   position_i_m[1] = 2467374.064;
   position_i_m[2] = -3072838.471;
-  const double r_norm_m = norm(position_i_m);
+  const double r_norm_m = position_i_m.CalcNorm();
   libra::Vector<3> velocity_i_m_s;
   velocity_i_m_s[0] = 3517.005128;
   velocity_i_m_s[1] = -323.2731889;

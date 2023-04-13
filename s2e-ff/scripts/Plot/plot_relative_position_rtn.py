@@ -48,9 +48,9 @@ read_file_name  = path_to_logs + '/' + 'logs_' + read_file_tag + '/' + read_file
 # Data read and edit
 #
 # Read S2E CSV
-d1 = pandas.read_csv(read_file_name, skiprows=[1,1], sep=',', usecols=['sat1 pos from sat0_rtn(X)[m]', 'sat1 pos from sat0_rtn(Y)[m]', 'sat1 pos from sat0_rtn(Z)[m]'])
+d1 = pandas.read_csv(read_file_name, skiprows=[1,1], sep=',', usecols=['sat1 pos from sat0_rtn_x[m]', 'sat1 pos from sat0_rtn_y[m]', 'sat1 pos from sat0_rtn_z[m]'])
 # Add satellites if you need
-# d2 = pandas.read_csv(read_file_name, skiprows=[1,1], sep=',', usecols=['sat2 pos from sat0_rtn(X)[m]', 'sat2 pos from sat0_rtn(Y)[m]', 'sat2 pos from sat0_rtn(Z)[m]'])
+# d2 = pandas.read_csv(read_file_name, skiprows=[1,1], sep=',', usecols=['sat2 pos from sat0_rtn_x[m]', 'sat2 pos from sat0_rtn_y[m]', 'sat2 pos from sat0_rtn_z[m]'])
 
 # Edit data if you need
 
@@ -65,14 +65,14 @@ ax.set_ylabel("Transverse [m]")
 ax.set_zlabel("Normal [m]")
 
 # Add plot settings if you need
-# ax.set_xlim(-30, 30)
-# ax.set_ylim(-30, 30)
-# ax.set_zlim(-20, 20)
+#ax.set_xlim(-100, 100)
+#ax.set_ylim(-100, 100)
+#ax.set_zlim(-100, 100)
 
 ax.plot(0,0,0, marker="*", c="green", markersize=10, label="Sat0")
-ax.plot(d1['sat1 pos from sat0_rtn(X)[m]'].to_numpy(),d1['sat1 pos from sat0_rtn(Y)[m]'].to_numpy(),d1['sat1 pos from sat0_rtn(Z)[m]'].to_numpy(), marker="x", c="red", label="Sat1")
+ax.plot(d1['sat1 pos from sat0_rtn_x[m]'].to_numpy(),d1['sat1 pos from sat0_rtn_y[m]'].to_numpy(),d1['sat1 pos from sat0_rtn_z[m]'].to_numpy(), marker="x", c="red", label="Sat1")
 # Add satellites if you need
-# ax.plot(d2['sat2 pos from sat0_rtn(X)[m]'].to_numpy(),d2['sat2 pos from sat0_rtn(Y)[m]'].to_numpy(),d2['sat2 pos from sat0_rtn(Z)[m]'].to_numpy(), marker="o", c="blue", label="Sat2")
+# ax.plot(d2['sat2 pos from sat0_rtn_x[m]'].to_numpy(),d2['sat2 pos from sat0_rtn_y[m]'].to_numpy(),d2['sat2 pos from sat0_rtn_z[m]'].to_numpy(), marker="o", c="blue", label="Sat2")
 
 ax.legend()
 

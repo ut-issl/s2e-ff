@@ -1,6 +1,6 @@
 #include "InitializeRelativeAttitudeController.hpp"
 
-#include <Interface/InitInput/IniAccess.h>
+#include <library/initialize/initialize_file_access.hpp>
 
 RelativeAttitudeController InitializeRelativeAttitudeController(ClockGenerator* clock_gen, const std::string file_name,
                                                                 const RelativeInformation& rel_info,

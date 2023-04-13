@@ -1,10 +1,10 @@
 #include "RelativeVelocitySensor.hpp"
 
-RelativeVelocitySensor::RelativeVelocitySensor(const int prescaler, ClockGenerator* clock_gen, SensorBase& sensor_base, const int target_sat_id,
+RelativeVelocitySensor::RelativeVelocitySensor(const int prescaler, ClockGenerator* clock_gen, Sensor& sensor_base, const int target_sat_id,
                                                const int reference_sat_id, const RelativeVelocitySensorErrorFrame error_frame,
                                                const RelativeInformation& rel_info, const Dynamics& dynamics)
-    : ComponentBase(prescaler, clock_gen),
-      SensorBase(sensor_base),
+    : Component(prescaler, clock_gen),
+      Sensor(sensor_base),
       target_sat_id_(target_sat_id),
       reference_sat_id_(reference_sat_id),
       error_frame_(error_frame),
@@ -21,13 +21,13 @@ void RelativeVelocitySensor::MainRoutine(int count) {
   libra::Vector<3> true_target_velocity_rtn_m_s = rel_info_.GetRelativeVelocity_rtn_m_s(target_sat_id_, reference_sat_id_);
 
   // Add noise at body frame and frame conversion
-  libra::Quaternion q_i2rtn = dynamics_.GetOrbit().CalcQuaternionI2LVLH();
+  libra::Quaternion q_i2rtn = dynamics_.GetOrbit().CalcQuaternion_i2lvlh();
   switch (error_frame_) {
     case RelativeVelocitySensorErrorFrame::INERTIAL: {
       measured_target_velocity_i_m_s_ = Measure(true_target_velocity_i_m_s);
       libra::Vector<3> d_vel_i_m_s = measured_target_velocity_i_m_s_ - true_target_velocity_i_m_s;
       // Frame conversion
-      libra::Vector<3> d_vel_rtn_m_s = q_i2rtn.frame_conv(d_vel_i_m_s);
+      libra::Vector<3> d_vel_rtn_m_s = q_i2rtn.FrameConversion(d_vel_i_m_s);
       measured_target_velocity_rtn_m_s_ = true_target_velocity_rtn_m_s + d_vel_rtn_m_s;
       break;
     }
@@ -35,7 +35,7 @@ void RelativeVelocitySensor::MainRoutine(int count) {
       measured_target_velocity_rtn_m_s_ = Measure(true_target_velocity_rtn_m_s);
       libra::Vector<3> d_vel_rtn_m_s = measured_target_velocity_rtn_m_s_ - true_target_velocity_rtn_m_s;
       // Frame conversion
-      libra::Vector<3> d_vel_i_m_s = q_i2rtn.frame_conv_inv(d_vel_rtn_m_s);
+      libra::Vector<3> d_vel_i_m_s = q_i2rtn.InverseFrameConversion(d_vel_rtn_m_s);
       measured_target_velocity_i_m_s_ = true_target_velocity_i_m_s + d_vel_i_m_s;
       break;
     }
