@@ -8,6 +8,13 @@ project(S2E_FF
 
 cmake_minimum_required(VERSION 3.13)
 
+# build config
+option(BUILD_64BIT "Build 64bit" OFF)
+option(GOOGLE_TEST "Execute GoogleTest" OFF)
+if (NOT BUILD_64BIT)
+  option(GOOGLE_TEST OFF) # GoogleTest supports 64bit only
+endif()
+
 # preprocessor
 if(WIN32)
   add_definitions(-DWIN32)
@@ -77,9 +84,24 @@ add_subdirectory(${S2E_CORE_DIR}/src/Simulation S2E_CORE/Simulation)
 
 set(SOURCE_FILES
   src/S2eFf.cpp
+  src/Components/AOCS/RelativeDistanceSensor.cpp
+  src/Components/AOCS/InitializeRelativeDistanceSensor.cpp
+  src/Components/AOCS/RelativePositionSensor.cpp
+  src/Components/AOCS/InitializeRelativePositionSensor.cpp
+  src/Components/AOCS/RelativeVelocitySensor.cpp
+  src/Components/AOCS/InitializeRelativeVelocitySensor.cpp
+  src/Components/IdealComponents/RelativeAttitudeController.cpp
+  src/Components/IdealComponents/InitializeRelativeAttitudeController.cpp
+  src/Library/math/DualQuaternion.cpp
+  src/Library/math/RotationFirstDualQuaternion.cpp
+  src/Library/math/TranslationFirstDualQuaternion.cpp
+  src/Library/Orbit/QuasiNonsingularOrbitalElements.cpp
+  src/Library/RelativeOrbit/QuasiNonsingularRelativeOrbitalElements.cpp
+  src/Library/RelativeOrbit/QuasiNonsingularOrbitalElementDifferences.cpp
   src/Simulation/Case/FfCase.cpp
   src/Simulation/Spacecraft/FfSat.cpp
   src/Simulation/Spacecraft/FfComponents.cpp
+  src/Simulation/Spacecraft/FfComponents2.cpp
 )
 # Create executable file
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
@@ -87,18 +109,24 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 ## cspice library
 if(CYGWIN)
   SET (CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".a")
-  find_library(CSPICE_LIB
-    NAMES cspice.a csupport.a
-    PATHS ${CSPICE_DIR}/cspice_cygwin/lib)
+  set(CSPICE_LIB_DIR ${CSPICE_DIR}/cspice_cygwin/lib)
 elseif(UNIX)
-  find_library(CSPICE_LIB
-    NAMES cspice.a csupport.a
-    PATHS ${CSPICE_DIR}/cspice_unix/lib)
-elseif(WIN32)
+  if(BUILD_64BIT)
+    set(CSPICE_LIB_DIR ${CSPICE_DIR}/cspice_unix64/lib)
+  else()
+    set(CSPICE_LIB_DIR ${CSPICE_DIR}/cspice_unix/lib)
+  endif()
+endif()
+
+if(WIN32)
   SET (CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
   find_library(CSPICE_LIB
     NAMES cspice.lib csupport.lib
     PATHS ${CSPICE_DIR}/cspice_msvs/lib)
+else()
+  find_library(CSPICE_LIB
+    NAMES cspice.a csupport.a
+    PATHS ${CSPICE_LIB_DIR})
 endif()
 if(NOT CSPICE_LIB)
   message(FATAL_ERROR "cspice not found in ${EXT_LIB_DIR}")
@@ -111,9 +139,15 @@ if(CYGWIN)
     NAMES libnrlmsise00.a
     PATHS ${NRLMSISE00_DIR}/lib)
 elseif(UNIX)
-  find_library(NRLMSISE00_LIB 
-    NAMES libnrlmsise00.a
-    PATHS ${NRLMSISE00_DIR}/lib)
+  if(BUILD_64BIT)
+    find_library(NRLMSISE00_LIB
+      NAMES libnrlmsise00.a
+      PATHS ${NRLMSISE00_DIR}/lib64)
+  else()
+    find_library(NRLMSISE00_LIB
+      NAMES libnrlmsise00.a
+      PATHS ${NRLMSISE00_DIR}/lib)
+  endif()
 elseif(WIN32)
   SET (CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
   find_library(NRLMSISE00_LIB 
@@ -151,3 +185,43 @@ message("Cspice_LIB:  " ${CSPICE_LIB})
 message("nrlmsise00_LIB:  " ${NRLMSISE00_LIB})
 
 include(${S2E_CORE_DIR}/common.cmake)
+
+## GoogleTest settings
+if(GOOGLE_TEST)
+  include(FetchContent)
+  FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG release-1.12.1
+  )
+  FetchContent_MakeAvailable(googletest)
+  if(WIN32)
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+  endif()
+
+  ## Unit test
+  set(TEST_PROJECT_NAME ${PROJECT_NAME}_TEST)
+  set(TEST_FILES
+    # Dual Quaternion
+    src/Library/math/DualQuaternion.cpp
+    test/TestDualQuaternion.cpp
+    src/Library/math/RotationFirstDualQuaternion.cpp
+    test/TestRotationFirstDualQuaternion.cpp
+    src/Library/math/TranslationFirstDualQuaternion.cpp
+    test/TestTranslationFirstDualQuaternion.cpp
+    # Orbital elements
+    src/Library/Orbit/QuasiNonsingularOrbitalElements.cpp
+    test/TestQuasiNonsingularOrbitalElements.cpp
+    # Relative orbital elements
+    src/Library/RelativeOrbit/QuasiNonsingularOrbitalElementDifferences.cpp
+    test/TestQuasiNonsingularOrbitalElementDifferences.cpp
+    src/Library/RelativeOrbit/QuasiNonsingularRelativeOrbitalElements.cpp
+    test/TestQuasiNonsingularRelativeOrbitalElements.cpp
+  )
+  add_executable(${TEST_PROJECT_NAME} ${TEST_FILES})
+  target_link_libraries(${TEST_PROJECT_NAME} gtest gtest_main)
+  target_link_libraries(${TEST_PROJECT_NAME} MATH)
+  include_directories(${TEST_PROJECT_NAME})
+  add_test(NAME s2e-test COMMAND ${TEST_PROJECT_NAME})
+  enable_testing()
+endif()

@@ -19,6 +19,8 @@ void FfCase::Initialize() {
   for (auto& sc : satellites_) {
     sc->LogSetup(*(sim_config_.main_logger_));
   }
+  relative_information_.LogSetup(*(sim_config_.main_logger_));
+
   // Write headers to the log
   sim_config_.main_logger_->WriteHeaders();
 
@@ -40,6 +42,8 @@ void FfCase::Main() {
     for (auto& sc : satellites_) {
       sc->Update(&(glo_env_->GetSimTime()));
     }
+    // Relative Information
+    relative_information_.Update();
     // Debug output
     if (glo_env_->GetSimTime().GetState().disp_output) {
       std::cout << "Progresss: " << glo_env_->GetSimTime().GetProgressionRate() << "%\r";

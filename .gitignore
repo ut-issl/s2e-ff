@@ -13,6 +13,7 @@ s2e-ff/data/**/logs/
 
 # ExtLibraries
 ExtLibraries/
+src-core/ExtLibraries/
 s2e-ff/scripts/tmp_cspice/
 
 # Executables
@@ -32,4 +33,7 @@ Icon
 # Files that might appear on external disk
 .Spotlight-V100
 .Trashes
+
+# Python
+__pycache__/
 

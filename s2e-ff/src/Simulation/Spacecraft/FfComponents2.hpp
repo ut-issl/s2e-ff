@@ -12,15 +12,14 @@
 
 #include "../../Components/AOCS/RelativeDistanceSensor.hpp"
 #include "../../Components/AOCS/RelativePositionSensor.hpp"
-#include "../../Components/AOCS/RelativeVelocitySensor.hpp"
 #include "../../Components/IdealComponents/RelativeAttitudeController.hpp"
 #include "OBC.h"
 
-class FfComponents : public InstalledComponents {
+class FfComponents2 : public InstalledComponents {
  public:
-  FfComponents(const Dynamics* dynamics, const Structure* structure, const LocalEnvironment* local_env, const GlobalEnvironment* glo_env,
-               const SimulationConfig* config, ClockGenerator* clock_gen, const RelativeInformation* rel_info);
-  ~FfComponents();
+  FfComponents2(const Dynamics* dynamics, const Structure* structure, const LocalEnvironment* local_env, const GlobalEnvironment* glo_env,
+                const SimulationConfig* config, ClockGenerator* clock_gen, const RelativeInformation* rel_info);
+  ~FfComponents2();
   libra::Vector<3> GenerateForce_N_b();
   libra::Vector<3> GenerateTorque_Nm_b();
   void LogSetup(Logger& logger);
@@ -28,11 +27,6 @@ class FfComponents : public InstalledComponents {
  private:
   // Components
   OBC* obc_;
-  RelativeDistanceSensor* relative_distance_sensor_;
-  RelativePositionSensor* relative_position_sensor_;
-  RelativeVelocitySensor* relative_velocity_sensor_;
-  ForceGenerator* force_generator_;
-  RelativeAttitudeController* relative_attitude_controller_;
 
   // References
   const Dynamics* dynamics_;
