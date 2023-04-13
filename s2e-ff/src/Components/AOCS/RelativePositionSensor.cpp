@@ -1,7 +1,7 @@
 #include "RelativePositionSensor.hpp"
 
 RelativePositionSensor::RelativePositionSensor(const int prescaler, ClockGenerator* clock_gen, SensorBase& sensor_base, const int target_sat_id,
-                                               const int reference_sat_id, const RelativePositionSensorErrorFrame error_frame, 
+                                               const int reference_sat_id, const RelativePositionSensorErrorFrame error_frame,
                                                const RelativeInformation& rel_info, const Dynamics& dynamics)
     : ComponentBase(prescaler, clock_gen),
       SensorBase(sensor_base),
@@ -21,31 +21,30 @@ void RelativePositionSensor::MainRoutine(int count) {
   measured_target_position_rtn_m_ = rel_info_.GetRelativePosition_rtn_m(target_sat_id_, reference_sat_id_);
   libra::Quaternion q_i2b = dynamics_.GetAttitude().GetQuaternion_i2b();
   measured_target_position_body_m_ = q_i2b.frame_conv(measured_target_position_i_m_);
-  
+
   // Add noise at body frame and frame conversion
   libra::Quaternion q_i2rtn = dynamics_.GetOrbit().CalcQuaternionI2LVLH();
-  switch (error_frame_)
-  {
-  case RelativePositionSensorErrorFrame::INERTIAL :
-    measured_target_position_i_m_ = Measure(measured_target_position_i_m_);
-    // Frame conversion
-    measured_target_position_rtn_m_ = q_i2rtn.frame_conv(measured_target_position_i_m_);
-    measured_target_position_body_m_ = q_i2b.frame_conv(measured_target_position_i_m_);
-    break;
-  case RelativePositionSensorErrorFrame::RTN :
-    measured_target_position_rtn_m_ = Measure(measured_target_position_rtn_m_);
-    // Frame conversion
-    measured_target_position_i_m_ = q_i2rtn.frame_conv_inv(measured_target_position_rtn_m_);
-    measured_target_position_body_m_ = q_i2b.frame_conv(measured_target_position_i_m_);
-    break;
-  case RelativePositionSensorErrorFrame::BODY :
-    measured_target_position_body_m_ = Measure(measured_target_position_body_m_);
-    // Frame conversion
-    measured_target_position_i_m_ = q_i2b.frame_conv_inv(measured_target_position_body_m_);
-    measured_target_position_rtn_m_ = q_i2rtn.frame_conv(measured_target_position_i_m_);
-    break;  
-  default:
-    break;
+  switch (error_frame_) {
+    case RelativePositionSensorErrorFrame::INERTIAL:
+      measured_target_position_i_m_ = Measure(measured_target_position_i_m_);
+      // Frame conversion
+      measured_target_position_rtn_m_ = q_i2rtn.frame_conv(measured_target_position_i_m_);
+      measured_target_position_body_m_ = q_i2b.frame_conv(measured_target_position_i_m_);
+      break;
+    case RelativePositionSensorErrorFrame::RTN:
+      measured_target_position_rtn_m_ = Measure(measured_target_position_rtn_m_);
+      // Frame conversion
+      measured_target_position_i_m_ = q_i2rtn.frame_conv_inv(measured_target_position_rtn_m_);
+      measured_target_position_body_m_ = q_i2b.frame_conv(measured_target_position_i_m_);
+      break;
+    case RelativePositionSensorErrorFrame::BODY:
+      measured_target_position_body_m_ = Measure(measured_target_position_body_m_);
+      // Frame conversion
+      measured_target_position_i_m_ = q_i2b.frame_conv_inv(measured_target_position_body_m_);
+      measured_target_position_rtn_m_ = q_i2rtn.frame_conv(measured_target_position_i_m_);
+      break;
+    default:
+      break;
   }
 }
 
