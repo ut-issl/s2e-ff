@@ -3,7 +3,7 @@
  * @brief Orbital elements avoid singularity when the eccentricity is near zero.
  */
 
-#include "QuasiNonsingularOrbitalElements.hpp"
+#include "quasi_nonsingular_orbital_elements.hpp"
 
 #include <cfloat>
 

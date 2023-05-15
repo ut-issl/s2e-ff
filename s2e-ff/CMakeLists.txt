@@ -56,7 +56,7 @@ set(SOURCE_FILES
   src/library/math/dual_quaternion.cpp
   src/library/math/rotation_first_dual_quaternion.cpp
   src/library/math/translation_first_dual_quaternion.cpp
-  src/library/orbit/QuasiNonsingularOrbitalElements.cpp
+  src/library/orbit/quasi_nonsingular_orbital_elements.cpp
   src/library/relative_orbit/QuasiNonsingularRelativeOrbitalElements.cpp
   src/library/relative_orbit/QuasiNonsingularOrbitalElementDifferences.cpp
   src/simulation/case/ff_case.cpp
@@ -169,7 +169,7 @@ if(GOOGLE_TEST)
     src/library/math/translation_first_dual_quaternion.cpp
     test/TestTranslationFirstDualQuaternion.cpp
     # Orbital elements
-    src/library/orbit/QuasiNonsingularOrbitalElements.cpp
+    src/library/orbit/quasi_nonsingular_orbital_elements.cpp
     test/TestQuasiNonsingularOrbitalElements.cpp
     # Relative orbital elements
     src/library/relative_orbit/QuasiNonsingularOrbitalElementDifferences.cpp
