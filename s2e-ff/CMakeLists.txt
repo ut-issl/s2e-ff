@@ -44,7 +44,7 @@ add_subdirectory(${S2E_CORE_DIR}/src/simulation s2e_core/simulation)
 
 
 set(SOURCE_FILES
-  src/S2eFf.cpp
+  src/s2e_ff.cpp
   src/Components/AOCS/RelativeDistanceSensor.cpp
   src/Components/AOCS/InitializeRelativeDistanceSensor.cpp
   src/Components/AOCS/RelativePositionSensor.cpp
