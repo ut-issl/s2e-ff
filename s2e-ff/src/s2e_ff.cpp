@@ -20,7 +20,7 @@ void print_path(std::string path) {
 // Main function
 int main() {
   // Set initialize file
-  std::string ini_file = "../../data/ini/FfSimBase.ini";
+  std::string ini_file = "../../data/initialize_files/ff_simulation_base.ini";
 
   std::cout << "Starting simulation..." << std::endl;
   std::cout << "\tIni file: ";

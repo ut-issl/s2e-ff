@@ -163,19 +163,19 @@ if(GOOGLE_TEST)
   set(TEST_FILES
     # Dual Quaternion
     src/library/math/dual_quaternion.cpp
-    test/TestDualQuaternion.cpp
+    test/test_dual_quaternion.cpp
     src/library/math/rotation_first_dual_quaternion.cpp
-    test/TestRotationFirstDualQuaternion.cpp
+    test/test_rotation_first_dual_quaternion.cpp
     src/library/math/translation_first_dual_quaternion.cpp
-    test/TestTranslationFirstDualQuaternion.cpp
+    test/test_translation_first_dual_quaternion.cpp
     # Orbital elements
     src/library/orbit/quasi_nonsingular_orbital_elements.cpp
-    test/TestQuasiNonsingularOrbitalElements.cpp
+    test/test_quasi_nonsingular_orbital_elements.cpp
     # Relative orbital elements
     src/library/relative_orbit/quasi_nonsingular_orbital_element_differences.cpp
-    test/TestQuasiNonsingularOrbitalElementDifferences.cpp
+    test/test_quasi_nonsingular_orbital_element_differences.cpp
     src/library/relative_orbit/quasi_nonsingular_relative_orbital_elements.cpp
-    test/TestQuasiNonsingularRelativeOrbitalElements.cpp
+    test/test_quasi_nonsingular_relative_orbital_elements.cpp
   )
   add_executable(${TEST_PROJECT_NAME} ${TEST_FILES})
   target_link_libraries(${TEST_PROJECT_NAME} gtest gtest_main)
