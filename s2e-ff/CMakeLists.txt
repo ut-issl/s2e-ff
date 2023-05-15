@@ -47,8 +47,8 @@ set(SOURCE_FILES
   src/s2e_ff.cpp
   src/components/aocs/relative_distance_sensor.cpp
   src/components/aocs/initialize_relative_distance_sensor.cpp
-  src/components/aocs/RelativePositionSensor.cpp
-  src/components/aocs/InitializeRelativePositionSensor.cpp
+  src/components/aocs/relative_position_sensor.cpp
+  src/components/aocs/initialize_relative_position_sensor.cpp
   src/components/aocs/RelativeVelocitySensor.cpp
   src/components/aocs/InitializeRelativeVelocitySensor.cpp
   src/components/ideal/RelativeAttitudeController.cpp

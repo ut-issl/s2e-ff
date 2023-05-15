@@ -1,4 +1,4 @@
-#include "InitializeRelativePositionSensor.hpp"
+#include "initialize_relative_position_sensor.hpp"
 
 #include <components/base/initialize_sensor.hpp>
 #include <library/initialize/initialize_file_access.hpp>
