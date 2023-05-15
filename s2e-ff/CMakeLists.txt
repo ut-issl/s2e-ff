@@ -55,7 +55,7 @@ set(SOURCE_FILES
   src/components/ideal/initialize_relative_attitude_controller.cpp
   src/library/math/dual_quaternion.cpp
   src/library/math/rotation_first_dual_quaternion.cpp
-  src/library/math/TranslationFirstDualQuaternion.cpp
+  src/library/math/translation_first_dual_quaternion.cpp
   src/library/orbit/QuasiNonsingularOrbitalElements.cpp
   src/library/relative_orbit/QuasiNonsingularRelativeOrbitalElements.cpp
   src/library/relative_orbit/QuasiNonsingularOrbitalElementDifferences.cpp
@@ -166,7 +166,7 @@ if(GOOGLE_TEST)
     test/TestDualQuaternion.cpp
     src/library/math/rotation_first_dual_quaternion.cpp
     test/TestRotationFirstDualQuaternion.cpp
-    src/library/math/TranslationFirstDualQuaternion.cpp
+    src/library/math/translation_first_dual_quaternion.cpp
     test/TestTranslationFirstDualQuaternion.cpp
     # Orbital elements
     src/library/orbit/QuasiNonsingularOrbitalElements.cpp

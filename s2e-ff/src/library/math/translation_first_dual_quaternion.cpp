@@ -1,4 +1,4 @@
-#include "TranslationFirstDualQuaternion.hpp"
+#include "translation_first_dual_quaternion.hpp"
 
 #include <float.h>
 
