@@ -1,4 +1,4 @@
-#include "FfComponents2.hpp"
+#include "ff_components_2.hpp"
 
 #include <components/ideal/initialize_force_generator.hpp>
 #include <library/initialize/initialize_file_access.hpp>

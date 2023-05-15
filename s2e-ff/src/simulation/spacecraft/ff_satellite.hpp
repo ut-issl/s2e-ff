@@ -2,8 +2,8 @@
 
 #include <simulation/spacecraft/spacecraft.hpp>
 
-#include "FfComponents.hpp"
-#include "FfComponents2.hpp"
+#include "ff_components.hpp"
+#include "ff_components_2.hpp"
 
 class FfSat : public Spacecraft {
  public:
