@@ -8,9 +8,9 @@
 #include <components/ideal/force_generator.hpp>
 #include <components/real/cdh/on_board_computer.hpp>
 
-#include "../../components/AOCS/InitializeRelativeDistanceSensor.hpp"
-#include "../../components/AOCS/InitializeRelativePositionSensor.hpp"
 #include "../../components/IdealComponents/InitializeRelativeAttitudeController.hpp"
+#include "../../components/aocs/InitializeRelativeDistanceSensor.hpp"
+#include "../../components/aocs/InitializeRelativePositionSensor.hpp"
 
 class FfComponents2 : public InstalledComponents {
  public:
