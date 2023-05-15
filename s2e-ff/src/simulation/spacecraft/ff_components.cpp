@@ -51,16 +51,16 @@ FfComponents::~FfComponents() {
   delete obc_;
 }
 
-Vector<3> FfComponents::GenerateForce_N_b() {
-  Vector<3> force_N_b_(0.0);
-  force_N_b_ += force_generator_->GetGeneratedForce_b_N();
-  return force_N_b_;
+Vector<3> FfComponents::GenerateForce_b_N() {
+  Vector<3> force_b_N_(0.0);
+  force_b_N_ += force_generator_->GetGeneratedForce_b_N();
+  return force_b_N_;
 }
 
-Vector<3> FfComponents::GenerateTorque_Nm_b() {
+Vector<3> FfComponents::GenerateTorque_b_Nm() {
   // No attitude control component
-  Vector<3> torque_Nm_b_(0.0);
-  return torque_Nm_b_;
+  Vector<3> torque_b_Nm_(0.0);
+  return torque_b_Nm_;
 }
 
 void FfComponents::LogSetup(Logger& logger) {

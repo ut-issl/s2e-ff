@@ -26,15 +26,15 @@ FfComponents2::~FfComponents2() {
   delete obc_;
 }
 
-Vector<3> FfComponents2::GenerateForce_N_b() {
-  Vector<3> force_N_b_(0.0);
-  return force_N_b_;
+Vector<3> FfComponents2::GenerateForce_b_N() {
+  Vector<3> force_b_N_(0.0);
+  return force_b_N_;
 }
 
-Vector<3> FfComponents2::GenerateTorque_Nm_b() {
+Vector<3> FfComponents2::GenerateTorque_b_Nm() {
   // No attitude control component
-  Vector<3> torque_Nm_b_(0.0);
-  return torque_Nm_b_;
+  Vector<3> torque_b_Nm_(0.0);
+  return torque_b_Nm_;
 }
 
 void FfComponents2::LogSetup(Logger& logger) { UNUSED(logger); }
