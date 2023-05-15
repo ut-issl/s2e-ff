@@ -58,7 +58,7 @@ set(SOURCE_FILES
   src/library/math/translation_first_dual_quaternion.cpp
   src/library/orbit/quasi_nonsingular_orbital_elements.cpp
   src/library/relative_orbit/QuasiNonsingularRelativeOrbitalElements.cpp
-  src/library/relative_orbit/QuasiNonsingularOrbitalElementDifferences.cpp
+  src/library/relative_orbit/quasi_nonsingular_orbital_element_differences.cpp
   src/simulation/case/ff_case.cpp
   src/simulation/spacecraft/ff_satellite.cpp
   src/simulation/spacecraft/ff_components.cpp
@@ -172,7 +172,7 @@ if(GOOGLE_TEST)
     src/library/orbit/quasi_nonsingular_orbital_elements.cpp
     test/TestQuasiNonsingularOrbitalElements.cpp
     # Relative orbital elements
-    src/library/relative_orbit/QuasiNonsingularOrbitalElementDifferences.cpp
+    src/library/relative_orbit/quasi_nonsingular_orbital_element_differences.cpp
     test/TestQuasiNonsingularOrbitalElementDifferences.cpp
     src/library/relative_orbit/QuasiNonsingularRelativeOrbitalElements.cpp
     test/TestQuasiNonsingularRelativeOrbitalElements.cpp

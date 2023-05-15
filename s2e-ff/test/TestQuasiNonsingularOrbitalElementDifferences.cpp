@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../src/Library/RelativeOrbit/QuasiNonsingularOrbitalElementDifferences.hpp"
+#include "../src/library/relative_orbit/quasi_nonsingular_orbital_element_differences.hpp"
 
 TEST(QuasiNonsingularOrbitalElementDifferences, ConstructorWithOe) {
   // reference

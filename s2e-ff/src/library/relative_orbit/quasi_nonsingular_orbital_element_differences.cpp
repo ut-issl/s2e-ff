@@ -3,7 +3,7 @@
  * @brief Orbital elements differences to avoid singularity when the eccentricity is near zero.
  */
 
-#include "QuasiNonsingularOrbitalElementDifferences.hpp"
+#include "quasi_nonsingular_orbital_element_differences.hpp"
 
 #include <cmath>
 #include <library/math/matrix_vector.hpp>
