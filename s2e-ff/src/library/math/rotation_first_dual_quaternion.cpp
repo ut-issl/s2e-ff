@@ -1,4 +1,4 @@
-#include "RotationFirstDualQuaternion.hpp"
+#include "rotation_first_dual_quaternion.hpp"
 
 #include <float.h>
 

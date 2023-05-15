@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../src/Library/math/RotationFirstDualQuaternion.hpp"
+#include "../src/Library/math/rotation_first_dual_quaternion.hpp"
 
 TEST(RotationFirstDualQuaternion, ConstructorFromRotationTranslation) {
   libra::Quaternion q_rot(1.0, 0.0, 0.0, 1.0);  // 90deg rotation around X axis
