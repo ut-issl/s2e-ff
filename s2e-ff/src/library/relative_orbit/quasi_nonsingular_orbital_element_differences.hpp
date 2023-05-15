@@ -3,8 +3,8 @@
  * @brief Orbital elements differences to avoid singularity when the eccentricity is near zero.
  */
 
-#ifndef QUASI_NONSINGULAR_ORBITAL_ELEMENT_DIFFERENCES_H_
-#define QUASI_NONSINGULAR_ORBITAL_ELEMENT_DIFFERENCES_H_
+#ifndef S2E_LIBRARY_RELATIVE_ORBIT_QUASI_NONSINGULAR_ORBITAL_ELEMENT_DIFFERENCES_HPP_
+#define S2E_LIBRARY_RELATIVE_ORBIT_QUASI_NONSINGULAR_ORBITAL_ELEMENT_DIFFERENCES_HPP_
 
 #include <library/math/vector.hpp>
 
@@ -68,4 +68,4 @@ class QuasiNonsingularOrbitalElementDifferences {
   QuasiNonsingularOrbitalElements diff_qns_oe_;       //!< Difference of quasi-nonsingular orbital elements
 };
 
-#endif
+#endif  // S2E_LIBRARY_RELATIVE_ORBIT_QUASI_NONSINGULAR_ORBITAL_ELEMENT_DIFFERENCES_HPP_

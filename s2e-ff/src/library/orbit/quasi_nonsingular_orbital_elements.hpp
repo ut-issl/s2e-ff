@@ -3,8 +3,8 @@
  * @brief Orbital elements avoid singularity when the eccentricity is near zero.
  */
 
-#ifndef QUASI_NONSINGULAR_ORBITAL_ELEMENTS_H_
-#define QUASI_NONSINGULAR_ORBITAL_ELEMENTS_H_
+#ifndef S2E_LIBRARY_ORBIT_QUASI_NONSINGULAR_ORBITAL_ELEMENTS_HPP_
+#define S2E_LIBRARY_ORBIT_QUASI_NONSINGULAR_ORBITAL_ELEMENTS_HPP_
 
 #include <library/math/s2e_math.hpp>
 #include <library/math/vector.hpp>
@@ -141,4 +141,4 @@ class QuasiNonsingularOrbitalElements {
  */
 QuasiNonsingularOrbitalElements operator-(const QuasiNonsingularOrbitalElements lhs, const QuasiNonsingularOrbitalElements rhs);
 
-#endif
+#endif  // S2E_LIBRARY_ORBIT_QUASI_NONSINGULAR_ORBITAL_ELEMENTS_HPP_

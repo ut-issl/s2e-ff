@@ -3,8 +3,8 @@
  * @brief Relative orbital elements defined by eccentricity/inclination vectors to avoid singularity when the eccentricity is near zero.
  */
 
-#ifndef QUASI_NONSINGULAR_RELATIVE_ORBITAL_ELEMENTS_H_
-#define QUASI_NONSINGULAR_RELATIVE_ORBITAL_ELEMENTS_H_
+#ifndef S2E_LIBRARY_RELATIVE_ORBIT_QUASI_NONSINGULAR_RELATIVE_ORBITAL_ELEMENTS_HPP_
+#define S2E_LIBRARY_RELATIVE_ORBIT_QUASI_NONSINGULAR_RELATIVE_ORBITAL_ELEMENTS_HPP_
 
 #include <library/math/vector.hpp>
 
@@ -113,4 +113,4 @@ class QuasiNonsingularRelativeOrbitalElements {
   double CalcDiffMeanArgLat_rad(const QuasiNonsingularOrbitalElements qns_oe_reference, const QuasiNonsingularOrbitalElements qns_oe_target);
 };
 
-#endif
+#endif  // S2E_LIBRARY_RELATIVE_ORBIT_QUASI_NONSINGULAR_RELATIVE_ORBITAL_ELEMENTS_HPP_
