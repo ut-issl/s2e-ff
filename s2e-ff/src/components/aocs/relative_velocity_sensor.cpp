@@ -1,4 +1,4 @@
-#include "RelativeVelocitySensor.hpp"
+#include "relative_velocity_sensor.hpp"
 
 RelativeVelocitySensor::RelativeVelocitySensor(const int prescaler, ClockGenerator* clock_gen, Sensor& sensor_base, const int target_sat_id,
                                                const int reference_sat_id, const RelativeVelocitySensorErrorFrame error_frame,
