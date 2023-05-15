@@ -1,10 +1,15 @@
+/**
+ * @file s2e_ff.cpp
+ * @brief The main file of S2E-FF
+ */
+
 // Simulator includes
 #include <library/logger/logger.hpp>
 
 // Add custom include files
 #include "./simulation/case/ff_case.hpp"
 
-// degub print of initialize file path
+// debug print of initialize file path
 void print_path(std::string path) {
 #ifdef WIN32
   std::cout << path << std::endl;
@@ -26,9 +31,9 @@ int main() {
   std::cout << "\tIni file: ";
   print_path(ini_file);
 
-  auto simcase = FfCase(ini_file);
-  simcase.Initialize();
-  simcase.Main();
+  auto simulation_case = FfCase(ini_file);
+  simulation_case.Initialize();
+  simulation_case.Main();
 
   return EXIT_SUCCESS;
 }
