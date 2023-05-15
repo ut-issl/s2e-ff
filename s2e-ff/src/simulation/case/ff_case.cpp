@@ -1,3 +1,8 @@
+/**
+ * @file ff_case.cpp
+ * @brief Simulation case for FF
+ */
+
 #include "ff_case.hpp"
 
 FfCase::FfCase(std::string ini_fname) : SimulationCase(ini_fname) { relative_information_ = RelativeInformation(); }
