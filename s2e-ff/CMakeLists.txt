@@ -53,12 +53,12 @@ set(SOURCE_FILES
   src/components/aocs/initialize_relative_velocity_sensor.cpp
   src/components/ideal/relative_attitude_controller.cpp
   src/components/ideal/initialize_relative_attitude_controller.cpp
-  src/Library/math/DualQuaternion.cpp
-  src/Library/math/RotationFirstDualQuaternion.cpp
-  src/Library/math/TranslationFirstDualQuaternion.cpp
-  src/Library/Orbit/QuasiNonsingularOrbitalElements.cpp
-  src/Library/RelativeOrbit/QuasiNonsingularRelativeOrbitalElements.cpp
-  src/Library/RelativeOrbit/QuasiNonsingularOrbitalElementDifferences.cpp
+  src/library/math/DualQuaternion.cpp
+  src/library/math/RotationFirstDualQuaternion.cpp
+  src/library/math/TranslationFirstDualQuaternion.cpp
+  src/library/Orbit/QuasiNonsingularOrbitalElements.cpp
+  src/library/RelativeOrbit/QuasiNonsingularRelativeOrbitalElements.cpp
+  src/library/RelativeOrbit/QuasiNonsingularOrbitalElementDifferences.cpp
   src/simulation/case/ff_case.cpp
   src/simulation/spacecraft/ff_satellite.cpp
   src/simulation/spacecraft/ff_components.cpp
@@ -162,19 +162,19 @@ if(GOOGLE_TEST)
   set(TEST_PROJECT_NAME ${PROJECT_NAME}_TEST)
   set(TEST_FILES
     # Dual Quaternion
-    src/Library/math/DualQuaternion.cpp
+    src/library/math/DualQuaternion.cpp
     test/TestDualQuaternion.cpp
-    src/Library/math/RotationFirstDualQuaternion.cpp
+    src/library/math/RotationFirstDualQuaternion.cpp
     test/TestRotationFirstDualQuaternion.cpp
-    src/Library/math/TranslationFirstDualQuaternion.cpp
+    src/library/math/TranslationFirstDualQuaternion.cpp
     test/TestTranslationFirstDualQuaternion.cpp
     # Orbital elements
-    src/Library/Orbit/QuasiNonsingularOrbitalElements.cpp
+    src/library/Orbit/QuasiNonsingularOrbitalElements.cpp
     test/TestQuasiNonsingularOrbitalElements.cpp
     # Relative orbital elements
-    src/Library/RelativeOrbit/QuasiNonsingularOrbitalElementDifferences.cpp
+    src/library/RelativeOrbit/QuasiNonsingularOrbitalElementDifferences.cpp
     test/TestQuasiNonsingularOrbitalElementDifferences.cpp
-    src/Library/RelativeOrbit/QuasiNonsingularRelativeOrbitalElements.cpp
+    src/library/RelativeOrbit/QuasiNonsingularRelativeOrbitalElements.cpp
     test/TestQuasiNonsingularRelativeOrbitalElements.cpp
   )
   add_executable(${TEST_PROJECT_NAME} ${TEST_FILES})
