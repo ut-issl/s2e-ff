@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../src/Library/Orbit/quasi_nonsingular_orbital_elements.hpp"
+#include "../src/library/orbit/quasi_nonsingular_orbital_elements.hpp"
 
 TEST(QuasiNonsingularOrbitalElements, DefaultConstructor) {
   QuasiNonsingularOrbitalElements qn_oe;
