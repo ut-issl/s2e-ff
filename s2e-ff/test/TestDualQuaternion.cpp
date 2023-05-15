@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../src/Library/math/DualQuaternion.hpp"
+#include "../src/Library/math/dual_quaternion.hpp"
 
 TEST(DualQuaternion, DefaultConstructor) {
   libra::DualQuaternion dq;

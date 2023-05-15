@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DualQuaternion.hpp"
+#include "dual_quaternion.hpp"
 
 namespace libra {
 

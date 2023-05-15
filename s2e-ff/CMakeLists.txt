@@ -53,7 +53,7 @@ set(SOURCE_FILES
   src/components/aocs/initialize_relative_velocity_sensor.cpp
   src/components/ideal/relative_attitude_controller.cpp
   src/components/ideal/initialize_relative_attitude_controller.cpp
-  src/library/math/DualQuaternion.cpp
+  src/library/math/dual_quaternion.cpp
   src/library/math/RotationFirstDualQuaternion.cpp
   src/library/math/TranslationFirstDualQuaternion.cpp
   src/library/orbit/QuasiNonsingularOrbitalElements.cpp
@@ -162,7 +162,7 @@ if(GOOGLE_TEST)
   set(TEST_PROJECT_NAME ${PROJECT_NAME}_TEST)
   set(TEST_FILES
     # Dual Quaternion
-    src/library/math/DualQuaternion.cpp
+    src/library/math/dual_quaternion.cpp
     test/TestDualQuaternion.cpp
     src/library/math/RotationFirstDualQuaternion.cpp
     test/TestRotationFirstDualQuaternion.cpp
