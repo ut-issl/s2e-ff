@@ -8,7 +8,7 @@
 
 #include <library/math/vector.hpp>
 
-#include "../Orbit/QuasiNonsingularOrbitalElements.hpp"
+#include "../orbit/QuasiNonsingularOrbitalElements.hpp"
 
 /**
  * @class QuasiNonsingularOrbitalElementDifferences
