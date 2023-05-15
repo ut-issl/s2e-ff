@@ -1,20 +1,30 @@
-#pragma once
+/**
+ * @file dual_quaternion.hpp
+ * @brief Library for dual quaternion
+ */
+
+#ifndef S2E_LIBRARY_MATH_DUAL_QUATERNION_HPP_
+#define S2E_LIBRARY_MATH_DUAL_QUATERNION_HPP_
 
 #include <library/math/quaternion.hpp>
 
 namespace libra {
 
+/**
+ * @class ScrewParameters
+ * @brief
+ */
 class ScrewParameters {
  public:
-  Vector<3> axis_;
-  double angle_rad_;
-  Vector<3> moment_;
-  double pitch_;
+  Vector<3> axis_;    //!< Screw direction axis
+  double angle_rad_;  //!< Screw rotation angle [rad]
+  Vector<3> moment_;  //!< Screw moment
+  double pitch_;      //!< Screw pitch
 };
 
 /**
  * @class DualQuaternion
- * @brief Frame conversion sequence: Rotation -> Translation
+ * @brief
  */
 class DualQuaternion {
  public:
@@ -40,29 +50,29 @@ class DualQuaternion {
   DualQuaternion(const double q_real_x, const double q_real_y, const double q_real_z, const double q_real_w, const double q_dual_x,
                  const double q_dual_y, const double q_dual_z, const double q_dual_w);
 
-  // Operator for a single dual quaternon
+  // Operator for a single dual quaternion
   /**
    * @fn Keeping scalar part of the rotation quaternion be positive
    */
   DualQuaternion Properization() const;
 
   /**
-   * @fn Calulate conjugated of the dual quaternion as dual number
+   * @fn Calculate conjugated of the dual quaternion as dual number
    */
   DualQuaternion DualNumberConjugate() const;
 
   /**
-   * @fn Calulate conjugated of the dual quaternion as quaternion
+   * @fn Calculate conjugated of the dual quaternion as quaternion
    */
   DualQuaternion QuaternionConjugate() const;
 
   /**
-   * @fn Calulate conjugated of the dual quaternion combined dual number and quaternion conjugate
+   * @fn Calculate conjugated of the dual quaternion combined dual number and quaternion conjugate
    */
   DualQuaternion DualQuaternionConjugate() const;
 
   /**
-   * @fn Calulate inverse of the dual quaternion
+   * @fn Calculate inverse of the dual quaternion
    */
   inline DualQuaternion Inverse() const { return this->QuaternionConjugate(); };
 
@@ -134,3 +144,5 @@ DualQuaternion operator*(const double& scalar, const DualQuaternion& dq);
 DualQuaternion operator*(const DualQuaternion& dq_lhs, const DualQuaternion& dq_rhs);
 
 }  // namespace libra
+
+#endif  // S2E_LIBRARY_MATH_DUAL_QUATERNION_HPP_

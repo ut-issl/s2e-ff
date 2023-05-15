@@ -1,3 +1,8 @@
+/**
+ * @file dual_quaternion.cpp
+ * @brief Library for dual quaternion
+ */
+
 #include "dual_quaternion.hpp"
 
 #include <float.h>

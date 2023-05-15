@@ -1,4 +1,10 @@
-#pragma once
+/**
+ * @file rotation_first_dual_quaternion.hpp
+ * @brief Library for rotation first dual quaternion
+ */
+
+#ifndef S2E_LIBRARY_MATH_ROTATION_FIRST_DUAL_QUATERNION_HPP_
+#define S2E_LIBRARY_MATH_ROTATION_FIRST_DUAL_QUATERNION_HPP_
 
 #include "dual_quaternion.hpp"
 
@@ -79,3 +85,5 @@ class RotationFirstDualQuaternion : public DualQuaternion {
 RotationFirstDualQuaternion Sclerp(const RotationFirstDualQuaternion dq1, const RotationFirstDualQuaternion dq2, const double tau);
 
 }  // namespace libra
+
+#endif  // S2E_LIBRARY_MATH_ROTATION_FIRST_DUAL_QUATERNION_HPP_

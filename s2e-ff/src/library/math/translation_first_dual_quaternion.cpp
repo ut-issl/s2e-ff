@@ -1,3 +1,8 @@
+/**
+ * @file translation_first_dual_quaternion.cpp
+ * @brief Library for translation first dual quaternion
+ */
+
 #include "translation_first_dual_quaternion.hpp"
 
 #include <float.h>
