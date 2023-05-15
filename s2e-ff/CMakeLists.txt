@@ -57,7 +57,7 @@ set(SOURCE_FILES
   src/library/math/rotation_first_dual_quaternion.cpp
   src/library/math/translation_first_dual_quaternion.cpp
   src/library/orbit/quasi_nonsingular_orbital_elements.cpp
-  src/library/relative_orbit/QuasiNonsingularRelativeOrbitalElements.cpp
+  src/library/relative_orbit/quasi_nonsingular_relative_orbital_elements.cpp
   src/library/relative_orbit/quasi_nonsingular_orbital_element_differences.cpp
   src/simulation/case/ff_case.cpp
   src/simulation/spacecraft/ff_satellite.cpp
@@ -174,7 +174,7 @@ if(GOOGLE_TEST)
     # Relative orbital elements
     src/library/relative_orbit/quasi_nonsingular_orbital_element_differences.cpp
     test/TestQuasiNonsingularOrbitalElementDifferences.cpp
-    src/library/relative_orbit/QuasiNonsingularRelativeOrbitalElements.cpp
+    src/library/relative_orbit/quasi_nonsingular_relative_orbital_elements.cpp
     test/TestQuasiNonsingularRelativeOrbitalElements.cpp
   )
   add_executable(${TEST_PROJECT_NAME} ${TEST_FILES})

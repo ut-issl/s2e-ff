@@ -3,7 +3,7 @@
  * @brief Relative orbital elements defined by eccentricity/inclination vectors to avoid singularity when the eccentricity is near zero.
  */
 
-#include "QuasiNonsingularRelativeOrbitalElements.hpp"
+#include "quasi_nonsingular_relative_orbital_elements.hpp"
 
 #include <cmath>
 
