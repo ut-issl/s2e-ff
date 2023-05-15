@@ -45,14 +45,14 @@ add_subdirectory(${S2E_CORE_DIR}/src/simulation s2e_core/simulation)
 
 set(SOURCE_FILES
   src/s2e_ff.cpp
-  src/Components/AOCS/RelativeDistanceSensor.cpp
-  src/Components/AOCS/InitializeRelativeDistanceSensor.cpp
-  src/Components/AOCS/RelativePositionSensor.cpp
-  src/Components/AOCS/InitializeRelativePositionSensor.cpp
-  src/Components/AOCS/RelativeVelocitySensor.cpp
-  src/Components/AOCS/InitializeRelativeVelocitySensor.cpp
-  src/Components/IdealComponents/RelativeAttitudeController.cpp
-  src/Components/IdealComponents/InitializeRelativeAttitudeController.cpp
+  src/components/AOCS/RelativeDistanceSensor.cpp
+  src/components/AOCS/InitializeRelativeDistanceSensor.cpp
+  src/components/AOCS/RelativePositionSensor.cpp
+  src/components/AOCS/InitializeRelativePositionSensor.cpp
+  src/components/AOCS/RelativeVelocitySensor.cpp
+  src/components/AOCS/InitializeRelativeVelocitySensor.cpp
+  src/components/IdealComponents/RelativeAttitudeController.cpp
+  src/components/IdealComponents/InitializeRelativeAttitudeController.cpp
   src/Library/math/DualQuaternion.cpp
   src/Library/math/RotationFirstDualQuaternion.cpp
   src/Library/math/TranslationFirstDualQuaternion.cpp

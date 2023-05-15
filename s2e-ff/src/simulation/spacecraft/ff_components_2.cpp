@@ -3,10 +3,6 @@
 #include <components/ideal/initialize_force_generator.hpp>
 #include <library/initialize/initialize_file_access.hpp>
 
-#include "../../Components/AOCS/InitializeRelativeDistanceSensor.hpp"
-#include "../../Components/AOCS/InitializeRelativePositionSensor.hpp"
-#include "../../Components/IdealComponents/InitializeRelativeAttitudeController.hpp"
-
 FfComponents2::FfComponents2(const Dynamics* dynamics, const Structure* structure, const LocalEnvironment* local_env,
                              const GlobalEnvironment* glo_env, const SimulationConfiguration* config, ClockGenerator* clock_gen,
                              const RelativeInformation* rel_info)
