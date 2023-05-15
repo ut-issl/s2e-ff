@@ -2,7 +2,7 @@
 #include <library/logger/logger.hpp>
 
 // Add custom include files
-#include "./simulation/Case/FfCase.hpp"
+#include "./simulation/case/FfCase.hpp"
 
 // degub print of initialize file path
 void print_path(std::string path) {
