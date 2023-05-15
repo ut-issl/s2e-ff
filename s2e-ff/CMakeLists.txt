@@ -51,8 +51,8 @@ set(SOURCE_FILES
   src/components/aocs/InitializeRelativePositionSensor.cpp
   src/components/aocs/RelativeVelocitySensor.cpp
   src/components/aocs/InitializeRelativeVelocitySensor.cpp
-  src/components/IdealComponents/RelativeAttitudeController.cpp
-  src/components/IdealComponents/InitializeRelativeAttitudeController.cpp
+  src/components/ideal/RelativeAttitudeController.cpp
+  src/components/ideal/InitializeRelativeAttitudeController.cpp
   src/Library/math/DualQuaternion.cpp
   src/Library/math/RotationFirstDualQuaternion.cpp
   src/Library/math/TranslationFirstDualQuaternion.cpp
