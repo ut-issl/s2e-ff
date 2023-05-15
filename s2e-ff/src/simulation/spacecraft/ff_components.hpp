@@ -56,12 +56,13 @@ class FfComponents : public InstalledComponents {
 
  private:
   // Components
-  OnBoardComputer* obc_;                                      //!< On board computer
-
-  RelativeDistanceSensor* relative_distance_sensor_;          //!< Example of Relative distance sensor
-  RelativePositionSensor* relative_position_sensor_;          //!< Example of Relative position sensor
-  RelativeVelocitySensor* relative_velocity_sensor_;          //!< Example of Relative velocity sensor
-
+  // CDH
+  OnBoardComputer* obc_;  //!< On board computer
+  // Sensors
+  RelativeDistanceSensor* relative_distance_sensor_;  //!< Example of Relative distance sensor
+  RelativePositionSensor* relative_position_sensor_;  //!< Example of Relative position sensor
+  RelativeVelocitySensor* relative_velocity_sensor_;  //!< Example of Relative velocity sensor
+  // Actuators
   ForceGenerator* force_generator_;                           //!< Example of force generator
   RelativeAttitudeController* relative_attitude_controller_;  //!< Example of attitude controller
 

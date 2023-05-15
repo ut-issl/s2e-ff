@@ -86,7 +86,6 @@ class RelativeAttitudeController : public Component, public ILoggable {
   RelativeAttitudeControlMode sub_mode_;      //!< Control mode for sub axis
   int target_sat_id_;                         //!< Target satellite ID
   int my_sat_id_;                             //!< Satellite ID of the satellite which mounts this components
-
   libra::Vector<3> main_target_direction_b_;  //!< Pointing main target direction on body frame
   libra::Vector<3> sub_target_direction_b_;   //!< Pointing sub target direction on body frame
 
