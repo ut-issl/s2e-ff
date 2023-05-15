@@ -3,7 +3,7 @@
 #include <simulation/case/simulation_case.hpp>
 #include <simulation/multiple_spacecraft/relative_information.hpp>
 
-#include "../Spacecraft/FfSat.hpp"
+#include "../spacecraft/FfSat.hpp"
 
 class FfCase : public SimulationCase {
  public:

@@ -60,9 +60,9 @@ set(SOURCE_FILES
   src/Library/RelativeOrbit/QuasiNonsingularRelativeOrbitalElements.cpp
   src/Library/RelativeOrbit/QuasiNonsingularOrbitalElementDifferences.cpp
   src/simulation/case/FfCase.cpp
-  src/simulation/Spacecraft/FfSat.cpp
-  src/simulation/Spacecraft/FfComponents.cpp
-  src/simulation/Spacecraft/FfComponents2.cpp
+  src/simulation/spacecraft/FfSat.cpp
+  src/simulation/spacecraft/FfComponents.cpp
+  src/simulation/spacecraft/FfComponents2.cpp
 )
 # Create executable file
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
