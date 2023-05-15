@@ -1,3 +1,8 @@
+/**
+ * @file relative_position_sensor.cpp
+ * @brief Relative position sensor
+ */
+
 #include "relative_position_sensor.hpp"
 
 RelativePositionSensor::RelativePositionSensor(const int prescaler, ClockGenerator* clock_gen, Sensor& sensor_base, const int target_sat_id,

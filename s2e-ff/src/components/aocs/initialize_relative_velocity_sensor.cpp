@@ -1,3 +1,8 @@
+/**
+ * @file initialize_relative_velocity_sensor.cpp
+ * @brief Initialize function for RelativeVelocitySensor
+ */
+
 #include "initialize_relative_velocity_sensor.hpp"
 
 #include <components/base/initialize_sensor.hpp>

@@ -1,3 +1,8 @@
+/**
+ * @file relative_distance_sensor.cpp
+ * @brief Relative distance sensor
+ */
+
 #include "relative_distance_sensor.hpp"
 
 RelativeDistanceSensor::RelativeDistanceSensor(const int prescaler, ClockGenerator* clock_gen, Sensor& sensor_base, const int target_sat_id,

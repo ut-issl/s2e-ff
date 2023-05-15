@@ -1,3 +1,8 @@
+/**
+ * @file relative_velocity_sensor.cpp
+ * @brief Relative velocity sensor
+ */
+
 #include "relative_velocity_sensor.hpp"
 
 RelativeVelocitySensor::RelativeVelocitySensor(const int prescaler, ClockGenerator* clock_gen, Sensor& sensor_base, const int target_sat_id,
