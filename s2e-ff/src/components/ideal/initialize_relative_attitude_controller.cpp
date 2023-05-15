@@ -1,4 +1,4 @@
-#include "InitializeRelativeAttitudeController.hpp"
+#include "initialize_relative_attitude_controller.hpp"
 
 #include <library/initialize/initialize_file_access.hpp>
 

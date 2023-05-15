@@ -10,7 +10,7 @@
 
 #include "../../components/aocs/initialize_relative_distance_sensor.hpp"
 #include "../../components/aocs/initialize_relative_position_sensor.hpp"
-#include "../../components/ideal/InitializeRelativeAttitudeController.hpp"
+#include "../../components/ideal/initialize_relative_attitude_controller.hpp"
 
 class FfComponents2 : public InstalledComponents {
  public:

@@ -1,4 +1,4 @@
-#include "RelativeAttitudeController.hpp"
+#include "relative_attitude_controller.hpp"
 
 #include <library/math/matrix.hpp>
 

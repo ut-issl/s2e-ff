@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RelativeAttitudeController.hpp"
+#include "relative_attitude_controller.hpp"
 
 RelativeAttitudeController InitializeRelativeAttitudeController(ClockGenerator* clock_gen, const std::string file_name,
                                                                 const RelativeInformation& rel_info,
