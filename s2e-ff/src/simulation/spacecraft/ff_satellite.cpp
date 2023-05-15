@@ -1,4 +1,4 @@
-#include "FfSat.hpp"
+#include "ff_satellite.hpp"
 
 FfSat::FfSat(SimulationConfiguration* sim_config, const GlobalEnvironment* glo_env, RelativeInformation* relative_information, const int sat_id)
     : Spacecraft(sim_config, glo_env, sat_id, relative_information) {

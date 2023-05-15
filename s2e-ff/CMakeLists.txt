@@ -60,7 +60,7 @@ set(SOURCE_FILES
   src/Library/RelativeOrbit/QuasiNonsingularRelativeOrbitalElements.cpp
   src/Library/RelativeOrbit/QuasiNonsingularOrbitalElementDifferences.cpp
   src/simulation/case/ff_case.cpp
-  src/simulation/spacecraft/FfSat.cpp
+  src/simulation/spacecraft/ff_satellite.cpp
   src/simulation/spacecraft/FfComponents.cpp
   src/simulation/spacecraft/FfComponents2.cpp
 )
