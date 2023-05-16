@@ -20,6 +20,8 @@
 #include "../../components/aocs/initialize_relative_velocity_sensor.hpp"
 #include "../../components/controller/relative_orbit_controller_chief.hpp"
 
+class RelativeOrbitControllerChief;
+
 /**
  * @class FfComponents
  * @brief A components class for FF satellite
@@ -70,10 +72,10 @@ class FfComponents : public InstalledComponents {
   RelativePositionSensor* relative_position_sensor_;  //!< Example of Relative position sensor
   RelativeVelocitySensor* relative_velocity_sensor_;  //!< Example of Relative velocity sensor
   // Actuators
-  ForceGenerator* force_generator_;  //!< Example of force generator
+  ForceGenerator* force_generator_;                          //!< Example of force generator
 
-  // RelativeOrbitControllerChief* relative_orbit_controller_; // !< Relative orbit controller
-  RelativeOrbitAnalyzer* relative_orbit_analyzer_;  // !< Relative orbit analyzer
+  RelativeOrbitControllerChief* relative_orbit_controller_;  // !< Relative orbit controller
+  RelativeOrbitAnalyzer* relative_orbit_analyzer_;           // !< Relative orbit analyzer
 
   // References
   const Dynamics* dynamics_;               //!< Dynamics information of the spacecraft

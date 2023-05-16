@@ -32,7 +32,7 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
 
   relative_orbit_analyzer_ = new RelativeOrbitAnalyzer(1, clock_gen, *rel_info_);
 
-  // relative_orbit_controller_ = new RelativeOrbitControllerChief(1, clock_gen, *this);
+  relative_orbit_controller_ = new RelativeOrbitControllerChief(1, clock_gen, *this);
 
   // Debug for actuator output
   libra::Vector<3> force_N;
@@ -48,7 +48,7 @@ FfComponents::~FfComponents() {
   delete relative_velocity_sensor_;
   delete force_generator_;
   delete relative_orbit_analyzer_;
-  // delete relative_orbit_controller_;
+  delete relative_orbit_controller_;
   // OBC must be deleted the last since it has com ports
   delete obc_;
 }
