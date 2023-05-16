@@ -51,7 +51,7 @@ read_file_name  = path_to_logs + '/' + 'logs_' + read_file_tag + '/' + read_file
 # Read S2E CSV
 d1 = read_3d_vector_from_csv(read_file_name, 'satellite1_position_from_satellite0_rtn', 'm')
 # Add satellites if you need
-# d2 = read_3d_vector_from_csv(read_file_name, 'satellite2_position_from_satellite0_rtn', 'm')
+d2 = read_3d_vector_from_csv(read_file_name, 'satellite2_position_from_satellite0_rtn', 'm')
 
 # Edit data if you need
 
@@ -73,7 +73,7 @@ ax.set_zlabel("Normal [m]")
 ax.plot(0,0,0, marker="*", c="green", markersize=10, label="Sat0")
 ax.plot(d1[0],d1[1],d1[2], marker="x", linestyle='None', c="red", label="Sat1")
 # Add satellites if you need
-# ax.plot(d2[0],d2[1],d2[2], marker="o", linestyle='None', c="blue", label="Sat2")
+ax.plot(d2[0],d2[1],d2[2], marker="o", linestyle='None', c="blue", label="Sat2")
 
 ax.legend()
 
