@@ -48,9 +48,13 @@ read_file_name  = path_to_logs + '/' + 'logs_' + read_file_tag + '/' + read_file
 # Data read and edit
 #
 # Read S2E CSV
-d1 = pandas.read_csv(read_file_name, skiprows=[1,1], sep=',', usecols=['sat1 pos from sat0_rtn_x[m]', 'sat1 pos from sat0_rtn_y[m]', 'sat1 pos from sat0_rtn_z[m]'])
+d1 = pandas.read_csv(read_file_name, skiprows=[1,1], sep=',', usecols=['satellite1_position_from_satellite0_rtn_x[m]',
+                                                                       'satellite1_position_from_satellite0_rtn_y[m]',
+                                                                       'satellite1_position_from_satellite0_rtn_z[m]'])
 # Add satellites if you need
-# d2 = pandas.read_csv(read_file_name, skiprows=[1,1], sep=',', usecols=['sat2 pos from sat0_rtn_x[m]', 'sat2 pos from sat0_rtn_y[m]', 'sat2 pos from sat0_rtn_z[m]'])
+# d2 = pandas.read_csv(read_file_name, skiprows=[1,1], sep=',', usecols=['satellite2_position_from_satellite0_rtn_x[m]', 
+#                                                                        'satellite2_position_from_satellite0_rtn_y[m]',
+#                                                                        'satellite2_position_from_satellite0_rtn_z[m]'])
 
 # Edit data if you need
 
@@ -70,9 +74,13 @@ ax.set_zlabel("Normal [m]")
 #ax.set_zlim(-100, 100)
 
 ax.plot(0,0,0, marker="*", c="green", markersize=10, label="Sat0")
-ax.plot(d1['sat1 pos from sat0_rtn_x[m]'].to_numpy(),d1['sat1 pos from sat0_rtn_y[m]'].to_numpy(),d1['sat1 pos from sat0_rtn_z[m]'].to_numpy(), marker="x", c="red", label="Sat1")
+ax.plot(d1['satellite1_position_from_satellite0_rtn_x[m]'].to_numpy(),
+        d1['satellite1_position_from_satellite0_rtn_y[m]'].to_numpy(),
+        d1['satellite1_position_from_satellite0_rtn_z[m]'].to_numpy(), marker="x", c="red", label="Sat1")
 # Add satellites if you need
-# ax.plot(d2['sat2 pos from sat0_rtn_x[m]'].to_numpy(),d2['sat2 pos from sat0_rtn_y[m]'].to_numpy(),d2['sat2 pos from sat0_rtn_z[m]'].to_numpy(), marker="o", c="blue", label="Sat2")
+# ax.plot(d2['satellite2_position_from_satellite0_rtn_x[m]'].to_numpy(),
+#         d2['satellite2_position_from_satellite0_rtn_y[m]'].to_numpy(),
+#         d2['satellite2_position_from_satellite0_rtn_z[m]'].to_numpy(), marker="o", c="blue", label="Sat2")
 
 ax.legend()
 
