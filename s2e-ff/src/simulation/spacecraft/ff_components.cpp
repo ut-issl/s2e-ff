@@ -30,9 +30,9 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
   const std::string force_generator_file = sat_file.ReadString(section_name.c_str(), "force_generator_file");
   force_generator_ = new ForceGenerator(InitializeForceGenerator(clock_gen, force_generator_file, dynamics_));
 
-  const std::string relative_attitude_controller_file = sat_file.ReadString(section_name.c_str(), "relative_attitude_controller_file");
-  relative_attitude_controller_ = new RelativeAttitudeController(InitializeRelativeAttitudeController(
-      clock_gen, relative_attitude_controller_file, *rel_info_, local_env_->GetCelestialInformation(), *dynamics_, sat_id));
+  relative_orbit_analyzer_ = new RelativeOrbitAnalyzer(1, clock_gen, *rel_info_);
+
+  // relative_orbit_controller_ = new RelativeOrbitControllerChief(1, clock_gen, *this);
 
   // Debug for actuator output
   libra::Vector<3> force_N;
@@ -47,7 +47,8 @@ FfComponents::~FfComponents() {
   delete relative_position_sensor_;
   delete relative_velocity_sensor_;
   delete force_generator_;
-  delete relative_attitude_controller_;
+  delete relative_orbit_analyzer_;
+  // delete relative_orbit_controller_;
   // OBC must be deleted the last since it has com ports
   delete obc_;
 }
@@ -68,5 +69,6 @@ void FfComponents::LogSetup(Logger& logger) {
   logger.AddLogList(relative_distance_sensor_);
   logger.AddLogList(relative_position_sensor_);
   logger.AddLogList(relative_velocity_sensor_);
+  logger.AddLogList(relative_orbit_analyzer_);
   logger.AddLogList(force_generator_);
 }

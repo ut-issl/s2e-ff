@@ -14,10 +14,11 @@
 #include <components/ideal/force_generator.hpp>
 #include <components/real/cdh/on_board_computer.hpp>
 
+#include "../../components/analyzer/relative_orbit_analyzer.hpp"
 #include "../../components/aocs/initialize_relative_distance_sensor.hpp"
 #include "../../components/aocs/initialize_relative_position_sensor.hpp"
 #include "../../components/aocs/initialize_relative_velocity_sensor.hpp"
-#include "../../components/ideal/initialize_relative_attitude_controller.hpp"
+#include "../../components/controller/relative_orbit_controller_chief.hpp"
 
 /**
  * @class FfComponents
@@ -54,6 +55,12 @@ class FfComponents : public InstalledComponents {
    */
   void LogSetup(Logger& logger);
 
+  // Getter
+  inline RelativeDistanceSensor& GetRelativeDistanceSensor() const { return *relative_distance_sensor_; }
+  inline RelativePositionSensor& GetRelativePositionSensor() const { return *relative_position_sensor_; }
+  inline RelativeVelocitySensor& GetRelativeVelocitySensor() const { return *relative_velocity_sensor_; }
+  inline ForceGenerator& GetForceGenerator() const { return *force_generator_; }
+
  private:
   // Components
   // CDH
@@ -63,8 +70,10 @@ class FfComponents : public InstalledComponents {
   RelativePositionSensor* relative_position_sensor_;  //!< Example of Relative position sensor
   RelativeVelocitySensor* relative_velocity_sensor_;  //!< Example of Relative velocity sensor
   // Actuators
-  ForceGenerator* force_generator_;                           //!< Example of force generator
-  RelativeAttitudeController* relative_attitude_controller_;  //!< Example of attitude controller
+  ForceGenerator* force_generator_;  //!< Example of force generator
+
+  // RelativeOrbitControllerChief* relative_orbit_controller_; // !< Relative orbit controller
+  RelativeOrbitAnalyzer* relative_orbit_analyzer_;  // !< Relative orbit analyzer
 
   // References
   const Dynamics* dynamics_;               //!< Dynamics information of the spacecraft
