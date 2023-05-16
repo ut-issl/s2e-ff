@@ -30,7 +30,7 @@ FfComponents2::FfComponents2(const Dynamics* dynamics, const Structure* structur
   const std::string force_generator_file = sat_file.ReadString(section_name.c_str(), "force_generator_file");
   force_generator_ = new ForceGenerator(InitializeForceGenerator(clock_gen, force_generator_file, dynamics_));
 
-  // relative_orbit_controller_ = new RelativeOrbitControllerChief(1, clock_gen, *this);
+  relative_orbit_controller_ = new RelativeOrbitControllerDeputy(1, clock_gen, sat_id, *this);
 
   // Debug for actuator output
   libra::Vector<3> force_N;
@@ -45,8 +45,7 @@ FfComponents2::~FfComponents2() {
   delete relative_position_sensor_;
   delete relative_velocity_sensor_;
   delete force_generator_;
-  // delete relative_attitude_controller_;
-  // delete relative_orbit_controller_;
+  delete relative_orbit_controller_;
   // OBC must be deleted the last since it has com ports
   delete obc_;
 }
@@ -68,6 +67,6 @@ void FfComponents2::LogSetup(Logger& logger) {
   logger.AddLogList(relative_distance_sensor_);
   logger.AddLogList(relative_position_sensor_);
   logger.AddLogList(relative_velocity_sensor_);
-  // logger.AddLogList(relative_orbit_controller_);
+  logger.AddLogList(relative_orbit_controller_);
   logger.AddLogList(force_generator_);
 }

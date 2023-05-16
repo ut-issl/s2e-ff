@@ -17,9 +17,9 @@
 #include "../../components/aocs/initialize_relative_distance_sensor.hpp"
 #include "../../components/aocs/initialize_relative_position_sensor.hpp"
 #include "../../components/aocs/initialize_relative_velocity_sensor.hpp"
-// #include "../../components/controller/relative_orbit_controller_deputy.hpp"
+#include "../../components/controller/relative_orbit_controller_deputy.hpp"
 
-// class RelativeOrbitControllerDeputy;
+class RelativeOrbitControllerDeputy;
 
 /**
  * @class FfComponents2
@@ -73,7 +73,7 @@ class FfComponents2 : public InstalledComponents {
 
   // Actuators
   ForceGenerator* force_generator_;
-  // RelativeOrbitControllerDeputy* relative_orbit_controller_;
+  RelativeOrbitControllerDeputy* relative_orbit_controller_;
 
   // References
   const Dynamics* dynamics_;               //!< Dynamics information of the spacecraft
