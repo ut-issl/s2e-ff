@@ -16,7 +16,10 @@
 
 #include "../../components/aocs/initialize_relative_distance_sensor.hpp"
 #include "../../components/aocs/initialize_relative_position_sensor.hpp"
-#include "../../components/ideal/initialize_relative_attitude_controller.hpp"
+#include "../../components/aocs/initialize_relative_velocity_sensor.hpp"
+// #include "../../components/controller/relative_orbit_controller_deputy.hpp"
+
+// class RelativeOrbitControllerDeputy;
 
 /**
  * @class FfComponents2
@@ -29,7 +32,7 @@ class FfComponents2 : public InstalledComponents {
    * @brief Constructor
    */
   FfComponents2(const Dynamics* dynamics, const Structure* structure, const LocalEnvironment* local_env, const GlobalEnvironment* glo_env,
-                const SimulationConfiguration* config, ClockGenerator* clock_gen, const RelativeInformation* rel_info);
+                const SimulationConfiguration* config, ClockGenerator* clock_gen, const RelativeInformation* rel_info, const int sat_id);
   /**
    * @fn ~FfComponents
    * @brief Destructor
@@ -53,9 +56,24 @@ class FfComponents2 : public InstalledComponents {
    */
   void LogSetup(Logger& logger);
 
+  // Getter
+  inline RelativeDistanceSensor& GetRelativeDistanceSensor() const { return *relative_distance_sensor_; }
+  inline RelativePositionSensor& GetRelativePositionSensor() const { return *relative_position_sensor_; }
+  inline RelativeVelocitySensor& GetRelativeVelocitySensor() const { return *relative_velocity_sensor_; }
+  inline ForceGenerator& GetForceGenerator() const { return *force_generator_; }
+
  private:
   // Components
   OnBoardComputer* obc_;  //!< On board computer
+
+  // Sensors
+  RelativeDistanceSensor* relative_distance_sensor_;
+  RelativePositionSensor* relative_position_sensor_;
+  RelativeVelocitySensor* relative_velocity_sensor_;
+
+  // Actuators
+  ForceGenerator* force_generator_;
+  // RelativeOrbitControllerDeputy* relative_orbit_controller_;
 
   // References
   const Dynamics* dynamics_;               //!< Dynamics information of the spacecraft
