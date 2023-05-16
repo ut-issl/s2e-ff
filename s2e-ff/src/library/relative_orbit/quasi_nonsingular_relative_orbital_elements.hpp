@@ -19,6 +19,19 @@ class QuasiNonsingularRelativeOrbitalElements {
  public:
   /**
    * @fn QuasiNonsingularRelativeOrbitalElements
+   * @brief Default Constructor
+   * @note All members are initialized as zero
+   */
+  QuasiNonsingularRelativeOrbitalElements();
+  /**
+   * @fn QuasiNonsingularRelativeOrbitalElements
+   * @brief Constructor initialized with raw value
+   * @param [in] semi_major_axis_ref_m: Semi-major axis of the reference satellite orbit [m]
+   * @param [in] roe_as_vector: Relative Orbital Elements as Vector form
+   */
+  QuasiNonsingularRelativeOrbitalElements(const double semi_major_axis_ref_m, const libra::Vector<6> roe_as_vector);
+  /**
+   * @fn QuasiNonsingularRelativeOrbitalElements
    * @brief Constructor initialized with tow quasi-nonsingular orbital elements
    * @param [in] qns_oe_reference: Quasi-nonsingular orbital elements of the reference spacecraft
    * @param [in] qns_oe_target: Quasi-nonsingular orbital elements of the target spacecraft
@@ -60,6 +73,11 @@ class QuasiNonsingularRelativeOrbitalElements {
 
   // Getter
   /**
+   * @fn GetReferenceSemiMajor_m
+   * @brief Return reference semi-major axis [m]
+   */
+  inline double GetReferenceSemiMajor_m() const { return semi_major_axis_ref_m_; }
+  /**
    * @fn GetDeltaSemiMajor
    * @brief Return Relative semi major axis [-]
    */
@@ -89,6 +107,20 @@ class QuasiNonsingularRelativeOrbitalElements {
    * @brief Return Relative inclination vector Y component [-]
    */
   inline double GetDeltaInclinationY() const { return d_inclination_y_; }
+  /**
+   * @fn GetRelativeOrbitalElementsAsVector
+   * @brief Return Relative Orbital Elements as Vector expression
+   */
+  libra::Vector<6> GetRelativeOrbitalElementsAsVector() const {
+    libra::Vector<6> qns_roe;
+    qns_roe[0] = d_semi_major_axis_;
+    qns_roe[1] = d_mean_longitude_;
+    qns_roe[2] = d_eccentricity_x_;
+    qns_roe[3] = d_eccentricity_y_;
+    qns_roe[4] = d_inclination_x_;
+    qns_roe[5] = d_inclination_y_;
+    return qns_roe;
+  }
 
  private:
   // Reference orbit information
@@ -112,5 +144,13 @@ class QuasiNonsingularRelativeOrbitalElements {
    */
   double CalcDiffMeanArgLat_rad(const QuasiNonsingularOrbitalElements qns_oe_reference, const QuasiNonsingularOrbitalElements qns_oe_target);
 };
+
+/**
+ * @fn Operator -
+ * @brief Calculate subtract of two quasi-nonsingular orbital elements
+ * @note Reference semi-major axis is copied from lhs
+ */
+QuasiNonsingularRelativeOrbitalElements operator-(const QuasiNonsingularRelativeOrbitalElements lhs,
+                                                  const QuasiNonsingularRelativeOrbitalElements rhs);
 
 #endif  // S2E_LIBRARY_RELATIVE_ORBIT_QUASI_NONSINGULAR_RELATIVE_ORBITAL_ELEMENTS_HPP_

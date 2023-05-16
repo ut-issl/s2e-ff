@@ -7,6 +7,27 @@
 
 #include <cmath>
 
+QuasiNonsingularRelativeOrbitalElements::QuasiNonsingularRelativeOrbitalElements() {
+  semi_major_axis_ref_m_ = 0.0;
+
+  d_semi_major_axis_ = 0.0;
+  d_mean_longitude_ = 0.0;
+  d_eccentricity_x_ = 0.0;
+  d_eccentricity_y_ = 0.0;
+  d_inclination_x_ = 0.0;
+  d_inclination_y_ = 0.0;
+}
+
+QuasiNonsingularRelativeOrbitalElements::QuasiNonsingularRelativeOrbitalElements(const double semi_major_axis_ref_m,
+                                                                                 const libra::Vector<6> roe_as_vector)
+    : semi_major_axis_ref_m_(semi_major_axis_ref_m),
+      d_semi_major_axis_(roe_as_vector[0]),
+      d_mean_longitude_(roe_as_vector[1]),
+      d_eccentricity_x_(roe_as_vector[2]),
+      d_eccentricity_y_(roe_as_vector[3]),
+      d_inclination_x_(roe_as_vector[4]),
+      d_inclination_y_(roe_as_vector[5]) {}
+
 QuasiNonsingularRelativeOrbitalElements::QuasiNonsingularRelativeOrbitalElements(const QuasiNonsingularOrbitalElements qns_oe_reference,
                                                                                  const QuasiNonsingularOrbitalElements qns_oe_target) {
   semi_major_axis_ref_m_ = qns_oe_reference.GetSemiMajor_m();
@@ -109,4 +130,12 @@ double QuasiNonsingularRelativeOrbitalElements::CalcDiffMeanArgLat_rad(const Qua
 
   const double d_mean_arg_lat_rad = (eta / denominator) * (eta2 * d_true_anomaly_rad - sin_f * (2.0 + e_cos_f) * d_e);
   return (arg_peri_target_rad - arg_peri_ref_rad) + d_mean_arg_lat_rad;
+}
+
+QuasiNonsingularRelativeOrbitalElements operator-(const QuasiNonsingularRelativeOrbitalElements lhs,
+                                                  const QuasiNonsingularRelativeOrbitalElements rhs) {
+  libra::Vector<6> out_roe = lhs.GetRelativeOrbitalElementsAsVector() - rhs.GetRelativeOrbitalElementsAsVector();
+  QuasiNonsingularRelativeOrbitalElements out(lhs.GetReferenceSemiMajor_m(), out_roe);
+
+  return out;
 }
