@@ -58,12 +58,12 @@ csv_data = pandas.read_csv(read_file_name, skiprows=[1,3], sep=',', na_values=['
 f_air_sat0 = np.array([csv_data['air_drag_force_b_x[N]'].to_numpy(),
                        csv_data['air_drag_force_b_y[N]'].to_numpy(),
                        csv_data['air_drag_force_b_z[N]'].to_numpy()])
-a_air_sat0 = f_air_sat0 / 40                       
+a_air_sat0 = f_air_sat0 / 40 # FIXME Magic number for satellite mass
 
 f_air_sat1 = np.array([csv_data['air_drag_force_b_x[N].1'].to_numpy(),
                        csv_data['air_drag_force_b_y[N].1'].to_numpy(),
                        csv_data['air_drag_force_b_z[N].1'].to_numpy()])
-a_air_sat1 = f_air_sat1 / 10                       
+a_air_sat1 = f_air_sat1 / 10 # FIXME Magic number for satellite mass
 
 diff_a_air = a_air_sat1 - a_air_sat0
 
@@ -74,12 +74,12 @@ csv_data = pandas.read_csv(read_file_name, skiprows=[1,3], sep=',', na_values=['
 f_srp_sat0 = np.array([csv_data['srp_force_b_x[N]'].to_numpy(),
                        csv_data['srp_force_b_y[N]'].to_numpy(),
                        csv_data['srp_force_b_z[N]'].to_numpy()])
-a_srp_sat0 = f_srp_sat0 / 40                       
+a_srp_sat0 = f_srp_sat0 / 40 # FIXME Magic number for satellite mass
 
 f_srp_sat1 = np.array([csv_data['srp_force_b_x[N].1'].to_numpy(),
                        csv_data['srp_force_b_y[N].1'].to_numpy(),
                        csv_data['srp_force_b_z[N].1'].to_numpy()])
-a_srp_sat1 = f_srp_sat1 / 10  
+a_srp_sat1 = f_srp_sat1 / 10 # FIXME Magic number for satellite mass
 
 diff_a_srp = a_srp_sat1 - a_srp_sat0
 
