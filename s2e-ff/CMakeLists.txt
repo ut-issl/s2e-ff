@@ -53,6 +53,9 @@ set(SOURCE_FILES
   src/components/aocs/initialize_relative_velocity_sensor.cpp
   src/components/ideal/relative_attitude_controller.cpp
   src/components/ideal/initialize_relative_attitude_controller.cpp
+  # src/Components/Controller/RelativeOrbitControllerDeputy.cpp
+  # src/Components/Controller/RelativeOrbitControllerChief.cpp
+  src/components/analyzer/relative_orbit_analyzer.cpp
   src/library/math/dual_quaternion.cpp
   src/library/math/rotation_first_dual_quaternion.cpp
   src/library/math/translation_first_dual_quaternion.cpp
