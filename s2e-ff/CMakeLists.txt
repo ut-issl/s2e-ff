@@ -44,25 +44,25 @@ add_subdirectory(${S2E_CORE_DIR}/src/simulation s2e_core/simulation)
 
 
 set(SOURCE_FILES
-  src/S2eFf.cpp
-  src/Components/AOCS/RelativeDistanceSensor.cpp
-  src/Components/AOCS/InitializeRelativeDistanceSensor.cpp
-  src/Components/AOCS/RelativePositionSensor.cpp
-  src/Components/AOCS/InitializeRelativePositionSensor.cpp
-  src/Components/AOCS/RelativeVelocitySensor.cpp
-  src/Components/AOCS/InitializeRelativeVelocitySensor.cpp
-  src/Components/IdealComponents/RelativeAttitudeController.cpp
-  src/Components/IdealComponents/InitializeRelativeAttitudeController.cpp
-  src/Library/math/DualQuaternion.cpp
-  src/Library/math/RotationFirstDualQuaternion.cpp
-  src/Library/math/TranslationFirstDualQuaternion.cpp
-  src/Library/Orbit/QuasiNonsingularOrbitalElements.cpp
-  src/Library/RelativeOrbit/QuasiNonsingularRelativeOrbitalElements.cpp
-  src/Library/RelativeOrbit/QuasiNonsingularOrbitalElementDifferences.cpp
-  src/Simulation/Case/FfCase.cpp
-  src/Simulation/Spacecraft/FfSat.cpp
-  src/Simulation/Spacecraft/FfComponents.cpp
-  src/Simulation/Spacecraft/FfComponents2.cpp
+  src/s2e_ff.cpp
+  src/components/aocs/relative_distance_sensor.cpp
+  src/components/aocs/initialize_relative_distance_sensor.cpp
+  src/components/aocs/relative_position_sensor.cpp
+  src/components/aocs/initialize_relative_position_sensor.cpp
+  src/components/aocs/relative_velocity_sensor.cpp
+  src/components/aocs/initialize_relative_velocity_sensor.cpp
+  src/components/ideal/relative_attitude_controller.cpp
+  src/components/ideal/initialize_relative_attitude_controller.cpp
+  src/library/math/dual_quaternion.cpp
+  src/library/math/rotation_first_dual_quaternion.cpp
+  src/library/math/translation_first_dual_quaternion.cpp
+  src/library/orbit/quasi_nonsingular_orbital_elements.cpp
+  src/library/relative_orbit/quasi_nonsingular_relative_orbital_elements.cpp
+  src/library/relative_orbit/quasi_nonsingular_orbital_element_differences.cpp
+  src/simulation/case/ff_case.cpp
+  src/simulation/spacecraft/ff_satellite.cpp
+  src/simulation/spacecraft/ff_components.cpp
+  src/simulation/spacecraft/ff_components_2.cpp
 )
 # Create executable file
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
@@ -162,20 +162,20 @@ if(GOOGLE_TEST)
   set(TEST_PROJECT_NAME ${PROJECT_NAME}_TEST)
   set(TEST_FILES
     # Dual Quaternion
-    src/Library/math/DualQuaternion.cpp
-    test/TestDualQuaternion.cpp
-    src/Library/math/RotationFirstDualQuaternion.cpp
-    test/TestRotationFirstDualQuaternion.cpp
-    src/Library/math/TranslationFirstDualQuaternion.cpp
-    test/TestTranslationFirstDualQuaternion.cpp
+    src/library/math/dual_quaternion.cpp
+    test/test_dual_quaternion.cpp
+    src/library/math/rotation_first_dual_quaternion.cpp
+    test/test_rotation_first_dual_quaternion.cpp
+    src/library/math/translation_first_dual_quaternion.cpp
+    test/test_translation_first_dual_quaternion.cpp
     # Orbital elements
-    src/Library/Orbit/QuasiNonsingularOrbitalElements.cpp
-    test/TestQuasiNonsingularOrbitalElements.cpp
+    src/library/orbit/quasi_nonsingular_orbital_elements.cpp
+    test/test_quasi_nonsingular_orbital_elements.cpp
     # Relative orbital elements
-    src/Library/RelativeOrbit/QuasiNonsingularOrbitalElementDifferences.cpp
-    test/TestQuasiNonsingularOrbitalElementDifferences.cpp
-    src/Library/RelativeOrbit/QuasiNonsingularRelativeOrbitalElements.cpp
-    test/TestQuasiNonsingularRelativeOrbitalElements.cpp
+    src/library/relative_orbit/quasi_nonsingular_orbital_element_differences.cpp
+    test/test_quasi_nonsingular_orbital_element_differences.cpp
+    src/library/relative_orbit/quasi_nonsingular_relative_orbital_elements.cpp
+    test/test_quasi_nonsingular_relative_orbital_elements.cpp
   )
   add_executable(${TEST_PROJECT_NAME} ${TEST_FILES})
   target_link_libraries(${TEST_PROJECT_NAME} gtest gtest_main)
