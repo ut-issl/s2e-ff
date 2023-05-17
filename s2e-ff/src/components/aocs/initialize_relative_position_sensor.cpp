@@ -13,16 +13,13 @@ RelativePositionSensor InitializeRelativePositionSensor(ClockGenerator* clock_ge
                                                         const int reference_sat_id_input) {
   // General
   IniAccess ini_file(file_name);
+  char section[30] = "RELATIVE_POSITION_SENSOR";
 
   // CompoBase
-  int prescaler = ini_file.ReadInt("ComponentBase", "prescaler");
+  int prescaler = ini_file.ReadInt(section, "prescaler");
   if (prescaler <= 1) prescaler = 1;
 
-  // SensorBase
-  Sensor<3> sensor_base = ReadSensorInformation<3>(file_name, compo_step_time_s * (double)(prescaler), "RelativePositionSensor");
-
   // RelativePositionSensor
-  char section[30] = "RelativePositionSensor";
   int target_sat_id = ini_file.ReadInt(section, "target_sat_id");
   int reference_sat_id = ini_file.ReadInt(section, "reference_sat_id");
   if (reference_sat_id < 0) {
@@ -43,6 +40,9 @@ RelativePositionSensor InitializeRelativePositionSensor(ClockGenerator* clock_ge
               << std::endl;
     error_frame = RelativePositionSensorErrorFrame::BODY;
   }
+
+  // SensorBase
+  Sensor<3> sensor_base = ReadSensorInformation<3>(file_name, compo_step_time_s * (double)(prescaler), section, "m");
 
   RelativePositionSensor relative_position_sensor(prescaler, clock_gen, sensor_base, target_sat_id, reference_sat_id, error_frame, rel_info,
                                                   dynamics);
