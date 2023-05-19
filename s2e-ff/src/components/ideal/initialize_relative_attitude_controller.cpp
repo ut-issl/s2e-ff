@@ -10,11 +10,11 @@ RelativeAttitudeController InitializeRelativeAttitudeController(ClockGenerator* 
   IniAccess ini_file(file_name);
 
   // CompoBase
-  int prescaler = ini_file.ReadInt("ComponentBase", "prescaler");
+  int prescaler = ini_file.ReadInt("COMPONENT_BASE", "prescaler");
   if (prescaler <= 1) prescaler = 1;
 
   // RelativeAttitudeController
-  char section[30] = "RelativeAttitudeController";
+  char section[30] = "RELATIVE_ATTITUDE_CONTROLLER";
 
   std::string main_mode_name = ini_file.ReadString(section, "main_mode");
   RelativeAttitudeControlMode main_mode = ConvertStringToRelativeAttitudeControlMode(main_mode_name);

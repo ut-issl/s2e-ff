@@ -14,22 +14,23 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
   // Component Instantiation
   obc_ = new OnBoardComputer(clock_gen);
 
-  const std::string rel_dist_file = sat_file.ReadString("COMPONENTS_FILE", "relative_distance_sensor_file");
+  std::string section_name = "COMPONENT_FILES";
+  const std::string rel_dist_file = sat_file.ReadString(section_name.c_str(), "relative_distance_sensor_file");
   relative_distance_sensor_ =
       new RelativeDistanceSensor(InitializeRelativeDistanceSensor(clock_gen, rel_dist_file, compo_step_sec, *rel_info_, sat_id));
 
-  const std::string rel_pos_file = sat_file.ReadString("COMPONENTS_FILE", "relative_position_sensor_file");
+  const std::string rel_pos_file = sat_file.ReadString(section_name.c_str(), "relative_position_sensor_file");
   relative_position_sensor_ =
       new RelativePositionSensor(InitializeRelativePositionSensor(clock_gen, rel_pos_file, compo_step_sec, *rel_info_, *dynamics_, sat_id));
 
-  const std::string rel_vel_file = sat_file.ReadString("COMPONENTS_FILE", "relative_velocity_sensor_file");
+  const std::string rel_vel_file = sat_file.ReadString(section_name.c_str(), "relative_velocity_sensor_file");
   relative_velocity_sensor_ =
       new RelativeVelocitySensor(InitializeRelativeVelocitySensor(clock_gen, rel_vel_file, compo_step_sec, *rel_info_, *dynamics_, sat_id));
 
-  const std::string force_generator_file = sat_file.ReadString("COMPONENTS_FILE", "force_generator_file");
+  const std::string force_generator_file = sat_file.ReadString(section_name.c_str(), "force_generator_file");
   force_generator_ = new ForceGenerator(InitializeForceGenerator(clock_gen, force_generator_file, dynamics_));
 
-  const std::string relative_attitude_controller_file = sat_file.ReadString("COMPONENTS_FILE", "relative_attitude_controller_file");
+  const std::string relative_attitude_controller_file = sat_file.ReadString(section_name.c_str(), "relative_attitude_controller_file");
   relative_attitude_controller_ = new RelativeAttitudeController(InitializeRelativeAttitudeController(
       clock_gen, relative_attitude_controller_file, *rel_info_, local_env_->GetCelestialInformation(), *dynamics_, sat_id));
 
