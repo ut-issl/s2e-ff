@@ -63,8 +63,8 @@ class FfComponents : public InstalledComponents {
   RelativePositionSensor* relative_position_sensor_;  //!< Example of Relative position sensor
   RelativeVelocitySensor* relative_velocity_sensor_;  //!< Example of Relative velocity sensor
   // Actuators
-  ForceGenerator* force_generator_;                           //!< Example of force generator
-  RelativeAttitudeController* relative_attitude_controller_;  //!< Example of attitude controller
+  ForceGenerator* force_generator_;  //!< Example of force generator
+  // RelativeAttitudeController* relative_attitude_controller_;  //!< Example of attitude controller
 
   // References
   const Dynamics* dynamics_;               //!< Dynamics information of the spacecraft

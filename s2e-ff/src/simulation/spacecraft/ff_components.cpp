@@ -30,10 +30,11 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
   const std::string force_generator_file = sat_file.ReadString(section_name.c_str(), "force_generator_file");
   force_generator_ = new ForceGenerator(InitializeForceGenerator(clock_gen, force_generator_file, dynamics_));
 
-  const std::string relative_attitude_controller_file = sat_file.ReadString(section_name.c_str(), "relative_attitude_controller_file");
-  relative_attitude_controller_ = new RelativeAttitudeController(InitializeRelativeAttitudeController(
-      clock_gen, relative_attitude_controller_file, *rel_info_, local_env_->GetCelestialInformation(), *dynamics_, sat_id));
-
+  /*
+    const std::string relative_attitude_controller_file = sat_file.ReadString(section_name.c_str(), "relative_attitude_controller_file");
+    relative_attitude_controller_ = new RelativeAttitudeController(InitializeRelativeAttitudeController(
+        clock_gen, relative_attitude_controller_file, *rel_info_, local_env_->GetCelestialInformation(), *dynamics_, sat_id));
+  */
   // Debug for actuator output
   libra::Vector<3> force_N;
   force_N[0] = 1.0;
@@ -47,14 +48,14 @@ FfComponents::~FfComponents() {
   delete relative_position_sensor_;
   delete relative_velocity_sensor_;
   delete force_generator_;
-  delete relative_attitude_controller_;
-  // OBC must be deleted the last since it has com ports
+  // delete relative_attitude_controller_;
+  //  OBC must be deleted the last since it has com ports
   delete obc_;
 }
 
 Vector<3> FfComponents::GenerateForce_b_N() {
   Vector<3> force_b_N_(0.0);
-  force_b_N_ += force_generator_->GetGeneratedForce_b_N();
+  // force_b_N_ += force_generator_->GetGeneratedForce_b_N();
   return force_b_N_;
 }
 
