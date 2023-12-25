@@ -9,10 +9,6 @@ LaserDistanceMeter::LaserDistanceMeter(const int prescaler, ClockGenerator* cloc
                                        const FfInterSpacecraftCommunication& inter_spacecraft_communication, const size_t id)
     : Component(prescaler, clock_gen), dynamics_(dynamics), inter_spacecraft_communication_(inter_spacecraft_communication) {
   Initialize(file_name, id);
-
-  laser_emission_position_b_m_ = dual_quaternion_c2b_.TransformVector(libra::Vector<3>{0.0});
-  laser_emitting_direction_b_ = dual_quaternion_c2b_.TransformVector(laser_emitting_direction_c_);
-  laser_emitting_direction_b_ -= laser_emission_position_b_m_;
 }
 
 void LaserDistanceMeter::MainRoutine(int count) {

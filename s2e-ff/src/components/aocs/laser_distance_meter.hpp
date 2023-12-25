@@ -51,19 +51,10 @@ class LaserDistanceMeter : public Component, public ILoggable {
    */
   virtual std::string GetLogValue() const;
 
-  inline libra::Vector<3> GetLaserEmissionPosition_i_m() const { return laser_emission_position_i_m_; }
-  inline libra::Vector<3> GetLaserEmittingDirection_i() const { return laser_emitting_direction_i_; }
-
  protected:
   libra::Vector<3> laser_emitting_direction_c_;                //!< Laser emitting direction @ component frame
   double emission_angle_rad_;                                  //!< Emission half angle from the normal direction [rad]
   libra::TranslationFirstDualQuaternion dual_quaternion_c2b_;  //!< Dual quaternion from component to body frame
-
-  libra::Vector<3> laser_emission_position_b_m_{0.0};  //!< Position of laser emission point @ inertia frame [m]
-  libra::Vector<3> laser_emitting_direction_b_{0.0};
-
-  libra::Vector<3> laser_emission_position_i_m_{0.0};  //!< Position of laser emission point @ inertia frame [m]
-  libra::Vector<3> laser_emitting_direction_i_{0.0};
 
   bool is_reflected_ = false;         //!< Flag to detect reflected light
   double observed_distance_m_ = 0.0;  //!< Observed direction
