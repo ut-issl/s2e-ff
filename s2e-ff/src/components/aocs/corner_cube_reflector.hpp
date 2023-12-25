@@ -84,7 +84,7 @@ class CornerCubeReflector {
     dual_quaternion_c2b_ = libra::TranslationFirstDualQuaternion(-position_b_m, quaternion_b2c.Conjugate()).QuaternionConjugate();
 
     ini_file.ReadVector(section_name.c_str(), "normal_direction_c", normal_direction_c_);
-    reflectable_angle_rad_ = ini_file.ReadDouble(section_name.c_str(), "reflectable_angle_rad ");
+    reflectable_angle_rad_ = ini_file.ReadDouble(section_name.c_str(), "reflectable_angle_rad");
   }
 };
 
