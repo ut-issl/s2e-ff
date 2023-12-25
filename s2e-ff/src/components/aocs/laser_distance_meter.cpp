@@ -26,12 +26,12 @@ LaserDistanceMeter::LaserDistanceMeter(const int prescaler, ClockGenerator* cloc
 }
 
 void LaserDistanceMeter::MainRoutine(int count) {
-  if (count < 10) return;
+  UNUSED(count);
 
   // Body -> Inertial frame
   libra::Vector<3> spacecraft_position_i2b_m = dynamics_.GetOrbit().GetPosition_i_m();
-  libra::Quaternion spacecraft_attitude_i2b = dynamics_.GetAttitude().GetQuaternion_i2b().Conjugate();
-  libra::TranslationFirstDualQuaternion dual_quaternion_i2b(-spacecraft_position_i2b_m, spacecraft_attitude_i2b);
+  libra::Quaternion spacecraft_attitude_i2b = dynamics_.GetAttitude().GetQuaternion_i2b();
+  libra::TranslationFirstDualQuaternion dual_quaternion_i2b(-spacecraft_position_i2b_m, spacecraft_attitude_i2b.Conjugate());
 
   // Component -> Inertial frame
   libra::TranslationFirstDualQuaternion dual_quaternion_c2i = dual_quaternion_i2b.QuaternionConjugate() * dual_quaternion_c2b_;
