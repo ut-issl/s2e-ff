@@ -7,6 +7,7 @@
 #define S2E_COMPONENTS_CORNER_CUBE_REFLECTOR_HPP_
 
 #include <dynamics/dynamics.hpp>
+#include <library/initialize/initialize_file_access.hpp>
 #include <library/math/vector.hpp>
 
 #include "../../library/math/translation_first_dual_quaternion.hpp"
@@ -26,19 +27,7 @@ class CornerCubeReflector {
    * @fn CornerCubeReflector
    * @brief Constructor
    */
-  CornerCubeReflector(const Dynamics* dynamics) : dynamics_(dynamics) {
-    normal_direction_c_[0] = 0.0;
-    normal_direction_c_[1] = 0.0;
-    normal_direction_c_[2] = 1.0;
-    reflectable_angle_rad_ = 0.1;
-
-    libra::Quaternion q_b2c(0.0, 1.0, 0.0, 1.0);
-    libra::Vector<3> position_b2c_m;
-    position_b2c_m[0] = 0.5;
-    position_b2c_m[1] = 0.0;
-    position_b2c_m[2] = 0.0;
-    dual_quaternion_c2b_ = libra::TranslationFirstDualQuaternion(-position_b2c_m, q_b2c.Conjugate()).QuaternionConjugate();
-  }
+  CornerCubeReflector(const std::string file_name, const Dynamics* dynamics, const size_t id = 0) : dynamics_(dynamics) { Initialize(file_name, id); }
   /**
    * @fn ~CornerCubeReflector
    * @brief Destructor
@@ -76,11 +65,27 @@ class CornerCubeReflector {
 
  protected:
   libra::Vector<3> normal_direction_c_{0.0};                   //!< Reflection surface normal direction vector @ component frame
-  double reflectable_angle_rad_;                               //!< Reflectable half angle from the normal direction [rad]
+  double reflectable_angle_rad_ = 0.0;                         //!< Reflectable half angle from the normal direction [rad]
   libra::TranslationFirstDualQuaternion dual_quaternion_c2b_;  //!< Dual quaternion from body to component frame
 
   // Reference
   const Dynamics* dynamics_;
+
+  // Functions
+  void Initialize(const std::string file_name, const size_t id = 0) {
+    IniAccess ini_file(file_name);
+    std::string name = "CORNER_CUBE_REFLECTOR_";
+    const std::string section_name = name + std::to_string(static_cast<long long>(id));
+
+    libra::Quaternion quaternion_b2c;
+    ini_file.ReadQuaternion(section_name.c_str(), "quaternion_b2c", quaternion_b2c);
+    libra::Vector<3> position_b_m;
+    ini_file.ReadVector(section_name.c_str(), "position_b_m", position_b_m);
+    dual_quaternion_c2b_ = libra::TranslationFirstDualQuaternion(-position_b_m, quaternion_b2c.Conjugate()).QuaternionConjugate();
+
+    ini_file.ReadVector(section_name.c_str(), "normal_direction_c", normal_direction_c_);
+    reflectable_angle_rad_ = ini_file.ReadDouble(section_name.c_str(), "reflectable_angle_rad ");
+  }
 };
 
 #endif  // S2E_COMPONENTS_CORNER_CUBE_REFLECTOR_HPP_

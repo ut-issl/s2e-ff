@@ -14,12 +14,15 @@ FfComponents2::FfComponents2(const Dynamics* dynamics, const Structure* structur
       rel_info_(rel_info),
       inter_spacecraft_communication_(inter_spacecraft_communication) {
   // General
-  IniAccess sat_file = IniAccess(config->spacecraft_file_list_[0]);
+  IniAccess sat_file = IniAccess(config->spacecraft_file_list_[1]);
 
   // Component Instantiation
   obc_ = new OnBoardComputer(clock_gen);
 
-  corner_cube_reflector_ = new CornerCubeReflector(dynamics_);
+  std::string file_name = sat_file.ReadString("COMPONENT_FILES", "corner_cube_reflector_file");
+  config_->main_logger_->CopyFileToLogDirectory(file_name);
+  corner_cube_reflector_ = new CornerCubeReflector(file_name, dynamics_);
+
   inter_spacecraft_communication.SetCornerCubeReflector(corner_cube_reflector_);
 
   // Debug for actuator output
