@@ -12,7 +12,7 @@ LaserDistanceMeter::LaserDistanceMeter(const int prescaler, ClockGenerator* cloc
 }
 
 void LaserDistanceMeter::MainRoutine(int count) {
-  UNUSED(count);
+  if (count < 10) return;
 
   // Body -> Inertial frame
   libra::Vector<3> spacecraft_position_i2b_m = dynamics_.GetOrbit().GetPosition_i_m();
@@ -22,35 +22,52 @@ void LaserDistanceMeter::MainRoutine(int count) {
   // Component -> Inertial frame
   libra::TranslationFirstDualQuaternion dual_quaternion_c2i = dual_quaternion_i2b.QuaternionConjugate() * dual_quaternion_c2b_;
 
-  // Get reflector information
-  libra::Vector<3> reflector_position_i_m = inter_spacecraft_communication_.GetCornerCubeReflector(0).GetReflectorPosition_i_m();
-  libra::Vector<3> reflector_normal_direction_i = inter_spacecraft_communication_.GetCornerCubeReflector(0).GetNormalDirection_i();
+  // Corner cube info
+  size_t number_of_reflectors = inter_spacecraft_communication_.GetNumberOfReflectors();
+  observed_distance_m_ = 1e30;
+  double observed_distance_m = 0.0;
+  is_reflected_ = false;
+  for (size_t reflector_id = 0; reflector_id < number_of_reflectors; reflector_id++) {
+    // Get reflector information
+    libra::Vector<3> reflector_position_i_m = inter_spacecraft_communication_.GetCornerCubeReflector(reflector_id).GetReflectorPosition_i_m();
+    libra::Vector<3> reflector_normal_direction_i = inter_spacecraft_communication_.GetCornerCubeReflector(reflector_id).GetNormalDirection_i();
 
-  // Conversion
-  libra::Vector<3> reflector_position_c_m = dual_quaternion_c2i.InverseTransformVector(reflector_position_i_m);
-  libra::Vector<3> reflector_normal_direction_c = dual_quaternion_c2i.GetRotationQuaternion().InverseFrameConversion(reflector_normal_direction_i);
+    // Conversion
+    libra::Vector<3> reflector_position_c_m = dual_quaternion_c2i.InverseTransformVector(reflector_position_i_m);
+    libra::Vector<3> reflector_normal_direction_c = dual_quaternion_c2i.GetRotationQuaternion().InverseFrameConversion(reflector_normal_direction_i);
 
-  // Calc relative distance
-  observed_distance_m_ = reflector_position_c_m.CalcNorm();
+    // Calc relative distance
+    observed_distance_m = reflector_position_c_m.CalcNorm();
 
-  // Check reflection
-  // Is the reflector in the laser radius?
-  double laser_radius_m = observed_distance_m_ * tan(emission_angle_rad_);
-  double closest_distance_m = CalcDistanceBwPointAndLine(reflector_position_c_m, libra::Vector<3>{0.0}, laser_emitting_direction_c_);
-  if (closest_distance_m > laser_radius_m) {
-    is_reflected_ = false;
-    return;
+    // Check reflection
+    // Is the reflector in the laser radius?
+    double laser_radius_m = observed_distance_m * tan(emission_angle_rad_);
+    double closest_distance_m = CalcDistanceBwPointAndLine(reflector_position_c_m, libra::Vector<3>{0.0}, laser_emitting_direction_c_);
+    if (closest_distance_m > laser_radius_m) {
+      continue;
+    }
+    // Is the laser is reflected?
+    double reflectable_angle_rad = inter_spacecraft_communication_.GetCornerCubeReflector(reflector_id).GetReflectableAngle_rad();
+    double cos_theta = libra::InnerProduct(reflector_normal_direction_c, -laser_emitting_direction_c_);
+    if (cos_theta > 1.0) cos_theta = 1.0;
+    if (cos_theta < -1.0) cos_theta = -1.0;
+    double laser_incident_angle_rad = acos(cos_theta);
+    if (laser_incident_angle_rad > reflectable_angle_rad) {
+      continue;
+    }
+    is_reflected_ = true;
+    // Observe closest point
+    if (observed_distance_m < observed_distance_m_) {
+      observed_distance_m_ = observed_distance_m;
+    }
   }
-  // Is the laser is reflected?
-  double reflectable_angle_rad = inter_spacecraft_communication_.GetCornerCubeReflector(0).GetReflectableAngle_rad();
-  double laser_incident_angle_rad = acos(libra::InnerProduct(reflector_normal_direction_c, -laser_emitting_direction_c_));
-  if (laser_incident_angle_rad > reflectable_angle_rad) {
-    is_reflected_ = false;
-    return;
-  }
-  is_reflected_ = true;
 
-  // Add noise
+  if (is_reflected_ == true) {
+    // Add noise
+    // TBW
+  } else {
+    observed_distance_m_ = 0.0;
+  }
 }
 
 std::string LaserDistanceMeter::GetLogHeader() const {

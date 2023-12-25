@@ -27,8 +27,8 @@ class FfInterSpacecraftCommunication {
   ~FfInterSpacecraftCommunication() {}
 
   inline void SetCornerCubeReflector(std::vector<CornerCubeReflector*> corner_cube_reflectors) { corner_cube_reflectors_ = corner_cube_reflectors; }
-  inline CornerCubeReflector& GetCornerCubeReflector(const size_t id) const { return *corner_cube_reflectors_[id]; }
-  inline size_t GetNumberOfReflectors() { return corner_cube_reflectors_.size(); }
+  inline CornerCubeReflector& GetCornerCubeReflector(const size_t id) const { return *(corner_cube_reflectors_[id]); }
+  inline size_t GetNumberOfReflectors() const { return corner_cube_reflectors_.size(); }
 
  private:
   std::vector<CornerCubeReflector*> corner_cube_reflectors_;
