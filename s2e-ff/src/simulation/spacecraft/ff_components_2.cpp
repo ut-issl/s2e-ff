@@ -5,13 +5,22 @@
 
 FfComponents2::FfComponents2(const Dynamics* dynamics, const Structure* structure, const LocalEnvironment* local_env,
                              const GlobalEnvironment* glo_env, const SimulationConfiguration* config, ClockGenerator* clock_gen,
-                             const RelativeInformation* rel_info)
-    : dynamics_(dynamics), structure_(structure), local_env_(local_env), glo_env_(glo_env), config_(config), rel_info_(rel_info) {
+                             const RelativeInformation* rel_info, FfInterSpacecraftCommunication& inter_spacecraft_communication)
+    : dynamics_(dynamics),
+      structure_(structure),
+      local_env_(local_env),
+      glo_env_(glo_env),
+      config_(config),
+      rel_info_(rel_info),
+      inter_spacecraft_communication_(inter_spacecraft_communication) {
   // General
   IniAccess sat_file = IniAccess(config->spacecraft_file_list_[0]);
 
   // Component Instantiation
   obc_ = new OnBoardComputer(clock_gen);
+
+  corner_cube_reflector_ = new CornerCubeReflector(1, clock_gen, dynamics_);
+  inter_spacecraft_communication.SetCornerCubeReflector(corner_cube_reflector_);
 
   // Debug for actuator output
   libra::Vector<3> force_N;
@@ -22,6 +31,7 @@ FfComponents2::FfComponents2(const Dynamics* dynamics, const Structure* structur
 }
 
 FfComponents2::~FfComponents2() {
+  delete corner_cube_reflector_;
   // OBC must be deleted the last since it has com ports
   delete obc_;
 }

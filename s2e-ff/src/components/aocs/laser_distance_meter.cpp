@@ -8,17 +8,17 @@
 LaserDistanceMeter::LaserDistanceMeter(const int prescaler, ClockGenerator* clock_gen, const Dynamics& dynamics,
                                        const FfInterSpacecraftCommunication& inter_spacecraft_communication)
     : Component(prescaler, clock_gen), dynamics_(dynamics), inter_spacecraft_communication_(inter_spacecraft_communication) {
-  laser_emitting_direction_c_[0] = -1.0;
-  laser_emitting_direction_c_[1] = 0.0;
+  laser_emitting_direction_c_[0] = 0.0;
+  laser_emitting_direction_c_[1] = 1.0;
   laser_emitting_direction_c_[2] = 0.0;
   emission_angle_rad_ = 0.1;
 
-  libra::Quaternion q_b2c(0.0, 0.0, 0.0, 1.0);
+  libra::Quaternion q_b2c(0.0, 0.0, 1.0, 1.0);
   libra::Vector<3> position_b2c_m;
   position_b2c_m[0] = -0.5;
   position_b2c_m[1] = 0.0;
   position_b2c_m[2] = 0.0;
-  dual_quaternion_c2b_ = libra::TranslationFirstDualQuaternion(-position_b2c_m, q_b2c);
+  dual_quaternion_c2b_ = libra::TranslationFirstDualQuaternion(-position_b2c_m, q_b2c.Conjugate()).QuaternionConjugate();
 
   laser_emission_position_b_m_ = dual_quaternion_c2b_.TransformVector(libra::Vector<3>{0.0});
   laser_emitting_direction_b_ = dual_quaternion_c2b_.TransformVector(laser_emitting_direction_c_);
@@ -42,7 +42,7 @@ void LaserDistanceMeter::MainRoutine(int count) {
 
   // Conversion
   libra::Vector<3> reflector_position_c_m = dual_quaternion_c2i.InverseTransformVector(reflector_position_i_m);
-  libra::Vector<3> reflector_normal_direction_c = dual_quaternion_c2i.GetRotationQuaternion().FrameConversion(reflector_normal_direction_i);  // ?
+  libra::Vector<3> reflector_normal_direction_c = dual_quaternion_c2i.GetRotationQuaternion().InverseFrameConversion(reflector_normal_direction_i);
 
   // Calc relative distance
   observed_distance_m_ = reflector_position_c_m.CalcNorm();

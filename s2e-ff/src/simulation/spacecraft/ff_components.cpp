@@ -4,8 +4,15 @@
 #include <library/initialize/initialize_file_access.hpp>
 
 FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure, const LocalEnvironment* local_env, const GlobalEnvironment* glo_env,
-                           const SimulationConfiguration* config, ClockGenerator* clock_gen, const RelativeInformation* rel_info)
-    : dynamics_(dynamics), structure_(structure), local_env_(local_env), glo_env_(glo_env), config_(config), rel_info_(rel_info) {
+                           const SimulationConfiguration* config, ClockGenerator* clock_gen, const RelativeInformation* rel_info,
+                           FfInterSpacecraftCommunication& inter_spacecraft_communication)
+    : dynamics_(dynamics),
+      structure_(structure),
+      local_env_(local_env),
+      glo_env_(glo_env),
+      config_(config),
+      rel_info_(rel_info),
+      inter_spacecraft_communication_(inter_spacecraft_communication) {
   // General
   const int sat_id = 0;
   IniAccess sat_file = IniAccess(config->spacecraft_file_list_[sat_id]);
@@ -26,6 +33,8 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
   const std::string rel_vel_file = sat_file.ReadString(section_name.c_str(), "relative_velocity_sensor_file");
   relative_velocity_sensor_ =
       new RelativeVelocitySensor(InitializeRelativeVelocitySensor(clock_gen, rel_vel_file, compo_step_sec, *rel_info_, *dynamics_, sat_id));
+
+  laser_distance_meter_ = new LaserDistanceMeter(1, clock_gen, *dynamics_, inter_spacecraft_communication_);
 
   const std::string force_generator_file = sat_file.ReadString(section_name.c_str(), "force_generator_file");
   force_generator_ = new ForceGenerator(InitializeForceGenerator(clock_gen, force_generator_file, dynamics_));
@@ -48,6 +57,7 @@ FfComponents::~FfComponents() {
   delete relative_velocity_sensor_;
   delete force_generator_;
   delete relative_attitude_controller_;
+  delete laser_distance_meter_;
   // OBC must be deleted the last since it has com ports
   delete obc_;
 }
@@ -69,4 +79,5 @@ void FfComponents::LogSetup(Logger& logger) {
   logger.AddLogList(relative_position_sensor_);
   logger.AddLogList(relative_velocity_sensor_);
   logger.AddLogList(force_generator_);
+  logger.AddLogList(laser_distance_meter_);
 }

@@ -7,17 +7,17 @@
 
 CornerCubeReflector::CornerCubeReflector(const int prescaler, ClockGenerator* clock_gen, const Dynamics* dynamics)
     : Component(prescaler, clock_gen), dynamics_(dynamics) {
-  normal_direction_c_[0] = 1.0;
+  normal_direction_c_[0] = 0.0;
   normal_direction_c_[1] = 0.0;
-  normal_direction_c_[2] = 0.0;
+  normal_direction_c_[2] = 1.0;
   reflectable_angle_rad_ = 0.1;
 
-  libra::Quaternion q_rot(0.0, 0.0, 0.0, 1.0);
+  libra::Quaternion q_rot(0.0, 1.0, 0.0, 1.0);
   libra::Vector<3> v_translation_m;
   v_translation_m[0] = 0.5;
   v_translation_m[1] = 0.0;
   v_translation_m[2] = 0.0;
-  dual_quaternion_c2b_ = libra::TranslationFirstDualQuaternion(-v_translation_m, q_rot);
+  dual_quaternion_c2b_ = libra::TranslationFirstDualQuaternion(-v_translation_m, q_rot.Conjugate()).QuaternionConjugate();
 }
 
 void CornerCubeReflector::MainRoutine(int count) {
