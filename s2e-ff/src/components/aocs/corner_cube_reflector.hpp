@@ -26,7 +26,7 @@ class CornerCubeReflector {
    * @fn CornerCubeReflector
    * @brief Constructor
    */
-  CornerCubeReflector(const Dynamics* dynamics) {
+  CornerCubeReflector(const Dynamics* dynamics) : dynamics_(dynamics) {
     normal_direction_c_[0] = 0.0;
     normal_direction_c_[1] = 0.0;
     normal_direction_c_[2] = 1.0;
