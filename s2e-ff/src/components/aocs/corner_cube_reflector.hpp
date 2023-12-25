@@ -56,7 +56,7 @@ class CornerCubeReflector : public Component, public ILoggable {
 
   inline libra::Vector<3> GetReflectorPosition_i_m() const {
     libra::Vector<3> spacecraft_position_i2b_m = dynamics_->GetOrbit().GetPosition_i_m();
-    libra::Quaternion spacecraft_attitude_i2b = dynamics_->GetAttitude().GetQuaternion_i2b();
+    libra::Quaternion spacecraft_attitude_i2b = dynamics_->GetAttitude().GetQuaternion_i2b().Conjugate();
     libra::TranslationFirstDualQuaternion dual_quaternion_i2b(-spacecraft_position_i2b_m, spacecraft_attitude_i2b);
 
     libra::Vector<3> position_i_m = dual_quaternion_i2b.InverseTransformVector(libra::Vector<3>{0.0});
