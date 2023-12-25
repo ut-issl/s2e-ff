@@ -23,8 +23,8 @@ void LaserDistanceMeter::MainRoutine(int count) {
   libra::TranslationFirstDualQuaternion dual_quaternion_c2i = dual_quaternion_i2b.QuaternionConjugate() * dual_quaternion_c2b_;
 
   // Get reflector information
-  libra::Vector<3> reflector_position_i_m = inter_spacecraft_communication_.GetCornerCubeReflector().GetReflectorPosition_i_m();
-  libra::Vector<3> reflector_normal_direction_i = inter_spacecraft_communication_.GetCornerCubeReflector().GetNormalDirection_i();
+  libra::Vector<3> reflector_position_i_m = inter_spacecraft_communication_.GetCornerCubeReflector(0).GetReflectorPosition_i_m();
+  libra::Vector<3> reflector_normal_direction_i = inter_spacecraft_communication_.GetCornerCubeReflector(0).GetNormalDirection_i();
 
   // Conversion
   libra::Vector<3> reflector_position_c_m = dual_quaternion_c2i.InverseTransformVector(reflector_position_i_m);
@@ -42,7 +42,7 @@ void LaserDistanceMeter::MainRoutine(int count) {
     return;
   }
   // Is the laser is reflected?
-  double reflectable_angle_rad = inter_spacecraft_communication_.GetCornerCubeReflector().GetReflectableAngle_rad();
+  double reflectable_angle_rad = inter_spacecraft_communication_.GetCornerCubeReflector(0).GetReflectableAngle_rad();
   double laser_incident_angle_rad = acos(libra::InnerProduct(reflector_normal_direction_c, -laser_emitting_direction_c_));
   if (laser_incident_angle_rad > reflectable_angle_rad) {
     is_reflected_ = false;

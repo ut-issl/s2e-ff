@@ -60,7 +60,7 @@ class FfComponents2 : public InstalledComponents {
  private:
   // Components
   OnBoardComputer* obc_;  //!< On board computer
-  CornerCubeReflector* corner_cube_reflector_;
+  std::vector<CornerCubeReflector*> corner_cube_reflectors_;
 
   // References
   const Dynamics* dynamics_;               //!< Dynamics information of the spacecraft

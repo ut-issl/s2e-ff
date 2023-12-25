@@ -26,11 +26,12 @@ class FfInterSpacecraftCommunication {
    */
   ~FfInterSpacecraftCommunication() {}
 
-  inline void SetCornerCubeReflector(CornerCubeReflector* corner_cube_reflector) { corner_cube_reflector_ = corner_cube_reflector; }
-  inline CornerCubeReflector& GetCornerCubeReflector() const { return *corner_cube_reflector_; }
+  inline void SetCornerCubeReflector(std::vector<CornerCubeReflector*> corner_cube_reflectors) { corner_cube_reflectors_ = corner_cube_reflectors; }
+  inline CornerCubeReflector& GetCornerCubeReflector(const size_t id) const { return *corner_cube_reflectors_[id]; }
+  inline size_t GetNumberOfReflectors() { return corner_cube_reflectors_.size(); }
 
  private:
-  CornerCubeReflector* corner_cube_reflector_;
+  std::vector<CornerCubeReflector*> corner_cube_reflectors_;
 };
 
 #endif  // S2E_SIMULATION_FF_SPACECRAFT_INTER_SPACECRAFT_COMMUNICATION_HPP_

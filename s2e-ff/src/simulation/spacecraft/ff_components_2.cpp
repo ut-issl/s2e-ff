@@ -21,9 +21,12 @@ FfComponents2::FfComponents2(const Dynamics* dynamics, const Structure* structur
 
   std::string file_name = sat_file.ReadString("COMPONENT_FILES", "corner_cube_reflector_file");
   config_->main_logger_->CopyFileToLogDirectory(file_name);
-  corner_cube_reflector_ = new CornerCubeReflector(file_name, dynamics_);
-
-  inter_spacecraft_communication.SetCornerCubeReflector(corner_cube_reflector_);
+  IniAccess corner_cube_file(file_name);
+  size_t number_of_reflectors = corner_cube_file.ReadInt("GENERAL", "number_of_reflectors");
+  for (size_t id = 0; id < number_of_reflectors; id++) {
+    corner_cube_reflectors_.push_back(new CornerCubeReflector(file_name, dynamics_, id));
+  }
+  inter_spacecraft_communication.SetCornerCubeReflector(corner_cube_reflectors_);
 
   // Debug for actuator output
   libra::Vector<3> force_N;
@@ -34,7 +37,9 @@ FfComponents2::FfComponents2(const Dynamics* dynamics, const Structure* structur
 }
 
 FfComponents2::~FfComponents2() {
-  delete corner_cube_reflector_;
+  for (auto corner_cube_reflector : corner_cube_reflectors_) {
+    delete corner_cube_reflector;
+  }
   // OBC must be deleted the last since it has com ports
   delete obc_;
 }
