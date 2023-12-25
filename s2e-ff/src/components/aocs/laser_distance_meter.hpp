@@ -24,8 +24,8 @@ class LaserDistanceMeter : public Component, public ILoggable {
    * @fn LaserDistanceMeter
    * @brief Constructor
    */
-  LaserDistanceMeter(const int prescaler, ClockGenerator* clock_gen, const Dynamics& dynamics,
-                     const FfInterSpacecraftCommunication& inter_spacecraft_communication);
+  LaserDistanceMeter(const int prescaler, ClockGenerator* clock_gen, const std::string file_name, const Dynamics& dynamics,
+                     const FfInterSpacecraftCommunication& inter_spacecraft_communication, const size_t id = 0);
   /**
    * @fn ~LaserDistanceMeter
    * @brief Destructor
@@ -73,6 +73,8 @@ class LaserDistanceMeter : public Component, public ILoggable {
   const FfInterSpacecraftCommunication& inter_spacecraft_communication_;
 
   double CalcDistanceBwPointAndLine(libra::Vector<3> point_position, libra::Vector<3> line_start_position, libra::Vector<3> line_direction);
+
+  void Initialize(const std::string file_name, const size_t id = 0);
 };
 
 #endif  // S2E_COMPONENTS_LASER_DISTANCE_METER_HPP_

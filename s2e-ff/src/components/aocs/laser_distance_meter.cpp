@@ -5,20 +5,10 @@
 
 #include "laser_distance_meter.hpp"
 
-LaserDistanceMeter::LaserDistanceMeter(const int prescaler, ClockGenerator* clock_gen, const Dynamics& dynamics,
-                                       const FfInterSpacecraftCommunication& inter_spacecraft_communication)
+LaserDistanceMeter::LaserDistanceMeter(const int prescaler, ClockGenerator* clock_gen, const std::string file_name, const Dynamics& dynamics,
+                                       const FfInterSpacecraftCommunication& inter_spacecraft_communication, const size_t id)
     : Component(prescaler, clock_gen), dynamics_(dynamics), inter_spacecraft_communication_(inter_spacecraft_communication) {
-  laser_emitting_direction_c_[0] = 0.0;
-  laser_emitting_direction_c_[1] = 1.0;
-  laser_emitting_direction_c_[2] = 0.0;
-  emission_angle_rad_ = 0.1;
-
-  libra::Quaternion q_b2c(0.0, 0.0, 1.0, 1.0);
-  libra::Vector<3> position_b2c_m;
-  position_b2c_m[0] = -0.5;
-  position_b2c_m[1] = 0.0;
-  position_b2c_m[2] = 0.0;
-  dual_quaternion_c2b_ = libra::TranslationFirstDualQuaternion(-position_b2c_m, q_b2c.Conjugate()).QuaternionConjugate();
+  Initialize(file_name, id);
 
   laser_emission_position_b_m_ = dual_quaternion_c2b_.TransformVector(libra::Vector<3>{0.0});
   laser_emitting_direction_b_ = dual_quaternion_c2b_.TransformVector(laser_emitting_direction_c_);
@@ -91,4 +81,20 @@ double LaserDistanceMeter::CalcDistanceBwPointAndLine(libra::Vector<3> point_pos
   double temp = libra::InnerProduct(q_p, line_direction) / pow(line_direction.CalcNorm(), 2.0);
   libra::Vector<3> position = q_p - temp * line_direction;
   return position.CalcNorm();
+}
+
+// Functions
+void LaserDistanceMeter::Initialize(const std::string file_name, const size_t id) {
+  IniAccess ini_file(file_name);
+  std::string name = "LASER_DISTANCE_METER_";
+  const std::string section_name = name + std::to_string(static_cast<long long>(id));
+
+  libra::Quaternion quaternion_b2c;
+  ini_file.ReadQuaternion(section_name.c_str(), "quaternion_b2c", quaternion_b2c);
+  libra::Vector<3> position_b_m;
+  ini_file.ReadVector(section_name.c_str(), "position_b_m", position_b_m);
+  dual_quaternion_c2b_ = libra::TranslationFirstDualQuaternion(-position_b_m, quaternion_b2c.Conjugate()).QuaternionConjugate();
+
+  ini_file.ReadVector(section_name.c_str(), "laser_emitting_direction_c", laser_emitting_direction_c_);
+  emission_angle_rad_ = ini_file.ReadDouble(section_name.c_str(), "emission_angle_rad");
 }

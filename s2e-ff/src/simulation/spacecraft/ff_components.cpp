@@ -34,7 +34,8 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
   relative_velocity_sensor_ =
       new RelativeVelocitySensor(InitializeRelativeVelocitySensor(clock_gen, rel_vel_file, compo_step_sec, *rel_info_, *dynamics_, sat_id));
 
-  laser_distance_meter_ = new LaserDistanceMeter(1, clock_gen, *dynamics_, inter_spacecraft_communication_);
+  const std::string ldm_file = sat_file.ReadString(section_name.c_str(), "Laser_distance_meter_file");
+  laser_distance_meter_ = new LaserDistanceMeter(1, clock_gen, ldm_file, *dynamics_, inter_spacecraft_communication_);
 
   const std::string force_generator_file = sat_file.ReadString(section_name.c_str(), "force_generator_file");
   force_generator_ = new ForceGenerator(InitializeForceGenerator(clock_gen, force_generator_file, dynamics_));
