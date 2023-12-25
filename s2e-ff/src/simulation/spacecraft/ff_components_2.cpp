@@ -19,7 +19,7 @@ FfComponents2::FfComponents2(const Dynamics* dynamics, const Structure* structur
   // Component Instantiation
   obc_ = new OnBoardComputer(clock_gen);
 
-  corner_cube_reflector_ = new CornerCubeReflector(1, clock_gen, dynamics_);
+  corner_cube_reflector_ = new CornerCubeReflector(dynamics_);
   inter_spacecraft_communication.SetCornerCubeReflector(corner_cube_reflector_);
 
   // Debug for actuator output

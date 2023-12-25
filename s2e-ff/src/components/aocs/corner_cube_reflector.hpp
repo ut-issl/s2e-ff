@@ -6,9 +6,7 @@
 #ifndef S2E_COMPONENTS_CORNER_CUBE_REFLECTOR_HPP_
 #define S2E_COMPONENTS_CORNER_CUBE_REFLECTOR_HPP_
 
-#include <components/base/component.hpp>
 #include <dynamics/dynamics.hpp>
-#include <library/logger/logger.hpp>
 #include <library/math/vector.hpp>
 
 #include "../../library/math/translation_first_dual_quaternion.hpp"
@@ -17,42 +15,35 @@
  * @class CornerCubeReflector
  * @brief Corner Cube Reflector
  */
-class CornerCubeReflector : public Component, public ILoggable {
+class CornerCubeReflector {
  public:
   /**
    * @fn CornerCubeReflector
    * @brief Constructor
    */
-  CornerCubeReflector() : Component(1, nullptr), dynamics_(nullptr) {}
+  CornerCubeReflector() : dynamics_(nullptr) {}
   /**
    * @fn CornerCubeReflector
    * @brief Constructor
    */
-  CornerCubeReflector(const int prescaler, ClockGenerator* clock_gen, const Dynamics* dynamics);
+  CornerCubeReflector(const Dynamics* dynamics) {
+    normal_direction_c_[0] = 0.0;
+    normal_direction_c_[1] = 0.0;
+    normal_direction_c_[2] = 1.0;
+    reflectable_angle_rad_ = 0.1;
+
+    libra::Quaternion q_b2c(0.0, 1.0, 0.0, 1.0);
+    libra::Vector<3> position_b2c_m;
+    position_b2c_m[0] = 0.5;
+    position_b2c_m[1] = 0.0;
+    position_b2c_m[2] = 0.0;
+    dual_quaternion_c2b_ = libra::TranslationFirstDualQuaternion(-position_b2c_m, q_b2c.Conjugate()).QuaternionConjugate();
+  }
   /**
    * @fn ~CornerCubeReflector
    * @brief Destructor
    */
   ~CornerCubeReflector() {}
-
-  // ComponentBase override function
-  /**
-   * @fn MainRoutine
-   * @brief Main routine
-   */
-  void MainRoutine(int count);
-
-  // Override ILoggable
-  /**
-   * @fn GetLogHeader
-   * @brief Override GetLogHeader function of ILoggable
-   */
-  virtual std::string GetLogHeader() const;
-  /**
-   * @fn GetLogValue
-   * @brief Override GetLogValue function of ILoggable
-   */
-  virtual std::string GetLogValue() const;
 
   inline libra::Vector<3> GetReflectorPosition_i_m() const {
     libra::Vector<3> spacecraft_position_i2b_m = dynamics_->GetOrbit().GetPosition_i_m();
@@ -87,9 +78,6 @@ class CornerCubeReflector : public Component, public ILoggable {
   libra::Vector<3> normal_direction_c_{0.0};                   //!< Reflection surface normal direction vector @ component frame
   double reflectable_angle_rad_;                               //!< Reflectable half angle from the normal direction [rad]
   libra::TranslationFirstDualQuaternion dual_quaternion_c2b_;  //!< Dual quaternion from body to component frame
-
-  libra::Vector<3> reflector_position_i_m_{0.0};  //!< Position of reflector @ inertia frame [m]
-  libra::Vector<3> normal_direction_i_{0.0};
 
   // Reference
   const Dynamics* dynamics_;
