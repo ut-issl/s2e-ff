@@ -51,6 +51,9 @@ class LaserDistanceMeter : public Component, public ILoggable {
    */
   virtual std::string GetLogValue() const;
 
+  inline double GetObservedDistance_m() const { return observed_distance_m_; }
+  inline bool GetIsReflected() const { return is_reflected_; }
+
  protected:
   libra::Vector<3> laser_emitting_direction_c_;                //!< Laser emitting direction @ component frame
   double emission_angle_rad_;                                  //!< Emission half angle from the normal direction [rad]
