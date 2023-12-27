@@ -26,6 +26,7 @@ class FfCase : public SimulationCase {
  private:
   std::vector<FfSat*> satellites_;
   RelativeInformation relative_information_;
+  FfInterSpacecraftCommunication ff_isc_;
 
   /**
    * @fn InitializeTargetObjects

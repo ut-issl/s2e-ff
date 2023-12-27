@@ -10,6 +10,8 @@
 #include <environment/local/local_environment.hpp>
 #include <simulation/spacecraft/installed_components.hpp>
 
+#include "../case/ff_inter_spacecraft_communication.hpp"
+
 // include for components
 #include <components/ideal/force_generator.hpp>
 #include <components/real/cdh/on_board_computer.hpp>
@@ -17,6 +19,7 @@
 #include "../../components/aocs/initialize_relative_distance_sensor.hpp"
 #include "../../components/aocs/initialize_relative_position_sensor.hpp"
 #include "../../components/aocs/initialize_relative_velocity_sensor.hpp"
+#include "../../components/aocs/laser_distance_meter.hpp"
 #include "../../components/ideal/initialize_relative_attitude_controller.hpp"
 
 /**
@@ -30,7 +33,8 @@ class FfComponents : public InstalledComponents {
    * @brief Constructor
    */
   FfComponents(const Dynamics* dynamics, const Structure* structure, const LocalEnvironment* local_env, const GlobalEnvironment* glo_env,
-               const SimulationConfiguration* config, ClockGenerator* clock_gen, const RelativeInformation* rel_info);
+               const SimulationConfiguration* config, ClockGenerator* clock_gen, const RelativeInformation* rel_info,
+               FfInterSpacecraftCommunication& inter_spacecraft_communication);
   /**
    * @fn ~FfComponents
    * @brief Destructor
@@ -62,6 +66,7 @@ class FfComponents : public InstalledComponents {
   RelativeDistanceSensor* relative_distance_sensor_;  //!< Example of Relative distance sensor
   RelativePositionSensor* relative_position_sensor_;  //!< Example of Relative position sensor
   RelativeVelocitySensor* relative_velocity_sensor_;  //!< Example of Relative velocity sensor
+  LaserDistanceMeter* laser_distance_meter_;
   // Actuators
   ForceGenerator* force_generator_;                           //!< Example of force generator
   RelativeAttitudeController* relative_attitude_controller_;  //!< Example of attitude controller
@@ -73,6 +78,7 @@ class FfComponents : public InstalledComponents {
   const GlobalEnvironment* glo_env_;       //!< Global environment information
   const SimulationConfiguration* config_;  //!< Simulation settings
   const RelativeInformation* rel_info_;    //!< Relative information
+  FfInterSpacecraftCommunication& inter_spacecraft_communication_;
 };
 
 #endif  // S2E_FF_SIMULATION_SPACECRAFT_FF_COMPONENTS_HPP_
