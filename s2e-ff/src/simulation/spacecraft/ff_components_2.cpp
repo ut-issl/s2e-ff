@@ -27,6 +27,15 @@ FfComponents2::FfComponents2(const Dynamics* dynamics, const Structure* structur
     corner_cube_reflectors_.push_back(new CornerCubeReflector(file_name, dynamics_, id));
   }
   inter_spacecraft_communication.SetCornerCubeReflector(corner_cube_reflectors_);
+  
+  file_name = sat_file.ReadString("COMPONENT_FILES", "laser_emitter_file");
+  config_->main_logger_->CopyFileToLogDirectory(file_name);
+  IniAccess laser_emitter_file(file_name);
+  size_t number_of_laser_emitters = laser_emitter_file.ReadInt("GENERAL", "number_of_laser_emitters");
+  for (size_t id = 0; id < number_of_laser_emitters; id++) {
+    laser_emitters_.push_back(new LaserEmitter(file_name, dynamics_, id));
+  }
+  inter_spacecraft_communication.SetLaserEmitter(laser_emitters_);
 
   // Debug for actuator output
   libra::Vector<3> force_N;

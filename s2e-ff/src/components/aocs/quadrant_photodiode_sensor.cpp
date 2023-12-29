@@ -35,11 +35,11 @@ void QuadrantPhotodiodeSensor::MainRoutine(int count) {
   for (size_t laser_id = 0; laser_id < number_of_laser_emitters; laser_id++) {
     // Get laser information
     libra::Vector<3> laser_position_i_m = inter_spacecraft_communication_.GetLaserEmitter(laser_id).GetLaserPosition_i_m();
-    libra::Vector<3> laser_normal_direction_i = inter_spacecraft_communication_.GetLaserEmitter(laser_id).GetNormalDirection_i();
+    libra::Vector<3> laser_emitting_direction_i = inter_spacecraft_communication_.GetLaserEmitter(laser_id).GetEmittingDirection_i();
 
     // Conversion
     libra::Vector<3> laser_position_c_m = dual_quaternion_c2i.InverseTransformVector(laser_position_i_m);
-    libra::Vector<3> laser_emitting_direction_c = dual_quaternion_c2i.GetRotationQuaternion().InverseFrameConversion(laser_normal_direction_i);
+    libra::Vector<3> laser_emitting_direction_c = dual_quaternion_c2i.GetRotationQuaternion().InverseFrameConversion(laser_emitting_direction_i);
 
     // Calc relative position displacement (horizontal direction and vertical direction)
     if (libra::InnerProduct(qpd_normal_direction_c_, -laser_emitting_direction_c) <

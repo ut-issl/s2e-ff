@@ -17,6 +17,7 @@
 #include <components/real/cdh/on_board_computer.hpp>
 
 #include "../../components/aocs/corner_cube_reflector.hpp"
+#include "../../components/aocs/laser_emitter.hpp"
 #include "../../components/aocs/initialize_relative_distance_sensor.hpp"
 #include "../../components/aocs/initialize_relative_position_sensor.hpp"
 #include "../../components/aocs/relative_attitude_sensor.hpp"
@@ -62,6 +63,7 @@ class FfComponents2 : public InstalledComponents {
   // Components
   OnBoardComputer* obc_;  //!< On board computer
   std::vector<CornerCubeReflector*> corner_cube_reflectors_;
+  std::vector<LaserEmitter*> laser_emitters_;
 
   // References
   const Dynamics* dynamics_;               //!< Dynamics information of the spacecraft

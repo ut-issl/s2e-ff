@@ -45,7 +45,7 @@ class LaserEmitter {
     return dual_quaternion_c2i.TransformVector(libra::Vector<3>{0.0});
   }
 
-  inline libra::Vector<3> GetNormalDirection_i() const {
+  inline libra::Vector<3> GetEmittingDirection_i() const {
     // Body -> Inertial frame
     libra::Vector<3> spacecraft_position_i2b_m = dynamics_->GetOrbit().GetPosition_i_m();
     libra::Quaternion spacecraft_attitude_i2b = dynamics_->GetAttitude().GetQuaternion_i2b();
@@ -55,16 +55,16 @@ class LaserEmitter {
     libra::TranslationFirstDualQuaternion dual_quaternion_c2i = dual_quaternion_i2b.QuaternionConjugate() * dual_quaternion_c2b_;
 
     libra::Vector<3> laser_position_i_m = dual_quaternion_c2i.TransformVector(libra::Vector<3>{0.0});
-    libra::Vector<3> normal_direction_i = dual_quaternion_c2i.TransformVector(normal_direction_c_);
-    normal_direction_i -= laser_position_i_m;
+    libra::Vector<3> emitting_direction_i = dual_quaternion_c2i.TransformVector(emitting_direction_c_);
+    emitting_direction_i -= laser_position_i_m;
 
-    return normal_direction_i;
+    return emitting_direction_i;
   }
 
   inline double GetEmmissionAngle_rad() const { return emission_angle_rad_; }
 
  protected:
-  libra::Vector<3> normal_direction_c_{0.0};                   //!< Reflection surface normal direction vector @ component frame
+  libra::Vector<3> emitting_direction_c_{0.0};                   //!< Reflection surface normal direction vector @ component frame
   double emission_angle_rad_ = 0.0;                         //!< Reflectable half angle from the normal direction [rad]
   libra::TranslationFirstDualQuaternion dual_quaternion_c2b_;  //!< Dual quaternion from body to component frame
 
@@ -83,7 +83,7 @@ class LaserEmitter {
     ini_file.ReadVector(section_name.c_str(), "position_b_m", position_b_m);
     dual_quaternion_c2b_ = libra::TranslationFirstDualQuaternion(-position_b_m, quaternion_b2c.Conjugate()).QuaternionConjugate();
 
-    ini_file.ReadVector(section_name.c_str(), "normal_direction_c", normal_direction_c_);
+    ini_file.ReadVector(section_name.c_str(), "emitting_direction_c", emitting_direction_c_);
     emission_angle_rad_ = ini_file.ReadDouble(section_name.c_str(), "emission_angle_rad");
   }
 };

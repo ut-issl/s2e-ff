@@ -41,6 +41,9 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
   const std::string ldm_file = sat_file.ReadString(section_name.c_str(), "Laser_distance_meter_file");
   laser_distance_meter_ = new LaserDistanceMeter(1, clock_gen, ldm_file, *dynamics_, inter_spacecraft_communication_);
 
+  const std::string qpd_file = sat_file.ReadString(section_name.c_str(), "quadrant_photodiode_sensor_file");
+  quadrant_photodiode_sensor_ = new QuadrantPhotodiodeSensor(1, clock_gen, ldm_file, *dynamics_, inter_spacecraft_communication_);
+
   const std::string force_generator_file = sat_file.ReadString(section_name.c_str(), "force_generator_file");
   force_generator_ = new ForceGenerator(InitializeForceGenerator(clock_gen, force_generator_file, dynamics_));
 
@@ -64,6 +67,7 @@ FfComponents::~FfComponents() {
   delete force_generator_;
   delete relative_attitude_controller_;
   delete laser_distance_meter_;
+  delete quadrant_photodiode_sensor_;
   // OBC must be deleted the last since it has com ports
   delete obc_;
 }
@@ -87,4 +91,5 @@ void FfComponents::LogSetup(Logger& logger) {
   logger.AddLogList(relative_velocity_sensor_);
   logger.AddLogList(force_generator_);
   logger.AddLogList(laser_distance_meter_);
+  logger.AddLogList(quadrant_photodiode_sensor_);
 }
