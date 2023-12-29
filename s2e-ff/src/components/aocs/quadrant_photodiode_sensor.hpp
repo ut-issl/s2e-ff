@@ -58,7 +58,6 @@ class QuadrantPhotodiodeSensor : public Component, public ILoggable {
   inline bool GetIsReflected() const { return is_received_laser_; }
 
  protected:
-  libra::Vector<3> laser_emitting_direction_c_;                //!< Laser emitting direction @ component frame
   libra::Vector<3> qpd_horizontal_direction_c_;                //!< Quadrant photodiode horizontal direction @ component frame
   libra::Vector<3> qpd_vertical_direction_c_;                  //!< Quadrant photodiode vertical direction @ component frame
   libra::Vector<3> qpd_normal_direction_c_;                    //!< Quadrant photodiode normal direction @ component frame

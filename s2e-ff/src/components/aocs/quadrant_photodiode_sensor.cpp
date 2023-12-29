@@ -41,17 +41,21 @@ void QuadrantPhotodiodeSensor::MainRoutine(int count) {
     libra::Vector<3> laser_position_c_m = dual_quaternion_c2i.InverseTransformVector(laser_position_i_m);
     libra::Vector<3> laser_emitting_direction_c = dual_quaternion_c2i.GetRotationQuaternion().InverseFrameConversion(laser_emitting_direction_i);
 
+    double cos_theta = libra::InnerProduct(qpd_normal_direction_c_, -laser_emitting_direction_c);
+    if (cos_theta > 1.0) cos_theta = 1.0;
+    if (cos_theta < -1.0) cos_theta = -1.0;
+    double laser_received_angle_rad = cos_theta;
+
     // Calc relative position displacement (horizontal direction and vertical direction)
-    if (libra::InnerProduct(qpd_normal_direction_c_, -laser_emitting_direction_c) <
-        qpd_normal_direction_c_.CalcNorm() * laser_emitting_direction_c.CalcNorm() * cos(qpd_laser_recieve_angle_rad_)) {
+    if (acos(laser_received_angle_rad) > qpd_laser_recieve_angle_rad_) {
       continue;
     }
     libra::Vector<3> laser_received_position_c_m = CalcLaserReceivedPosition(laser_position_c_m, libra::Vector<3>{0.0}, qpd_normal_direction_c_, laser_emitting_direction_c);
     horizontal_displacement_m = CalcDisplacement(laser_received_position_c_m, libra::Vector<3>{0.0}, qpd_horizontal_direction_c_);
     vertical_displacement_m = CalcDisplacement(laser_received_position_c_m, libra::Vector<3>{0.0}, qpd_vertical_direction_c_);
 
-    if (laser_emitting_direction_c.CalcNorm() < actual_distance_m_) {
-      actual_distance_m_ = laser_emitting_direction_c.CalcNorm();
+    if (laser_position_c_m.CalcNorm() < actual_distance_m_) {
+      actual_distance_m_ = laser_position_c_m.CalcNorm();
     }
     if (fabs(horizontal_displacement_m) < fabs(actual_horizontal_displacement_m_)) {
       actual_horizontal_displacement_m_ = horizontal_displacement_m;
@@ -70,12 +74,6 @@ void QuadrantPhotodiodeSensor::MainRoutine(int count) {
     observed_vertical_displacement_m_ = actual_vertical_displacement_m_;
   }
 
-  if (is_received_laser_ == true) {
-    // Add noise
-    // TBW
-  } else {
-    actual_distance_m_ = 0.0;
-  }
 }
 
 std::string QuadrantPhotodiodeSensor::GetLogHeader() const {
@@ -138,7 +136,6 @@ void QuadrantPhotodiodeSensor::Initialize(const std::string file_name, const siz
   ini_file.ReadVector(section_name.c_str(), "position_b_m", position_b_m);
   dual_quaternion_c2b_ = libra::TranslationFirstDualQuaternion(-position_b_m, quaternion_b2c.Conjugate()).QuaternionConjugate();
 
-  ini_file.ReadVector(section_name.c_str(), "laser_emitting_direction_c", laser_emitting_direction_c_);
   ini_file.ReadVector(section_name.c_str(), "qpd_horizontal_direction_c", qpd_horizontal_direction_c_);
   ini_file.ReadVector(section_name.c_str(), "qpd_vertical_direction_c", qpd_vertical_direction_c_);
   qpd_normal_direction_c_ = libra::OuterProduct(qpd_horizontal_direction_c_, qpd_vertical_direction_c_);
