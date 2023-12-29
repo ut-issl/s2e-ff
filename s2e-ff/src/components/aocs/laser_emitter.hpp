@@ -54,9 +54,9 @@ class LaserEmitter {
     // Component -> Inertial frame
     libra::TranslationFirstDualQuaternion dual_quaternion_c2i = dual_quaternion_i2b.QuaternionConjugate() * dual_quaternion_c2b_;
 
-    libra::Vector<3> reflector_position_i_m = dual_quaternion_c2i.TransformVector(libra::Vector<3>{0.0});
+    libra::Vector<3> laser_position_i_m = dual_quaternion_c2i.TransformVector(libra::Vector<3>{0.0});
     libra::Vector<3> normal_direction_i = dual_quaternion_c2i.TransformVector(normal_direction_c_);
-    normal_direction_i -= reflector_position_i_m;
+    normal_direction_i -= laser_position_i_m;
 
     return normal_direction_i;
   }
