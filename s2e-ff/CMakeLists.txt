@@ -49,6 +49,8 @@ set(SOURCE_FILES
   src/components/aocs/initialize_relative_distance_sensor.cpp
   src/components/aocs/relative_position_sensor.cpp
   src/components/aocs/initialize_relative_position_sensor.cpp
+  src/components/aocs/relative_attitude_sensor.cpp
+  src/components/aocs/initialize_relative_attitude_sensor.cpp
   src/components/aocs/relative_velocity_sensor.cpp
   src/components/aocs/initialize_relative_velocity_sensor.cpp
   src/components/aocs/laser_distance_meter.cpp
