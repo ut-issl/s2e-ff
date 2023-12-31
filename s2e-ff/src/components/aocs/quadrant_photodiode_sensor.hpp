@@ -25,7 +25,7 @@ class QuadrantPhotodiodeSensor : public Component, public ILoggable {
    * @brief Constructor
    */
   QuadrantPhotodiodeSensor(const int prescaler, ClockGenerator* clock_gen, const std::string file_name, const Dynamics& dynamics,
-                     const FfInterSpacecraftCommunication& inter_spacecraft_communication, const size_t id = 0);
+                           const FfInterSpacecraftCommunication& inter_spacecraft_communication, const size_t id = 0);
   /**
    * @fn ~QuadrantPhotodiodeSensor
    * @brief Destructor
@@ -62,10 +62,10 @@ class QuadrantPhotodiodeSensor : public Component, public ILoggable {
   libra::Vector<3> qpd_vertical_direction_c_;                  //!< Quadrant photodiode vertical direction @ component frame
   libra::Vector<3> qpd_normal_direction_c_;                    //!< Quadrant photodiode normal direction @ component frame
   double qpd_laser_recieve_angle_rad_;                         //!< laser received half angle from the normal direction [rad]
-  double qpd_sensor_radius_m_;                                 //!< Quadrant photodiode sensor radius [m] 
+  double qpd_sensor_radius_m_;                                 //!< Quadrant photodiode sensor radius [m]
   libra::TranslationFirstDualQuaternion dual_quaternion_c2b_;  //!< Dual quaternion from component to body frame
 
-  bool is_received_laser_ = false;         //!< Flag to detect reflected light
+  bool is_received_laser_ = false;  //!< Flag to detect reflected light
   double actual_distance_m_ = 0.0;
   double actual_horizontal_displacement_m_ = 0.0;
   double actual_vertical_displacement_m_ = 0.0;

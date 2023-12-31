@@ -5,8 +5,9 @@
 
 #include "quadrant_photodiode_sensor.hpp"
 
-QuadrantPhotodiodeSensor::QuadrantPhotodiodeSensor(const int prescaler, ClockGenerator* clock_gen, const std::string file_name, const Dynamics& dynamics,
-                                       const FfInterSpacecraftCommunication& inter_spacecraft_communication, const size_t id)
+QuadrantPhotodiodeSensor::QuadrantPhotodiodeSensor(const int prescaler, ClockGenerator* clock_gen, const std::string file_name,
+                                                   const Dynamics& dynamics, const FfInterSpacecraftCommunication& inter_spacecraft_communication,
+                                                   const size_t id)
     : Component(prescaler, clock_gen), dynamics_(dynamics), inter_spacecraft_communication_(inter_spacecraft_communication) {
   Initialize(file_name, id);
 }
@@ -21,7 +22,7 @@ void QuadrantPhotodiodeSensor::MainRoutine(int count) {
 
   // Component -> Inertial frame
   libra::TranslationFirstDualQuaternion dual_quaternion_c2i = dual_quaternion_i2b.QuaternionConjugate() * dual_quaternion_c2b_;
-  
+
   // Laser emitter info
   size_t number_of_laser_emitters = inter_spacecraft_communication_.GetNumberOfLasers();
   actual_distance_m_ = 1e30;
@@ -50,7 +51,8 @@ void QuadrantPhotodiodeSensor::MainRoutine(int count) {
     if (acos(laser_received_angle_rad) > qpd_laser_recieve_angle_rad_) {
       continue;
     }
-    libra::Vector<3> laser_received_position_c_m = CalcLaserReceivedPosition(laser_position_c_m, libra::Vector<3>{0.0}, qpd_normal_direction_c_, laser_emitting_direction_c);
+    libra::Vector<3> laser_received_position_c_m =
+        CalcLaserReceivedPosition(laser_position_c_m, libra::Vector<3>{0.0}, qpd_normal_direction_c_, laser_emitting_direction_c);
     horizontal_displacement_m = CalcDisplacement(laser_received_position_c_m, libra::Vector<3>{0.0}, qpd_horizontal_direction_c_);
     vertical_displacement_m = CalcDisplacement(laser_received_position_c_m, libra::Vector<3>{0.0}, qpd_vertical_direction_c_);
 
@@ -63,7 +65,7 @@ void QuadrantPhotodiodeSensor::MainRoutine(int count) {
     if (fabs(vertical_displacement_m) < fabs(actual_vertical_displacement_m_)) {
       actual_vertical_displacement_m_ = vertical_displacement_m;
     }
-    
+
     if (pow(fabs(horizontal_displacement_m * vertical_displacement_m), 0.5) > 2 * qpd_sensor_radius_m_) {
       continue;
     }
@@ -73,7 +75,6 @@ void QuadrantPhotodiodeSensor::MainRoutine(int count) {
     observed_horizontal_displacement_m_ = actual_horizontal_displacement_m_;
     observed_vertical_displacement_m_ = actual_vertical_displacement_m_;
   }
-
 }
 
 std::string QuadrantPhotodiodeSensor::GetLogHeader() const {
@@ -99,7 +100,7 @@ std::string QuadrantPhotodiodeSensor::GetLogValue() const {
 }
 
 double QuadrantPhotodiodeSensor::CalcDistanceBwPointAndLine(libra::Vector<3> point_position, libra::Vector<3> position_on_line,
-                                                      libra::Vector<3> line_direction) {
+                                                            libra::Vector<3> line_direction) {
   libra::Vector<3> q_p = point_position - position_on_line;
   double temp = libra::InnerProduct(q_p, line_direction) / pow(line_direction.CalcNorm(), 2.0);
   libra::Vector<3> position = q_p - temp * line_direction;
@@ -107,7 +108,7 @@ double QuadrantPhotodiodeSensor::CalcDistanceBwPointAndLine(libra::Vector<3> poi
 }
 
 libra::Vector<3> QuadrantPhotodiodeSensor::CalcLaserReceivedPosition(libra::Vector<3> point_position, libra::Vector<3> origin_position,
-                                                            libra::Vector<3> plane_normal_direction, libra::Vector<3> point_line_direction) {
+                                                                     libra::Vector<3> plane_normal_direction, libra::Vector<3> point_line_direction) {
   libra::Vector<3> q_p = point_position - origin_position;
   double temp1 = libra::InnerProduct(q_p, plane_normal_direction) / pow(plane_normal_direction.CalcNorm(), 2.0);
   libra::Vector<3> position_temp1 = q_p - temp1 * plane_normal_direction;
