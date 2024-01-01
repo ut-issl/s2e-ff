@@ -22,7 +22,7 @@ class RelativeAttitudeSensor : public Component, public Sensor<3>, public ILogga
    * @brief Constructor
    */
   RelativeAttitudeSensor(const int prescaler, ClockGenerator* clock_gen, Sensor& sensor_base, const int target_sat_id, const int reference_sat_id,
-                         const RelativeInformation& rel_info, const Dynamics& dynamics);
+                         const RelativeInformation& rel_info);
   /**
    * @fn ~RelativeAttitudeSensor
    * @brief Destructor
@@ -65,11 +65,9 @@ class RelativeAttitudeSensor : public Component, public Sensor<3>, public ILogga
 
   // References
   const RelativeInformation& rel_info_;  //!< Relative information
-  const Dynamics& dynamics_;             //!< Dynamics
 };
 
 RelativeAttitudeSensor InitializeRelativeAttitudeSensor(ClockGenerator* clock_gen, const std::string file_name, const double compo_step_time_s,
-                                                        const RelativeInformation& rel_info, const Dynamics& dynamics,
-                                                        const int reference_sat_id_input = -1);
+                                                        const RelativeInformation& rel_info, const int reference_sat_id_input = -1);
 
 #endif  // S2E_COMPONENTS_AOCS_RELATIVE_ATTITUDE_SENSOR_HPP_

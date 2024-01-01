@@ -32,7 +32,7 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
 
   const std::string rel_att_file = sat_file.ReadString(section_name.c_str(), "relative_attitude_sensor_file");
   relative_attitude_sensor_ =
-      new RelativeAttitudeSensor(InitializeRelativeAttitudeSensor(clock_gen, rel_att_file, compo_step_sec, *rel_info_, *dynamics_, sat_id));
+      new RelativeAttitudeSensor(InitializeRelativeAttitudeSensor(clock_gen, rel_att_file, compo_step_sec, *rel_info_, sat_id));
 
   const std::string rel_vel_file = sat_file.ReadString(section_name.c_str(), "relative_velocity_sensor_file");
   relative_velocity_sensor_ =
