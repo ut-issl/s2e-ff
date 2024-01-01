@@ -61,7 +61,8 @@ class RelativeAttitudeSensor : public Component, public Sensor<3>, public ILogga
 
   // Measured value
   libra::Quaternion measured_target_attitude_rb2tb_quaternion_;  //!< Measured quaternion of target body from reference body
-  libra::Vector<3> measured_target_attitude_rb2tb_rad_{0.0};     //!< Measured attitude of target body in BODY frame [m]
+  libra::Vector<3> measured_target_attitude_rb2tb_rad_{
+      0.0};  //!< Measured attitude of target body in BODY frame [rad], 3-2-1 Euler angle (1: roll, 2: pitch, 3: yaw order)
 
   // References
   const RelativeInformation& rel_info_;  //!< Relative information
