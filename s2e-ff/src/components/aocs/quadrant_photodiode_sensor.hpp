@@ -61,7 +61,7 @@ class QuadrantPhotodiodeSensor : public Component, public ILoggable {
   libra::Vector<3> qpd_horizontal_direction_c_;                //!< Quadrant photodiode horizontal direction @ component frame
   libra::Vector<3> qpd_vertical_direction_c_;                  //!< Quadrant photodiode vertical direction @ component frame
   libra::Vector<3> qpd_normal_direction_c_;                    //!< Quadrant photodiode normal direction @ component frame
-  double qpd_laser_recieve_angle_rad_;                         //!< laser received half angle from the normal direction [rad]
+  double qpd_laser_received_angle_rad_;                        //!< laser received half angle from the normal direction [rad]
   double qpd_sensor_radius_m_;                                 //!< Quadrant photodiode sensor radius [m]
   libra::TranslationFirstDualQuaternion dual_quaternion_c2b_;  //!< Dual quaternion from component to body frame
 
@@ -72,6 +72,8 @@ class QuadrantPhotodiodeSensor : public Component, public ILoggable {
   double observed_horizontal_displacement_m_ = 0.0;  //!< Observed horizontal displacement
   double observed_vertical_displacement_m_ = 0.0;    //!< Observed vertical displacement
 
+  libra::Vector<3> qpd_sensor_output_V_;
+
   // Reference
   const Dynamics& dynamics_;
   const FfInterSpacecraftCommunication& inter_spacecraft_communication_;
@@ -80,6 +82,8 @@ class QuadrantPhotodiodeSensor : public Component, public ILoggable {
   libra::Vector<3> CalcLaserReceivedPosition(libra::Vector<3> point_position, libra::Vector<3> origin_position,
                                              libra::Vector<3> plane_normal_direction, libra::Vector<3> point_line_direction);
   double CalcDisplacement(libra::Vector<3> point_position, libra::Vector<3> origin_position, libra::Vector<3> displacement_direction);
+
+  void CalcSensorOutput(double laser_power_W, double laser_beam_radius, double qpd_horizontal_displacement_m, double qpd_vertical_displacement_m);
 
   void Initialize(const std::string file_name, const size_t id = 0);
 };
