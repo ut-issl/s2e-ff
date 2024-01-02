@@ -61,12 +61,20 @@ class LaserEmitter {
     return emitting_direction_i;
   }
 
-  inline double GetEmmissionAngle_rad() const { return emission_angle_rad_; }
+  inline double GetEmissionAngle_rad() const { return emission_angle_rad_; }
+
+  inline double GetBeamWaist_mm() const { return laser_beam_waist_mm_; }
+  inline double GetRayleighRange_m() const { return laser_rayleigh_range_m_; }
+  inline double GetRayleighRangeOffset_m() const { return laser_rayleigh_range_offset_m_; }
 
  protected:
-  libra::Vector<3> emitting_direction_c_{0.0};                   //!< Reflection surface normal direction vector @ component frame
-  double emission_angle_rad_ = 0.0;                         //!< Reflectable half angle from the normal direction [rad]
+  libra::Vector<3> emitting_direction_c_{0.0};                 //!< Laser emitting direction vector @ component frame
+  double emission_angle_rad_ = 0.0;                            //!< Laser emitting angle from the emitting direction [rad]
   libra::TranslationFirstDualQuaternion dual_quaternion_c2b_;  //!< Dual quaternion from body to component frame
+
+  double laser_beam_waist_mm_ = 0.0;             //!< Beam waist of the laser [mm]
+  double laser_rayleigh_range_m_ = 0.0;          //!< Rayleigh range of the laser [m]
+  double laser_rayleigh_range_offset_m_ = 4.65;  //!< Rayleigh range position offset of the laser [m]
 
   // Reference
   const Dynamics* dynamics_;
@@ -85,6 +93,10 @@ class LaserEmitter {
 
     ini_file.ReadVector(section_name.c_str(), "emitting_direction_c", emitting_direction_c_);
     emission_angle_rad_ = ini_file.ReadDouble(section_name.c_str(), "emission_angle_rad");
+
+    laser_beam_waist_mm_ = ini_file.ReadDouble(section_name.c_str(), "laser_beam_waist_mm");
+    laser_rayleigh_range_m_ = ini_file.ReadDouble(section_name.c_str(), "laser_rayleigh_range_m");
+    laser_rayleigh_range_offset_m_ = ini_file.ReadDouble(section_name.c_str(), "laser_rayleigh_range_offset_m");
   }
 };
 
