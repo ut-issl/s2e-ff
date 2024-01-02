@@ -22,7 +22,7 @@ class RelativeAttitudeSensor : public Component, public Sensor<3>, public ILogga
    * @brief Constructor
    */
   RelativeAttitudeSensor(const int prescaler, ClockGenerator* clock_gen, Sensor& sensor_base, const int target_sat_id, const int reference_sat_id,
-                         const RelativeInformation& rel_info);
+                         const RelativeInformation& rel_info, const double standard_deviation_rad);
   /**
    * @fn ~RelativeAttitudeSensor
    * @brief Destructor
@@ -60,9 +60,13 @@ class RelativeAttitudeSensor : public Component, public Sensor<3>, public ILogga
   const int reference_sat_id_;  //!< Reference satellite ID
 
   // Measured value
-  libra::Quaternion measured_target_attitude_rb2tb_quaternion_;  //!< Measured quaternion of target body from reference body
+  libra::Quaternion measured_target_attitude_rb2tb_quaternion_ = {0.0, 0.0, 0.0, 1.0};  //!< Measured quaternion of target body from reference body
   libra::Vector<3> measured_target_attitude_rb2tb_rad_{
       0.0};  //!< Measured attitude of target body in BODY frame [rad], 3-2-1 Euler angle (1: roll, 2: pitch, 3: yaw order)
+
+  // Noises
+  libra::NormalRand angle_noise_;      //!< Normal random for magnitude noise
+  libra::NormalRand direction_noise_;  //!< Normal random for direction noise
 
   // References
   const RelativeInformation& rel_info_;  //!< Relative information

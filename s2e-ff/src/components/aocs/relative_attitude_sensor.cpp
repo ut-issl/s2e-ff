@@ -9,19 +9,34 @@
 #include <library/initialize/initialize_file_access.hpp>
 
 RelativeAttitudeSensor::RelativeAttitudeSensor(const int prescaler, ClockGenerator* clock_gen, Sensor& sensor_base, const int target_sat_id,
-                                               const int reference_sat_id, const RelativeInformation& rel_info)
-    : Component(prescaler, clock_gen), Sensor(sensor_base), target_sat_id_(target_sat_id), reference_sat_id_(reference_sat_id), rel_info_(rel_info) {}
+                                               const int reference_sat_id, const RelativeInformation& rel_info, const double standard_deviation_rad)
+    : Component(prescaler, clock_gen),
+      Sensor(sensor_base),
+      target_sat_id_(target_sat_id),
+      reference_sat_id_(reference_sat_id),
+      rel_info_(rel_info),
+      angle_noise_(0.0, standard_deviation_rad) {
+  direction_noise_.SetParameters(0.0, 1.0);
+}
 
 RelativeAttitudeSensor::~RelativeAttitudeSensor() {}
 
 void RelativeAttitudeSensor::MainRoutine(int count) {
   UNUSED(count);
+  // Error calculation
+  libra::Vector<3> random_direction;
+  random_direction[0] = direction_noise_;
+  random_direction[1] = direction_noise_;
+  random_direction[2] = direction_noise_;
+  random_direction = random_direction.CalcNormalizedVector();
+
+  double error_angle_rad = angle_noise_;
+  libra::Quaternion error_quaternion(random_direction, error_angle_rad);
 
   // Get true value
   measured_target_attitude_rb2tb_quaternion_ = rel_info_.GetRelativeAttitudeQuaternion(target_sat_id_, reference_sat_id_);
+  measured_target_attitude_rb2tb_quaternion_ = error_quaternion * measured_target_attitude_rb2tb_quaternion_;
   measured_target_attitude_rb2tb_rad_ = measured_target_attitude_rb2tb_quaternion_.ConvertToEuler();
-  measured_target_attitude_rb2tb_rad_ = Measure(measured_target_attitude_rb2tb_rad_);
-  measured_target_attitude_rb2tb_quaternion_ = libra::Quaternion::ConvertFromEuler(measured_target_attitude_rb2tb_rad_);
 }
 
 std::string RelativeAttitudeSensor::GetLogHeader() const {
@@ -54,6 +69,9 @@ RelativeAttitudeSensor InitializeRelativeAttitudeSensor(ClockGenerator* clock_ge
   int prescaler = ini_file.ReadInt(section, "prescaler");
   if (prescaler <= 1) prescaler = 1;
 
+  double error_angle_standard_deviation_deg = ini_file.ReadDouble(section, "error_angle_standard_deviation_deg");
+  double error_angle_standard_deviation_rad = libra::deg_to_rad * error_angle_standard_deviation_deg;
+
   // RelativeAttitudeSensor
   int target_sat_id = ini_file.ReadInt(section, "target_sat_id");
   int reference_sat_id = ini_file.ReadInt(section, "reference_sat_id");
@@ -64,7 +82,8 @@ RelativeAttitudeSensor InitializeRelativeAttitudeSensor(ClockGenerator* clock_ge
   // SensorBase
   Sensor<3> sensor_base = ReadSensorInformation<3>(file_name, compo_step_time_s * (double)(prescaler), section, "rad");
 
-  RelativeAttitudeSensor relative_attitude_sensor(prescaler, clock_gen, sensor_base, target_sat_id, reference_sat_id, rel_info);
+  RelativeAttitudeSensor relative_attitude_sensor(prescaler, clock_gen, sensor_base, target_sat_id, reference_sat_id, rel_info,
+                                                  error_angle_standard_deviation_rad);
 
   return relative_attitude_sensor;
 }
