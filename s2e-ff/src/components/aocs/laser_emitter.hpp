@@ -62,19 +62,25 @@ class LaserEmitter {
   }
 
   inline double GetEmissionAngle_rad() const { return emission_angle_rad_; }
+  inline double GetEmissionPower_W() const { return emission_power_W_; }
+  inline double GetBeamWaist_mm() const { return beam_waist_mm_; }
+  inline double GetRayleighRange_m() const { return rayleigh_range_m_; }
+  inline double GetRayleighRangeOffset_m() const { return rayleigh_range_offset_m_; }
 
-  inline double GetBeamWaist_mm() const { return laser_beam_waist_mm_; }
-  inline double GetRayleighRange_m() const { return laser_rayleigh_range_m_; }
-  inline double GetRayleighRangeOffset_m() const { return laser_rayleigh_range_offset_m_; }
+  inline double GetBeamRadius_mm(const double emission_distance_m) const {
+    double beam_radius_mm = beam_waist_mm_ * pow(1 + pow((emission_distance_m - rayleigh_range_offset_m_) / rayleigh_range_m_, 2.0), 0.5);
+    return beam_radius_mm;
+  }
 
  protected:
   libra::Vector<3> emitting_direction_c_{0.0};                 //!< Laser emitting direction vector @ component frame
   double emission_angle_rad_ = 0.0;                            //!< Laser emitting angle from the emitting direction [rad]
   libra::TranslationFirstDualQuaternion dual_quaternion_c2b_;  //!< Dual quaternion from body to component frame
 
-  double laser_beam_waist_mm_ = 0.0;             //!< Beam waist of the laser [mm]
-  double laser_rayleigh_range_m_ = 0.0;          //!< Rayleigh range of the laser [m]
-  double laser_rayleigh_range_offset_m_ = 4.65;  //!< Rayleigh range position offset of the laser [m]
+  double emission_power_W_ = 0.0;          //!< Laser emission power [W]
+  double beam_waist_mm_ = 0.0;             //!< Beam waist of the laser [mm]
+  double rayleigh_range_m_ = 0.0;          //!< Rayleigh range of the laser [m]
+  double rayleigh_range_offset_m_ = 4.65;  //!< Rayleigh range position offset of the laser [m]
 
   // Reference
   const Dynamics* dynamics_;
@@ -93,10 +99,11 @@ class LaserEmitter {
 
     ini_file.ReadVector(section_name.c_str(), "emitting_direction_c", emitting_direction_c_);
     emission_angle_rad_ = ini_file.ReadDouble(section_name.c_str(), "emission_angle_rad");
+    emission_power_W_ = ini_file.ReadDouble(section_name.c_str(), "emission_power_W");
 
-    laser_beam_waist_mm_ = ini_file.ReadDouble(section_name.c_str(), "laser_beam_waist_mm");
-    laser_rayleigh_range_m_ = ini_file.ReadDouble(section_name.c_str(), "laser_rayleigh_range_m");
-    laser_rayleigh_range_offset_m_ = ini_file.ReadDouble(section_name.c_str(), "laser_rayleigh_range_offset_m");
+    beam_waist_mm_ = ini_file.ReadDouble(section_name.c_str(), "beam_waist_mm");
+    rayleigh_range_m_ = ini_file.ReadDouble(section_name.c_str(), "rayleigh_range_m");
+    rayleigh_range_offset_m_ = ini_file.ReadDouble(section_name.c_str(), "rayleigh_range_offset_m");
   }
 };
 
