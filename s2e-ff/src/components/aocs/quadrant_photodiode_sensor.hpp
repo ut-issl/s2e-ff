@@ -74,6 +74,10 @@ class QuadrantPhotodiodeSensor : public Component, public ILoggable {
 
   libra::Vector<3> qpd_sensor_output_V_;
 
+  std::vector<double> qpd_displacement_reference_list_mm_;
+  std::vector<double> qpd_ratio_y_ref_reference_list_;
+  std::vector<double> qpd_ratio_z_ref_reference_list_;
+
   // Reference
   const Dynamics& dynamics_;
   const FfInterSpacecraftCommunication& inter_spacecraft_communication_;

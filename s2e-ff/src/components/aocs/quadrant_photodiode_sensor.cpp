@@ -162,6 +162,18 @@ void QuadrantPhotodiodeSensor::CalcSensorOutput(double laser_power_W, double las
 // Functions
 void QuadrantPhotodiodeSensor::Initialize(const std::string file_name, const size_t id) {
   IniAccess ini_file(file_name);
+  std::string file_path = ini_file.ReadString("GENERAL", "qpd_sensor_file_directory");
+  std::string filepath_qpd_sensor_reference = file_path + "qpd_sensor_reference.csv";
+  IniAccess conf_qpd_sensor_reference(filepath_qpd_sensor_reference);
+  std::vector<std::vector<std::string>> qpd_sensor_reference_str_list;
+  conf_qpd_sensor_reference.ReadCsvString(qpd_sensor_reference_str_list, 1000);
+
+  for (size_t index = 1; index < qpd_sensor_reference_str_list.size(); ++index) {  // first row is for labels
+    qpd_displacement_reference_list_mm_.push_back(stod(qpd_sensor_reference_str_list[index][0]));
+    qpd_ratio_y_ref_reference_list_.push_back(stod(qpd_sensor_reference_str_list[index][1]));
+    qpd_ratio_z_ref_reference_list_.push_back(stod(qpd_sensor_reference_str_list[index][2]));
+  }
+
   std::string name = "QUADRANT_PHOTODIODE_SENSOR_";
   const std::string section_name = name + std::to_string(static_cast<long long>(id));
 
