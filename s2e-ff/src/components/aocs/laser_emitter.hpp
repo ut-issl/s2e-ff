@@ -14,7 +14,7 @@
 
 /**
  * @class LaserEmitter
- * @brief Corner Cube Reflector
+ * @brief Laser Emitter
  */
 class LaserEmitter {
  public:
@@ -63,12 +63,12 @@ class LaserEmitter {
 
   inline double GetEmissionAngle_rad() const { return emission_angle_rad_; }
   inline double GetEmissionPower_W() const { return emission_power_W_; }
-  inline double GetBeamWaist_m() const { return beam_waist_m_; }
-  inline double GetRayleighRange_m() const { return rayleigh_range_m_; }
-  inline double GetRayleighRangeOffset_m() const { return rayleigh_range_offset_m_; }
+  inline double GetRadiusBeamWaist_m() const { return radius_beam_waist_m_; }
+  inline double GetRayleighLength_m() const { return rayleigh_length_m_; }
+  inline double GetRayleighLengthOffset_m() const { return rayleigh_length_offset_m_; }
 
-  inline double GetBeamRadius_m(const double emission_distance_m) const {
-    double beam_radius_m = beam_waist_m_ * pow(1 + pow((emission_distance_m - rayleigh_range_offset_m_) / rayleigh_range_m_, 2.0), 0.5);
+  inline double GetBeamWidthRadius_m(const double emission_distance_m) const {
+    double beam_radius_m = radius_beam_waist_m_ * pow(1 + pow((emission_distance_m - rayleigh_length_offset_m_) / rayleigh_length_m_, 2.0), 0.5);
     return beam_radius_m;
   }
 
@@ -77,10 +77,10 @@ class LaserEmitter {
   double emission_angle_rad_ = 0.0;                            //!< Laser emitting angle from the emitting direction [rad]
   libra::TranslationFirstDualQuaternion dual_quaternion_c2b_;  //!< Dual quaternion from body to component frame
 
-  double emission_power_W_ = 0.0;          //!< Laser emission power [W]
-  double beam_waist_m_ = 0.0;              //!< Beam waist of the laser [m]
-  double rayleigh_range_m_ = 0.0;          //!< Rayleigh range of the laser [m]
-  double rayleigh_range_offset_m_ = 4.65;  //!< Rayleigh range position offset of the laser [m]
+  double emission_power_W_ = 0.0;           //!< Laser emission power [W]
+  double radius_beam_waist_m_ = 0.0;        //!< Beam waist of the laser [m]
+  double rayleigh_length_m_ = 0.0;          //!< Rayleigh length (range) of the laser [m]
+  double rayleigh_length_offset_m_ = 4.65;  //!< Rayleigh length (range) position offset of the laser [m]
 
   // Reference
   const Dynamics* dynamics_;
@@ -101,9 +101,9 @@ class LaserEmitter {
     emission_angle_rad_ = ini_file.ReadDouble(section_name.c_str(), "emission_angle_rad");
     emission_power_W_ = ini_file.ReadDouble(section_name.c_str(), "emission_power_W");
 
-    beam_waist_m_ = ini_file.ReadDouble(section_name.c_str(), "beam_waist_m");
-    rayleigh_range_m_ = ini_file.ReadDouble(section_name.c_str(), "rayleigh_range_m");
-    rayleigh_range_offset_m_ = ini_file.ReadDouble(section_name.c_str(), "rayleigh_range_offset_m");
+    radius_beam_waist_m_ = ini_file.ReadDouble(section_name.c_str(), "radius_beam_waist_m");
+    rayleigh_length_m_ = ini_file.ReadDouble(section_name.c_str(), "rayleigh_length_m");
+    rayleigh_length_offset_m_ = ini_file.ReadDouble(section_name.c_str(), "rayleigh_length_offset_m");
   }
 };
 

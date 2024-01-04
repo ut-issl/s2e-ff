@@ -75,7 +75,7 @@ void QuadrantPhotodiodeSensor::MainRoutine(int count) {
       actual_vertical_displacement_m_ = qpd_vertical_displacement_m;
     }
 
-    qpd_received_laser_beam_radius_m = inter_spacecraft_communication_.GetLaserEmitter(laser_id).GetBeamRadius_m(qpd_laser_distance_m);
+    qpd_received_laser_beam_radius_m = inter_spacecraft_communication_.GetLaserEmitter(laser_id).GetBeamWidthRadius_m(qpd_laser_distance_m);
     qpd_received_laser_power_W = inter_spacecraft_communication_.GetLaserEmitter(laser_id).GetEmissionPower_W();
 
     CalcSensorOutput(qpd_received_laser_power_W, qpd_received_laser_beam_radius_m, qpd_horizontal_displacement_m, qpd_vertical_displacement_m);
