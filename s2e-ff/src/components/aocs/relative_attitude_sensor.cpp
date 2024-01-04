@@ -8,10 +8,9 @@
 #include <components/base/initialize_sensor.hpp>
 #include <library/initialize/initialize_file_access.hpp>
 
-RelativeAttitudeSensor::RelativeAttitudeSensor(const int prescaler, ClockGenerator* clock_gen, Sensor& sensor_base, const int target_sat_id,
-                                               const int reference_sat_id, const RelativeInformation& rel_info, const double standard_deviation_rad)
+RelativeAttitudeSensor::RelativeAttitudeSensor(const int prescaler, ClockGenerator* clock_gen, const int target_sat_id, const int reference_sat_id,
+                                               const RelativeInformation& rel_info, const double standard_deviation_rad)
     : Component(prescaler, clock_gen),
-      Sensor(sensor_base),
       target_sat_id_(target_sat_id),
       reference_sat_id_(reference_sat_id),
       rel_info_(rel_info),
@@ -34,9 +33,9 @@ void RelativeAttitudeSensor::MainRoutine(int count) {
   libra::Quaternion error_quaternion(random_direction, error_angle_rad);
 
   // Get true value
-  measured_target_attitude_rb2tb_quaternion_ = rel_info_.GetRelativeAttitudeQuaternion(target_sat_id_, reference_sat_id_);
-  measured_target_attitude_rb2tb_quaternion_ = error_quaternion * measured_target_attitude_rb2tb_quaternion_;
-  measured_target_attitude_rb2tb_rad_ = measured_target_attitude_rb2tb_quaternion_.ConvertToEuler();
+  measured_quaternion_rb2tb_ = rel_info_.GetRelativeAttitudeQuaternion(target_sat_id_, reference_sat_id_);
+  measured_quaternion_rb2tb_ = error_quaternion * measured_quaternion_rb2tb_;
+  measured_euler_angle_rb2tb_rad_ = measured_quaternion_rb2tb_.ConvertToEuler();
 }
 
 std::string RelativeAttitudeSensor::GetLogHeader() const {
@@ -45,7 +44,7 @@ std::string RelativeAttitudeSensor::GetLogHeader() const {
 
   const std::string frame_name = std::to_string(reference_sat_id_) + "to" + std::to_string(target_sat_id_);
   str_tmp += WriteQuaternion(head + "quaternion", frame_name);
-  str_tmp += WriteVector(head + "attitude", frame_name, "rad", 3);
+  str_tmp += WriteVector(head + "euler_angle", frame_name, "rad", 3);
 
   return str_tmp;
 }
@@ -53,8 +52,8 @@ std::string RelativeAttitudeSensor::GetLogHeader() const {
 std::string RelativeAttitudeSensor::GetLogValue() const {
   std::string str_tmp = "";
 
-  str_tmp += WriteQuaternion(measured_target_attitude_rb2tb_quaternion_);
-  str_tmp += WriteVector(measured_target_attitude_rb2tb_rad_);
+  str_tmp += WriteQuaternion(measured_quaternion_rb2tb_);
+  str_tmp += WriteVector(measured_euler_angle_rb2tb_rad_);
 
   return str_tmp;
 }
@@ -79,10 +78,7 @@ RelativeAttitudeSensor InitializeRelativeAttitudeSensor(ClockGenerator* clock_ge
     reference_sat_id = reference_sat_id_input;
   }
 
-  // SensorBase
-  Sensor<3> sensor_base = ReadSensorInformation<3>(file_name, compo_step_time_s * (double)(prescaler), section, "rad");
-
-  RelativeAttitudeSensor relative_attitude_sensor(prescaler, clock_gen, sensor_base, target_sat_id, reference_sat_id, rel_info,
+  RelativeAttitudeSensor relative_attitude_sensor(prescaler, clock_gen, target_sat_id, reference_sat_id, rel_info,
                                                   error_angle_standard_deviation_rad);
 
   return relative_attitude_sensor;
