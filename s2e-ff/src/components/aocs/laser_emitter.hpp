@@ -61,22 +61,20 @@ class LaserEmitter : public GaussianBeamBase {
   }
 
   inline double GetEmissionAngle_rad() const { return emission_angle_rad_; }
-  inline double GetEmissionPower_W() const { return GetTotalPower_W(); }
   inline double GetRayleighLength_m() const { return rayleigh_length_m_; }
   inline double GetRayleighLengthOffset_m() const { return rayleigh_length_offset_m_; }
 
-  inline double GetBeamWidthRadius_m(const double emission_distance_m) const {
-    double beam_radius_m = GetBeamWaistRadius_m() * sqrt(1 + pow((emission_distance_m - rayleigh_length_offset_m_) / rayleigh_length_m_, 2.0));
-    return beam_radius_m;
-  }
+  // Functions
+  double CalcBeamWidthRadius_m(const double emission_distance_m);
+  double CalcIntensity_W_m2(double emission_distance_m, double deviation_from_optical_axis_m);
 
  protected:
   libra::Vector<3> emitting_direction_c_{0.0};                 //!< Laser emitting direction vector @ component frame
   double emission_angle_rad_ = 0.0;                            //!< Laser emitting angle from the emitting direction [rad]
   libra::TranslationFirstDualQuaternion dual_quaternion_c2b_;  //!< Dual quaternion from body to component frame
 
-  double rayleigh_length_m_ = 0.0;          //!< Rayleigh length (range) of the laser [m]
-  double rayleigh_length_offset_m_ = 4.65;  //!< Rayleigh length (range) position offset of the laser [m]
+  double rayleigh_length_m_ = 0.0;         //!< Rayleigh length (range) of the laser [m]
+  double rayleigh_length_offset_m_ = 0.0;  //!< Rayleigh length (range) position offset of the laser [m]
 
   // Reference
   const Dynamics& dynamics_;

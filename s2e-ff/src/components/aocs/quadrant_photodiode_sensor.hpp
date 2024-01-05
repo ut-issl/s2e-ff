@@ -103,7 +103,7 @@ class QuadrantPhotodiodeSensor : public Component, public ILoggable {
   double CalcDisplacement(const libra::Vector<3> point_position, const libra::Vector<3> origin_position,
                           const libra::Vector<3> displacement_direction);
 
-  void CalcSensorOutput(const double laser_power_W, const double laser_beam_radius, const double qpd_horizontal_displacement_m,
+  void CalcSensorOutput(LaserEmitter laser_emitter, const double laser_emitting_distance_m, const double qpd_horizontal_displacement_m,
                         const double qpd_vertical_displacement_m);
   double DeterminePositionDisplacement(const QpdPositionDeterminationDirection determination_direction);
   double CalcSign(const double input_value, const double threshold);

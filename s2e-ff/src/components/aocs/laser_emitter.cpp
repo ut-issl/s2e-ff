@@ -19,6 +19,21 @@ LaserEmitter::LaserEmitter(const Dynamics& dynamics, libra::Vector<3> emitting_d
       rayleigh_length_m_(rayleigh_length_m),
       rayleigh_length_offset_m_(rayleigh_length_offset_m) {}
 
+double LaserEmitter::CalcBeamWidthRadius_m(const double emission_distance_m) {
+  const double radius_beam_waist_m = GetBeamWaistRadius_m();
+  double beam_width_radius_m = radius_beam_waist_m * sqrt(1.0 + pow(((emission_distance_m - rayleigh_length_offset_m_) / rayleigh_length_m_), 2.0));
+  return beam_width_radius_m;
+}
+
+double LaserEmitter::CalcIntensity_W_m2(double emission_distance_m, double deviation_from_optical_axis_m) {
+  double beam_width_radius_m = CalcBeamWidthRadius_m(emission_distance_m);
+  double peak_intensity_W_m2 = (2.0 * GetTotalPower_W()) / (libra::pi * beam_width_radius_m * beam_width_radius_m);
+  double gaussian_dist =
+      std::exp((-2.0 * deviation_from_optical_axis_m * deviation_from_optical_axis_m) / (beam_width_radius_m * beam_width_radius_m));
+  double intensity_W_m2 = peak_intensity_W_m2 * gaussian_dist;
+  return intensity_W_m2;
+}
+
 LaserEmitter InitializeLaserEmitter(const std::string file_name, const Dynamics& dynamics, const size_t id) {
   IniAccess ini_file(file_name);
   std::string name = "LASER_EMITTER_";
