@@ -63,8 +63,8 @@ class QuadrantPhotodiodeSensor : public Component, public ILoggable {
    * @brief Type of the quadrant photodiode sensor output value
    */
   typedef enum {
-    yAxisDirection = 0,  //!< y-axis direction
-    zAxisDirection,      //!< z-axis direction
+    kYAxisDirection = 0,  //!< y-axis direction
+    kZAxisDirection,      //!< z-axis direction
   } QpdPositionDeterminationDirection;
 
  protected:
