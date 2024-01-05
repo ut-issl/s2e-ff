@@ -68,9 +68,6 @@ class QuadrantPhotodiodeSensor : public Component, public ILoggable {
   } QpdPositionDeterminationDirection;
 
  protected:
-  libra::Vector<3> qpd_horizontal_direction_c_;                //!< Quadrant photodiode horizontal direction @ component frame
-  libra::Vector<3> qpd_vertical_direction_c_;                  //!< Quadrant photodiode vertical direction @ component frame
-  libra::Vector<3> qpd_normal_direction_c_;                    //!< Quadrant photodiode normal direction @ component frame
   double qpd_laser_receivable_angle_rad_;                      //!< laser receivable half angle from the normal direction [rad]
   double qpd_sensor_output_voltage_threshold_V_;               //!< Quadrant photodiode sensor output voltage threshold [V]
   double qpd_sensor_radius_m_;                                 //!< Quadrant photodiode sensor radius [m]
@@ -82,6 +79,10 @@ class QuadrantPhotodiodeSensor : public Component, public ILoggable {
   double distance_true_m_ = 0.0;
   double y_axis_displacement_true_m_ = 0.0;
   double z_axis_displacement_true_m_ = 0.0;
+
+  libra::Vector<3> x_axis_direction_c_{0.0};  //!< x-axis direction in the component coordinate system
+  libra::Vector<3> y_axis_direction_c_{0.0};  //!< x-axis direction in the component coordinate system
+  libra::Vector<3> z_axis_direction_c_{0.0};  //!< x-axis direction in the component coordinate system
 
   double qpd_sensor_output_y_axis_V_;            //!< Quadrant photodiode sensor output value corresponding to the y-axis direction [V]
   double qpd_sensor_output_z_axis_V_;            //!< Quadrant photodiode sensor output value corresponding to the y-axis direction [V]

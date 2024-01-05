@@ -50,7 +50,7 @@ void QuadrantPhotodiodeSensor::MainRoutine(int count) {
     libra::Vector<3> laser_position_c_m = dual_quaternion_c2i.InverseTransformVector(laser_position_i_m);
     libra::Vector<3> laser_emitting_direction_c = dual_quaternion_c2i.GetRotationQuaternion().InverseFrameConversion(laser_emitting_direction_i);
 
-    double cos_theta = libra::InnerProduct(qpd_normal_direction_c_, -laser_emitting_direction_c);
+    double cos_theta = libra::InnerProduct(x_axis_direction_c_, -laser_emitting_direction_c);
     if (cos_theta > 1.0) cos_theta = 1.0;
     if (cos_theta < -1.0) cos_theta = -1.0;
     double qpd_laser_received_angle_rad = acos(cos_theta);
@@ -60,10 +60,10 @@ void QuadrantPhotodiodeSensor::MainRoutine(int count) {
       continue;
     }
     libra::Vector<3> laser_received_position_c_m =
-        CalcLaserReceivedPosition(laser_position_c_m, libra::Vector<3>{0.0}, qpd_normal_direction_c_, laser_emitting_direction_c);
+        CalcLaserReceivedPosition(laser_position_c_m, libra::Vector<3>{0.0}, x_axis_direction_c_, laser_emitting_direction_c);
     qpd_laser_distance_m = laser_position_c_m.CalcNorm();
-    qpd_y_axis_displacement_m = CalcDisplacement(laser_received_position_c_m, libra::Vector<3>{0.0}, qpd_horizontal_direction_c_);
-    qpd_z_axis_displacement_m = CalcDisplacement(laser_received_position_c_m, libra::Vector<3>{0.0}, qpd_vertical_direction_c_);
+    qpd_y_axis_displacement_m = CalcDisplacement(laser_received_position_c_m, libra::Vector<3>{0.0}, y_axis_direction_c_);
+    qpd_z_axis_displacement_m = CalcDisplacement(laser_received_position_c_m, libra::Vector<3>{0.0}, z_axis_direction_c_);
 
     if (qpd_laser_distance_m < distance_true_m_) {
       distance_true_m_ = qpd_laser_distance_m;
@@ -231,12 +231,13 @@ void QuadrantPhotodiodeSensor::Initialize(const std::string file_name, const siz
   ini_file.ReadVector(section_name.c_str(), "position_b_m", position_b_m);
   dual_quaternion_c2b_ = libra::TranslationFirstDualQuaternion(-position_b_m, quaternion_b2c.Conjugate()).QuaternionConjugate();
 
-  ini_file.ReadVector(section_name.c_str(), "qpd_horizontal_direction_c", qpd_horizontal_direction_c_);
-  ini_file.ReadVector(section_name.c_str(), "qpd_vertical_direction_c", qpd_vertical_direction_c_);
-  qpd_normal_direction_c_ = libra::OuterProduct(qpd_horizontal_direction_c_, qpd_vertical_direction_c_);
   qpd_sensor_radius_m_ = ini_file.ReadDouble(section_name.c_str(), "qpd_sensor_radius_m");
   qpd_sensor_integral_step_m_ = ini_file.ReadDouble(section_name.c_str(), "qpd_sensor_integral_step_m");
   qpd_sensor_position_determination_threshold_m_ = ini_file.ReadDouble(section_name.c_str(), "qpd_sensor_position_determination_threshold_m");
   qpd_laser_receivable_angle_rad_ = ini_file.ReadDouble(section_name.c_str(), "qpd_laser_receivable_angle_rad");
   qpd_sensor_output_voltage_threshold_V_ = ini_file.ReadDouble(section_name.c_str(), "qpd_sensor_output_voltage_threshold_V");
+
+  x_axis_direction_c_[0] = 1.0;
+  y_axis_direction_c_[1] = 1.0;
+  z_axis_direction_c_[2] = 1.0;
 }
