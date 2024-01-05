@@ -1,4 +1,4 @@
-displacement[m],reference_ratio_y_axis_,reference_ratio_z_axis
+displacement[m],reference_ratio_y_axis_list,reference_ratio_z_axis_list
 -4.00e-3,1,-1
 -3.99e-3,1,-1
 -3.98e-3,1,-1
