@@ -30,6 +30,10 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
   relative_position_sensor_ =
       new RelativePositionSensor(InitializeRelativePositionSensor(clock_gen, rel_pos_file, compo_step_sec, *rel_info_, *dynamics_, sat_id));
 
+  const std::string rel_att_file = sat_file.ReadString(section_name.c_str(), "relative_attitude_sensor_file");
+  relative_attitude_sensor_ =
+      new RelativeAttitudeSensor(InitializeRelativeAttitudeSensor(clock_gen, rel_att_file, compo_step_sec, *rel_info_, sat_id));
+
   const std::string rel_vel_file = sat_file.ReadString(section_name.c_str(), "relative_velocity_sensor_file");
   relative_velocity_sensor_ =
       new RelativeVelocitySensor(InitializeRelativeVelocitySensor(clock_gen, rel_vel_file, compo_step_sec, *rel_info_, *dynamics_, sat_id));
@@ -55,6 +59,7 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
 FfComponents::~FfComponents() {
   delete relative_distance_sensor_;
   delete relative_position_sensor_;
+  delete relative_attitude_sensor_;
   delete relative_velocity_sensor_;
   delete force_generator_;
   delete relative_attitude_controller_;
@@ -78,6 +83,7 @@ Vector<3> FfComponents::GenerateTorque_b_Nm() {
 void FfComponents::LogSetup(Logger& logger) {
   logger.AddLogList(relative_distance_sensor_);
   logger.AddLogList(relative_position_sensor_);
+  logger.AddLogList(relative_attitude_sensor_);
   logger.AddLogList(relative_velocity_sensor_);
   logger.AddLogList(force_generator_);
   logger.AddLogList(laser_distance_meter_);

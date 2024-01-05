@@ -20,6 +20,7 @@
 #include "../../components/aocs/initialize_relative_position_sensor.hpp"
 #include "../../components/aocs/initialize_relative_velocity_sensor.hpp"
 #include "../../components/aocs/laser_distance_meter.hpp"
+#include "../../components/aocs/relative_attitude_sensor.hpp"
 #include "../../components/ideal/initialize_relative_attitude_controller.hpp"
 
 /**
@@ -65,6 +66,7 @@ class FfComponents : public InstalledComponents {
   // Sensors
   RelativeDistanceSensor* relative_distance_sensor_;  //!< Example of Relative distance sensor
   RelativePositionSensor* relative_position_sensor_;  //!< Example of Relative position sensor
+  RelativeAttitudeSensor* relative_attitude_sensor_;  //!< Example of Relative attitude sensor
   RelativeVelocitySensor* relative_velocity_sensor_;  //!< Example of Relative velocity sensor
   LaserDistanceMeter* laser_distance_meter_;
   // Actuators

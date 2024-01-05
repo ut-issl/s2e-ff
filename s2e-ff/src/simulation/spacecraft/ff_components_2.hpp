@@ -19,6 +19,7 @@
 #include "../../components/aocs/corner_cube_reflector.hpp"
 #include "../../components/aocs/initialize_relative_distance_sensor.hpp"
 #include "../../components/aocs/initialize_relative_position_sensor.hpp"
+#include "../../components/aocs/relative_attitude_sensor.hpp"
 #include "../../components/ideal/initialize_relative_attitude_controller.hpp"
 
 /**
