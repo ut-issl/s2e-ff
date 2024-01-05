@@ -25,17 +25,17 @@ void QuadrantPhotodiodeSensor::MainRoutine(int count) {
 
   // Laser emitter info
   size_t number_of_laser_emitters = inter_spacecraft_communication_.GetNumberOfLasers();
-  actual_distance_m_ = 1e30;
-  actual_horizontal_displacement_m_ = 1e30;
-  actual_vertical_displacement_m_ = 1e30;
-  determined_horizontal_displacement_m_ = 5.0e-3;
-  determined_vertical_displacement_m_ = 5.0e-3;
-  for (size_t qpd_sensor_output_id = 0; qpd_sensor_output_id < 3; qpd_sensor_output_id++) {
-    qpd_sensor_output_V_[qpd_sensor_output_id] = 0.0;
-  }
+  distance_true_m_ = 1e30;
+  y_axis_displacement_true_m_ = 1e30;
+  z_axis_displacement_true_m_ = 1e30;
+  observed_y_axis_displacement_m_ = 1.0e3;
+  observed_z_axis_displacement_m_ = 1.0e3;
+  qpd_sensor_output_y_axis_V_ = 0.0;
+  qpd_sensor_output_z_axis_V_ = 0.0;
+  qpd_sensor_output_sum_V_ = 0.0;
   double qpd_laser_distance_m = 0.0;
-  double qpd_horizontal_displacement_m = 0.0;
-  double qpd_vertical_displacement_m = 0.0;
+  double qpd_y_axis_displacement_m = 0.0;
+  double qpd_z_axis_displacement_m = 0.0;
 
   double qpd_received_laser_beam_radius_m = 0.0;
   double qpd_received_laser_power_W = 0.0;
@@ -56,38 +56,38 @@ void QuadrantPhotodiodeSensor::MainRoutine(int count) {
     double qpd_laser_received_angle_rad = acos(cos_theta);
 
     // Calc relative position displacement (horizontal direction and vertical direction)
-    if (qpd_laser_received_angle_rad > qpd_laser_received_angle_rad_) {
+    if (qpd_laser_received_angle_rad > qpd_laser_receivable_angle_rad_) {
       continue;
     }
     libra::Vector<3> laser_received_position_c_m =
         CalcLaserReceivedPosition(laser_position_c_m, libra::Vector<3>{0.0}, qpd_normal_direction_c_, laser_emitting_direction_c);
     qpd_laser_distance_m = laser_position_c_m.CalcNorm();
-    qpd_horizontal_displacement_m = CalcDisplacement(laser_received_position_c_m, libra::Vector<3>{0.0}, qpd_horizontal_direction_c_);
-    qpd_vertical_displacement_m = CalcDisplacement(laser_received_position_c_m, libra::Vector<3>{0.0}, qpd_vertical_direction_c_);
+    qpd_y_axis_displacement_m = CalcDisplacement(laser_received_position_c_m, libra::Vector<3>{0.0}, qpd_horizontal_direction_c_);
+    qpd_z_axis_displacement_m = CalcDisplacement(laser_received_position_c_m, libra::Vector<3>{0.0}, qpd_vertical_direction_c_);
 
-    if (qpd_laser_distance_m < actual_distance_m_) {
-      actual_distance_m_ = qpd_laser_distance_m;
+    if (qpd_laser_distance_m < distance_true_m_) {
+      distance_true_m_ = qpd_laser_distance_m;
     }
-    if (fabs(qpd_horizontal_displacement_m) < fabs(actual_horizontal_displacement_m_)) {
-      actual_horizontal_displacement_m_ = qpd_horizontal_displacement_m;
+    if (fabs(qpd_y_axis_displacement_m) < fabs(y_axis_displacement_true_m_)) {
+      y_axis_displacement_true_m_ = qpd_y_axis_displacement_m;
     }
-    if (fabs(qpd_vertical_displacement_m) < fabs(actual_vertical_displacement_m_)) {
-      actual_vertical_displacement_m_ = qpd_vertical_displacement_m;
+    if (fabs(qpd_z_axis_displacement_m) < fabs(z_axis_displacement_true_m_)) {
+      z_axis_displacement_true_m_ = qpd_z_axis_displacement_m;
     }
 
     qpd_received_laser_beam_radius_m = inter_spacecraft_communication_.GetLaserEmitter(laser_id).GetBeamWidthRadius_m(qpd_laser_distance_m);
     qpd_received_laser_power_W = inter_spacecraft_communication_.GetLaserEmitter(laser_id).GetEmissionPower_W();
 
-    CalcSensorOutput(qpd_received_laser_power_W, qpd_received_laser_beam_radius_m, qpd_horizontal_displacement_m, qpd_vertical_displacement_m);
+    CalcSensorOutput(qpd_received_laser_power_W, qpd_received_laser_beam_radius_m, qpd_y_axis_displacement_m, qpd_z_axis_displacement_m);
 
-    if (qpd_sensor_output_V_[VOLTAGE_SUM] < qpd_sensor_output_voltage_threshold_V_) {
+    if (qpd_sensor_output_sum_V_ < qpd_sensor_output_voltage_threshold_V_) {
       continue;
     }
     is_received_laser_ = true;
   }
   if (is_received_laser_) {
-    determined_horizontal_displacement_m_ = DeterminePositionDisplacement(DIRECTION_HORIZONTAL, qpd_sensor_output_V_);
-    determined_vertical_displacement_m_ = DeterminePositionDisplacement(DIRECTION_VERTICAL, qpd_sensor_output_V_);
+    observed_y_axis_displacement_m_ = DeterminePositionDisplacement(yAxisDirection);
+    observed_z_axis_displacement_m_ = DeterminePositionDisplacement(zAxisDirection);
   }
 }
 
@@ -95,14 +95,14 @@ std::string QuadrantPhotodiodeSensor::GetLogHeader() const {
   std::string str_tmp = "";
   std::string head = "quadrant_photodiode_sensor_";
   str_tmp += WriteScalar(head + "is_received_laser");
-  str_tmp += WriteScalar(head + "actual_distance[m]");
-  str_tmp += WriteScalar(head + "actual_horizontal_displacement[m]");
-  str_tmp += WriteScalar(head + "actual_vertical_displacement[m]");
-  str_tmp += WriteScalar(head + "qpd_output_value_horizontal[V]");
-  str_tmp += WriteScalar(head + "qpd_output_value_vertical[V]");
+  str_tmp += WriteScalar(head + "distance_true[m]");
+  str_tmp += WriteScalar(head + "y_axis_displacement_true[m]");
+  str_tmp += WriteScalar(head + "z_axis_displacement_true[m]");
+  str_tmp += WriteScalar(head + "qpd_output_value_y_axis[V]");
+  str_tmp += WriteScalar(head + "qpd_output_value_z_axis[V]");
   str_tmp += WriteScalar(head + "qpd_output_value_sum[V]");
-  str_tmp += WriteScalar(head + "determined_horizontal_displacement[m]");
-  str_tmp += WriteScalar(head + "determined_vertical_displacement[m]");
+  str_tmp += WriteScalar(head + "observed_y_axis_displacement[m]");
+  str_tmp += WriteScalar(head + "observed_z_axis_displacement[m]");
 
   return str_tmp;
 }
@@ -111,14 +111,14 @@ std::string QuadrantPhotodiodeSensor::GetLogValue() const {
   std::string str_tmp = "";
 
   str_tmp += WriteScalar(is_received_laser_);
-  str_tmp += WriteScalar(actual_distance_m_);
-  str_tmp += WriteScalar(actual_horizontal_displacement_m_);
-  str_tmp += WriteScalar(actual_vertical_displacement_m_);
-  str_tmp += WriteScalar(qpd_sensor_output_V_[VOLTAGE_HORIZONTAL]);
-  str_tmp += WriteScalar(qpd_sensor_output_V_[VOLTAGE_VERTICAL]);
-  str_tmp += WriteScalar(qpd_sensor_output_V_[VOLTAGE_SUM]);
-  str_tmp += WriteScalar(determined_horizontal_displacement_m_);
-  str_tmp += WriteScalar(determined_vertical_displacement_m_);
+  str_tmp += WriteScalar(distance_true_m_);
+  str_tmp += WriteScalar(y_axis_displacement_true_m_);
+  str_tmp += WriteScalar(z_axis_displacement_true_m_);
+  str_tmp += WriteScalar(qpd_sensor_output_y_axis_V_);
+  str_tmp += WriteScalar(qpd_sensor_output_z_axis_V_);
+  str_tmp += WriteScalar(qpd_sensor_output_sum_V_);
+  str_tmp += WriteScalar(observed_y_axis_displacement_m_);
+  str_tmp += WriteScalar(observed_z_axis_displacement_m_);
 
   return str_tmp;
 }
@@ -142,8 +142,8 @@ double QuadrantPhotodiodeSensor::CalcDisplacement(const libra::Vector<3> point_p
   return displacement_m;
 };
 
-void QuadrantPhotodiodeSensor::CalcSensorOutput(const double laser_power_W, const double laser_beam_radius_m,
-                                                const double qpd_horizontal_displacement_m, const double qpd_vertical_displacement_m) {
+void QuadrantPhotodiodeSensor::CalcSensorOutput(const double laser_power_W, const double laser_beam_radius_m, const double qpd_y_axis_displacement_m,
+                                                const double qpd_z_axis_displacement_m) {
   qpd_sensor_radius_m_ = (double)(((int32_t)(qpd_sensor_radius_m_ / qpd_sensor_integral_step_m_)) * qpd_sensor_integral_step_m_);
   for (size_t horizontal_step = 0; horizontal_step <= (size_t)(qpd_sensor_radius_m_ / qpd_sensor_integral_step_m_) * 2; horizontal_step++) {
     double horizontal_pos_m = qpd_sensor_integral_step_m_ * horizontal_step - qpd_sensor_radius_m_;
@@ -153,12 +153,12 @@ void QuadrantPhotodiodeSensor::CalcSensorOutput(const double laser_power_W, cons
     for (size_t vertical_step = 0; vertical_step <= (size_t)(vertical_range_max_m / qpd_sensor_integral_step_m_) * 2; vertical_step++) {
       double vertical_pos_m = qpd_sensor_integral_step_m_ * vertical_step - vertical_range_max_m;
       double temp = 2 * laser_power_W / libra::pi / pow(laser_beam_radius_m, 2.0) *
-                    exp(-2 * (pow((horizontal_pos_m - qpd_horizontal_displacement_m) / laser_beam_radius_m, 2.0) +
-                              pow((vertical_pos_m - qpd_vertical_displacement_m) / laser_beam_radius_m, 2.0))) *
+                    exp(-2 * (pow((horizontal_pos_m - qpd_y_axis_displacement_m) / laser_beam_radius_m, 2.0) +
+                              pow((vertical_pos_m - qpd_z_axis_displacement_m) / laser_beam_radius_m, 2.0))) *
                     pow(qpd_sensor_integral_step_m_, 2.0);
-      qpd_sensor_output_V_[VOLTAGE_HORIZONTAL] += CalcSign(-horizontal_pos_m, qpd_sensor_integral_step_m_ / 2) * temp;
-      qpd_sensor_output_V_[VOLTAGE_VERTICAL] += CalcSign(vertical_pos_m, qpd_sensor_integral_step_m_ / 2) * temp;
-      qpd_sensor_output_V_[VOLTAGE_SUM] += temp;
+      qpd_sensor_output_y_axis_V_ += CalcSign(-horizontal_pos_m, qpd_sensor_integral_step_m_ / 2) * temp;
+      qpd_sensor_output_z_axis_V_ += CalcSign(vertical_pos_m, qpd_sensor_integral_step_m_ / 2) * temp;
+      qpd_sensor_output_sum_V_ += temp;
     }
   }
 }
@@ -172,14 +172,13 @@ double QuadrantPhotodiodeSensor::CalcSign(const double input_value, const double
   return 0.0;
 }
 
-double QuadrantPhotodiodeSensor::DeterminePositionDisplacement(const QpdPositionDeterminationDirection determination_direction,
-                                                               const libra::Vector<3> qpd_sensor_output_V) {
+double QuadrantPhotodiodeSensor::DeterminePositionDisplacement(const QpdPositionDeterminationDirection determination_direction) {
   double determined_displacement_m = 0.0;
   double sensor_value_ratio;
   switch (determination_direction) {
-    case DIRECTION_HORIZONTAL:
-      determined_displacement_m = -CalcSign(qpd_sensor_output_V[VOLTAGE_HORIZONTAL], 0.0) * qpd_sensor_position_determination_threshold_m_;
-      sensor_value_ratio = qpd_sensor_output_V[VOLTAGE_HORIZONTAL] / qpd_sensor_output_V[VOLTAGE_SUM];
+    case yAxisDirection:
+      determined_displacement_m = -CalcSign(qpd_sensor_output_y_axis_V_, 0.0) * qpd_sensor_position_determination_threshold_m_;
+      sensor_value_ratio = qpd_sensor_output_y_axis_V_ / qpd_sensor_output_sum_V_;
       for (size_t i = 0; i < qpd_ratio_y_reference_list_.size() - 1; i++) {
         if (sensor_value_ratio <= qpd_ratio_y_reference_list_[i] && sensor_value_ratio >= qpd_ratio_y_reference_list_[i + 1]) {
           determined_displacement_m = qpd_displacement_reference_list_m_[i];
@@ -189,9 +188,9 @@ double QuadrantPhotodiodeSensor::DeterminePositionDisplacement(const QpdPosition
         }
       }
       break;
-    case DIRECTION_VERTICAL:
-      determined_displacement_m = CalcSign(qpd_sensor_output_V[VOLTAGE_VERTICAL], 0.0) * qpd_sensor_position_determination_threshold_m_;
-      sensor_value_ratio = qpd_sensor_output_V[VOLTAGE_VERTICAL] / qpd_sensor_output_V[VOLTAGE_SUM];
+    case zAxisDirection:
+      determined_displacement_m = CalcSign(qpd_sensor_output_z_axis_V_, 0.0) * qpd_sensor_position_determination_threshold_m_;
+      sensor_value_ratio = qpd_sensor_output_z_axis_V_ / qpd_sensor_output_sum_V_;
       for (size_t i = 0; i < qpd_ratio_y_reference_list_.size() - 1; i++) {
         if (sensor_value_ratio >= qpd_ratio_z_reference_list_[i] && sensor_value_ratio <= qpd_ratio_z_reference_list_[i + 1]) {
           determined_displacement_m = qpd_displacement_reference_list_m_[i];
@@ -238,6 +237,6 @@ void QuadrantPhotodiodeSensor::Initialize(const std::string file_name, const siz
   qpd_sensor_radius_m_ = ini_file.ReadDouble(section_name.c_str(), "qpd_sensor_radius_m");
   qpd_sensor_integral_step_m_ = ini_file.ReadDouble(section_name.c_str(), "qpd_sensor_integral_step_m");
   qpd_sensor_position_determination_threshold_m_ = ini_file.ReadDouble(section_name.c_str(), "qpd_sensor_position_determination_threshold_m");
-  qpd_laser_received_angle_rad_ = ini_file.ReadDouble(section_name.c_str(), "qpd_laser_received_angle_rad");
+  qpd_laser_receivable_angle_rad_ = ini_file.ReadDouble(section_name.c_str(), "qpd_laser_receivable_angle_rad");
   qpd_sensor_output_voltage_threshold_V_ = ini_file.ReadDouble(section_name.c_str(), "qpd_sensor_output_voltage_threshold_V");
 }

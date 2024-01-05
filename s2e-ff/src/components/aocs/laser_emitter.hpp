@@ -107,4 +107,4 @@ class LaserEmitter {
   }
 };
 
-#endif  // S2E_COMPONENTS_CORNER_CUBE_REFLECTOR_HPP_
+#endif  // S2E_COMPONENTS_LASER_EMITTER_HPP_

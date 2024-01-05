@@ -52,36 +52,26 @@ class QuadrantPhotodiodeSensor : public Component, public ILoggable {
    */
   virtual std::string GetLogValue() const;
 
-  inline double GetActualHorizontalDisplacement_m() const { return actual_horizontal_displacement_m_; }
-  inline double GetActualVerticalDisplacement_m() const { return actual_vertical_displacement_m_; }
-  inline double GetObservedHorizontalDisplacement_m() const { return determined_horizontal_displacement_m_; }
-  inline double GetObservedVerticalDisplacement_m() const { return determined_vertical_displacement_m_; }
+  inline double GetYAxisDisplacementTrue_m() const { return y_axis_displacement_true_m_; }
+  inline double GetZAxisDisplacementTrue_m() const { return z_axis_displacement_true_m_; }
+  inline double GetObservedYAxisDisplacement_m() const { return observed_y_axis_displacement_m_; }
+  inline double GetObservedZAxisDisplacement_m() const { return observed_z_axis_displacement_m_; }
   inline bool GetIsReceivedLaser() const { return is_received_laser_; }
-
-  /**
-   * @enum QpdSensorOutputValueType
-   * @brief Type of the quadrant photodiode sensor output value
-   */
-  typedef enum {
-    VOLTAGE_HORIZONTAL = 0,  //!< Value corresponding to the horizontal displacement
-    VOLTAGE_VERTICAL,        //!< Value corresponding to the vertical displacement
-    VOLTAGE_SUM              //!< Value corresponding to the sum of the light intensity
-  } QpdSensorOutputValueType;
 
   /**
    * @enum QpdPositionDeterminationDirection
    * @brief Type of the quadrant photodiode sensor output value
    */
   typedef enum {
-    DIRECTION_HORIZONTAL = 0,  //!< Horizontal direction
-    DIRECTION_VERTICAL,        //!< Vertical direction
+    yAxisDirection = 0,  //!< y-axis direction
+    zAxisDirection,      //!< z-axis direction
   } QpdPositionDeterminationDirection;
 
  protected:
   libra::Vector<3> qpd_horizontal_direction_c_;                //!< Quadrant photodiode horizontal direction @ component frame
   libra::Vector<3> qpd_vertical_direction_c_;                  //!< Quadrant photodiode vertical direction @ component frame
   libra::Vector<3> qpd_normal_direction_c_;                    //!< Quadrant photodiode normal direction @ component frame
-  double qpd_laser_received_angle_rad_;                        //!< laser received half angle from the normal direction [rad]
+  double qpd_laser_receivable_angle_rad_;                      //!< laser receivable half angle from the normal direction [rad]
   double qpd_sensor_output_voltage_threshold_V_;               //!< Quadrant photodiode sensor output voltage threshold [V]
   double qpd_sensor_radius_m_;                                 //!< Quadrant photodiode sensor radius [m]
   double qpd_sensor_integral_step_m_;                          //!< Integral step to calculate the output value of the quadrant photodiode sensor [m]
@@ -89,13 +79,15 @@ class QuadrantPhotodiodeSensor : public Component, public ILoggable {
   libra::TranslationFirstDualQuaternion dual_quaternion_c2b_;  //!< Dual quaternion from component to body frame
 
   bool is_received_laser_ = false;  //!< Flag to detect laser received
-  double actual_distance_m_ = 0.0;
-  double actual_horizontal_displacement_m_ = 0.0;
-  double actual_vertical_displacement_m_ = 0.0;
+  double distance_true_m_ = 0.0;
+  double y_axis_displacement_true_m_ = 0.0;
+  double z_axis_displacement_true_m_ = 0.0;
 
-  libra::Vector<3> qpd_sensor_output_V_;               //!< Observed quadrant photodiode sensor output
-  double determined_horizontal_displacement_m_ = 0.0;  //!< Determined horizontal displacement
-  double determined_vertical_displacement_m_ = 0.0;    //!< Determined vertical displacement
+  double qpd_sensor_output_y_axis_V_;            //!< Quadrant photodiode sensor output value corresponding to the y-axis direction [V]
+  double qpd_sensor_output_z_axis_V_;            //!< Quadrant photodiode sensor output value corresponding to the y-axis direction [V]
+  double qpd_sensor_output_sum_V_;               //!< Quadrant photodiode sensor output value corresponding to the sum of the light intensity [V]
+  double observed_y_axis_displacement_m_ = 0.0;  //!< Observed displacement in the y-axis direction [m]
+  double observed_z_axis_displacement_m_ = 0.0;  //!< Observed displacement in the z-axis direction [m]
 
   std::vector<double> qpd_displacement_reference_list_m_;
   std::vector<double> qpd_ratio_y_reference_list_;
@@ -112,10 +104,10 @@ class QuadrantPhotodiodeSensor : public Component, public ILoggable {
 
   void CalcSensorOutput(const double laser_power_W, const double laser_beam_radius, const double qpd_horizontal_displacement_m,
                         const double qpd_vertical_displacement_m);
-  double DeterminePositionDisplacement(const QpdPositionDeterminationDirection determination_direction, const libra::Vector<3> qpd_sensor_output_V);
+  double DeterminePositionDisplacement(const QpdPositionDeterminationDirection determination_direction);
   double CalcSign(const double input_value, const double threshold);
 
   void Initialize(const std::string file_name, const size_t id = 0);
 };
 
-#endif  // S2E_COMPONENTS_LASER_DISTANCE_METER_HPP_
+#endif  // S2E_COMPONENTS_QUADRANT_PHOTODIODE_SENSOR_HPP_
