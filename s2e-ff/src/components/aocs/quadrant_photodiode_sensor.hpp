@@ -16,7 +16,8 @@
 
 /**
  * @class QuadrantPhotodiodeSensor
- * @brief Relative distance sensor
+ * @brief Quadrant photodiode sensor
+ * @note  This component not only calculate the QPD sensor output values, but also calculate position displacements.
  */
 class QuadrantPhotodiodeSensor : public Component, public ILoggable {
  public:
@@ -55,7 +56,7 @@ class QuadrantPhotodiodeSensor : public Component, public ILoggable {
   inline double GetActualVerticalDisplacement_m() const { return actual_vertical_displacement_m_; }
   inline double GetObservedHorizontalDisplacement_m() const { return determined_horizontal_displacement_m_; }
   inline double GetObservedVerticalDisplacement_m() const { return determined_vertical_displacement_m_; }
-  inline bool GetIsReflected() const { return is_received_laser_; }
+  inline bool GetIsReceivedLaser() const { return is_received_laser_; }
 
   /**
    * @enum QpdSensorOutputValueType
@@ -83,6 +84,8 @@ class QuadrantPhotodiodeSensor : public Component, public ILoggable {
   double qpd_laser_received_angle_rad_;                        //!< laser received half angle from the normal direction [rad]
   double qpd_sensor_output_voltage_threshold_V_;               //!< Quadrant photodiode sensor output voltage threshold [V]
   double qpd_sensor_radius_m_;                                 //!< Quadrant photodiode sensor radius [m]
+  double qpd_sensor_integral_step_m_;                          //!< Integral step to calculate the output value of the quadrant photodiode sensor [m]
+  double qpd_sensor_position_determination_threshold_m_;       //!< Position determination threshold using the quadrant photodiode sensor [m]
   libra::TranslationFirstDualQuaternion dual_quaternion_c2b_;  //!< Dual quaternion from component to body frame
 
   bool is_received_laser_ = false;  //!< Flag to detect laser received
@@ -102,14 +105,15 @@ class QuadrantPhotodiodeSensor : public Component, public ILoggable {
   const Dynamics& dynamics_;
   const FfInterSpacecraftCommunication& inter_spacecraft_communication_;
 
-  double CalcDistanceBwPointAndLine(libra::Vector<3> point_position, libra::Vector<3> line_start_position, libra::Vector<3> line_direction);
-  libra::Vector<3> CalcLaserReceivedPosition(libra::Vector<3> point_position, libra::Vector<3> origin_position,
-                                             libra::Vector<3> plane_normal_direction, libra::Vector<3> point_line_direction);
-  double CalcDisplacement(libra::Vector<3> point_position, libra::Vector<3> origin_position, libra::Vector<3> displacement_direction);
+  libra::Vector<3> CalcLaserReceivedPosition(const libra::Vector<3> point_position, const libra::Vector<3> origin_position,
+                                             const libra::Vector<3> plane_normal_direction, const libra::Vector<3> point_line_direction);
+  double CalcDisplacement(const libra::Vector<3> point_position, const libra::Vector<3> origin_position,
+                          const libra::Vector<3> displacement_direction);
 
-  void CalcSensorOutput(double laser_power_W, double laser_beam_radius, double qpd_horizontal_displacement_m, double qpd_vertical_displacement_m);
-  double DeterminePositionDisplacement(QpdPositionDeterminationDirection determination_direction, libra::Vector<3> qpd_sensor_output_V);
-  double CalcSgn(double input_value, double threshold);
+  void CalcSensorOutput(const double laser_power_W, const double laser_beam_radius, const double qpd_horizontal_displacement_m,
+                        const double qpd_vertical_displacement_m);
+  double DeterminePositionDisplacement(const QpdPositionDeterminationDirection determination_direction, const libra::Vector<3> qpd_sensor_output_V);
+  double CalcSign(const double input_value, const double threshold);
 
   void Initialize(const std::string file_name, const size_t id = 0);
 };

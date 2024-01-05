@@ -68,7 +68,7 @@ class LaserEmitter {
   inline double GetRayleighLengthOffset_m() const { return rayleigh_length_offset_m_; }
 
   inline double GetBeamWidthRadius_m(const double emission_distance_m) const {
-    double beam_radius_m = radius_beam_waist_m_ * pow(1 + pow((emission_distance_m - rayleigh_length_offset_m_) / rayleigh_length_m_, 2.0), 0.5);
+    double beam_radius_m = radius_beam_waist_m_ * sqrt(1 + pow((emission_distance_m - rayleigh_length_offset_m_) / rayleigh_length_m_, 2.0));
     return beam_radius_m;
   }
 
