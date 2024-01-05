@@ -64,10 +64,6 @@ class LaserEmitter : public GaussianBeamBase {
   inline double GetRayleighLength_m() const { return rayleigh_length_m_; }
   inline double GetRayleighLengthOffset_m() const { return rayleigh_length_offset_m_; }
 
-  // Functions
-  double CalcBeamWidthRadius_m(const double emission_distance_m);
-  double CalcIntensity_W_m2(double emission_distance_m, double deviation_from_optical_axis_m);
-
  protected:
   libra::Vector<3> emitting_direction_c_{0.0};                 //!< Laser emitting direction vector @ component frame
   double emission_angle_rad_ = 0.0;                            //!< Laser emitting angle from the emitting direction [rad]

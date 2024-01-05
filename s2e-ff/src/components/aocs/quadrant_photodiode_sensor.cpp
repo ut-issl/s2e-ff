@@ -75,8 +75,10 @@ void QuadrantPhotodiodeSensor::MainRoutine(int count) {
       z_axis_displacement_true_m_ = qpd_z_axis_displacement_m;
     }
 
-    CalcSensorOutput(inter_spacecraft_communication_.GetLaserEmitter(laser_id), qpd_laser_distance_m, qpd_y_axis_displacement_m,
-                     qpd_z_axis_displacement_m);
+    LaserEmitter laser_emitter = inter_spacecraft_communication_.GetLaserEmitter(laser_id);
+    double laser_rayleigh_length_offset_m = laser_emitter.GetRayleighLengthOffset_m();
+
+    CalcSensorOutput(&laser_emitter, qpd_laser_distance_m - laser_rayleigh_length_offset_m, qpd_y_axis_displacement_m, qpd_z_axis_displacement_m);
 
     if (qpd_sensor_output_sum_V_ < qpd_sensor_output_voltage_threshold_V_) {
       continue;
@@ -140,7 +142,7 @@ double QuadrantPhotodiodeSensor::CalcDisplacement(const libra::Vector<3> point_p
   return displacement_m;
 };
 
-void QuadrantPhotodiodeSensor::CalcSensorOutput(LaserEmitter laser_emitter, const double laser_emitting_distance_m,
+void QuadrantPhotodiodeSensor::CalcSensorOutput(LaserEmitter* laser_emitter, const double distance_from_beam_waist_m,
                                                 const double qpd_y_axis_displacement_m, const double qpd_z_axis_displacement_m) {
   qpd_sensor_radius_m_ = (double)(((int32_t)(qpd_sensor_radius_m_ / qpd_sensor_integral_step_m_)) * qpd_sensor_integral_step_m_);
   for (size_t horizontal_step = 0; horizontal_step <= (size_t)(qpd_sensor_radius_m_ / qpd_sensor_integral_step_m_) * 2; horizontal_step++) {
@@ -152,7 +154,7 @@ void QuadrantPhotodiodeSensor::CalcSensorOutput(LaserEmitter laser_emitter, cons
       double vertical_pos_m = qpd_sensor_integral_step_m_ * vertical_step - vertical_range_max_m;
       double deviation_from_optical_axis_m =
           sqrt(pow(horizontal_pos_m - qpd_y_axis_displacement_m, 2.0) + pow(vertical_pos_m - qpd_z_axis_displacement_m, 2.0));
-      double temp = laser_emitter.CalcIntensity_W_m2(laser_emitting_distance_m, deviation_from_optical_axis_m) * qpd_sensor_integral_step_m_ *
+      double temp = laser_emitter->CalcIntensity_W_m2(distance_from_beam_waist_m, deviation_from_optical_axis_m) * qpd_sensor_integral_step_m_ *
                     qpd_sensor_integral_step_m_;
 
       qpd_sensor_output_y_axis_V_ += CalcSign(-horizontal_pos_m, qpd_sensor_integral_step_m_ / 2) * temp;
