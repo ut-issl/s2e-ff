@@ -87,9 +87,9 @@ void QuadrantPhotodiodeSensor::MainRoutine(int count) {
   }
   if (is_received_laser_) {
     observed_y_axis_displacement_m_ =
-        DeterminePositionDisplacement(yAxisDirection, qpd_sensor_output_y_axis_V_, qpd_sensor_output_sum_V_, qpd_ratio_y_reference_list_);
+        ObservePositionDisplacement(yAxisDirection, qpd_sensor_output_y_axis_V_, qpd_sensor_output_sum_V_, qpd_ratio_y_reference_list_);
     observed_z_axis_displacement_m_ =
-        DeterminePositionDisplacement(zAxisDirection, qpd_sensor_output_z_axis_V_, qpd_sensor_output_sum_V_, qpd_ratio_z_reference_list_);
+        ObservePositionDisplacement(zAxisDirection, qpd_sensor_output_z_axis_V_, qpd_sensor_output_sum_V_, qpd_ratio_z_reference_list_);
   }
 }
 
@@ -175,23 +175,22 @@ double QuadrantPhotodiodeSensor::CalcSign(const double input_value, const double
   return 0.0;
 }
 
-double QuadrantPhotodiodeSensor::DeterminePositionDisplacement(const QpdPositionDeterminationDirection determination_direction,
-                                                               const double qpd_sensor_output_V, const double qpd_sensor_output_sum_V,
-                                                               const std::vector<double>& qpd_ratio_reference_list) {
+double QuadrantPhotodiodeSensor::ObservePositionDisplacement(const QpdPositionDeterminationDirection determination_direction,
+                                                             const double qpd_sensor_output_V, const double qpd_sensor_output_sum_V,
+                                                             const std::vector<double>& qpd_ratio_reference_list) {
   double qpd_sensor_output_polarization = (determination_direction == yAxisDirection) ? -1.0 : 1.0;
-  double determined_displacement_m =
+  double observed_displacement_m =
       qpd_sensor_output_polarization * CalcSign(qpd_sensor_output_y_axis_V_, 0.0) * qpd_sensor_position_determination_threshold_m_;
   double sensor_value_ratio = qpd_sensor_output_V / qpd_sensor_output_sum_V;
   for (size_t i = 0; i < qpd_ratio_reference_list.size() - 1; ++i) {
     if ((qpd_sensor_output_polarization * sensor_value_ratio >= qpd_sensor_output_polarization * qpd_ratio_reference_list[i]) &&
         (qpd_sensor_output_polarization * sensor_value_ratio <= qpd_sensor_output_polarization * qpd_ratio_reference_list[i + 1])) {
-      determined_displacement_m = qpd_displacement_reference_list_m_[i];
-      determined_displacement_m += (qpd_displacement_reference_list_m_[i + 1] - qpd_displacement_reference_list_m_[i]) *
-                                   (sensor_value_ratio - qpd_ratio_reference_list[i]) /
-                                   (qpd_ratio_reference_list[i + 1] - qpd_ratio_reference_list[i]);
+      observed_displacement_m = qpd_displacement_reference_list_m_[i];
+      observed_displacement_m += (qpd_displacement_reference_list_m_[i + 1] - qpd_displacement_reference_list_m_[i]) *
+                                 (sensor_value_ratio - qpd_ratio_reference_list[i]) / (qpd_ratio_reference_list[i + 1] - qpd_ratio_reference_list[i]);
     }
   }
-  return determined_displacement_m;
+  return observed_displacement_m;
 }
 
 // Functions

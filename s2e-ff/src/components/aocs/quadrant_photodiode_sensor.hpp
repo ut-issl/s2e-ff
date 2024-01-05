@@ -105,8 +105,8 @@ class QuadrantPhotodiodeSensor : public Component, public ILoggable {
 
   void CalcSensorOutput(LaserEmitter* laser_emitter, const double distance_from_beam_waist_m, const double qpd_horizontal_displacement_m,
                         const double qpd_vertical_displacement_m);
-  double DeterminePositionDisplacement(const QpdPositionDeterminationDirection determination_direction, const double qpd_sensor_output_V,
-                                       const double qpd_sensor_output_sum_V, const std::vector<double>& qpd_ratio_reference_list);
+  double ObservePositionDisplacement(const QpdPositionDeterminationDirection determination_direction, const double qpd_sensor_output_V,
+                                     const double qpd_sensor_output_sum_V, const std::vector<double>& qpd_ratio_reference_list);
   double CalcSign(const double input_value, const double threshold);
 
   void Initialize(const std::string file_name, const size_t id = 0);
