@@ -1,6 +1,6 @@
 /**
- * @file corner_cube_reflector.hpp
- * @brief Corner cube reflector
+ * @file laser_emitter.hpp
+ * @brief Laser Emitter
  */
 
 #ifndef S2E_COMPONENTS_LASER_EMITTER_HPP_

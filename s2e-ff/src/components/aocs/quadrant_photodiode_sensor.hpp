@@ -1,6 +1,6 @@
 /**
- * @file laser_distance_meter.hpp
- * @brief Laser distance meter
+ * @file quadrant_photodiode_sensor.hpp
+ * @brief Quadrant photodiode (QPD) sensor
  */
 
 #ifndef S2E_COMPONENTS_QUADRANT_PHOTODIODE_SENSOR_HPP_

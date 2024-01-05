@@ -1,6 +1,6 @@
 /**
- * @file laser_distance_meter.hpp
- * @brief Laser distance meter
+ * @file quadrant_photodiode_sensor.cpp
+ * @brief Quadrant photodiode (QPD) sensor
  */
 
 #include "quadrant_photodiode_sensor.hpp"
