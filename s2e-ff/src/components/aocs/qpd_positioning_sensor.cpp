@@ -1,18 +1,17 @@
 /**
- * @file quadrant_photodiode_sensor.cpp
+ * @file qpd_positioning_sensor.cpp
  * @brief Quadrant photodiode (QPD) sensor
  */
 
-#include "quadrant_photodiode_sensor.hpp"
+#include "./qpd_positioning_sensor.hpp"
 
-QuadrantPhotodiodeSensor::QuadrantPhotodiodeSensor(const int prescaler, ClockGenerator* clock_gen, const std::string file_name,
-                                                   const Dynamics& dynamics, const FfInterSpacecraftCommunication& inter_spacecraft_communication,
-                                                   const size_t id)
+QpdPositioningSensor::QpdPositioningSensor(const int prescaler, ClockGenerator* clock_gen, const std::string file_name, const Dynamics& dynamics,
+                                           const FfInterSpacecraftCommunication& inter_spacecraft_communication, const size_t id)
     : Component(prescaler, clock_gen), dynamics_(dynamics), inter_spacecraft_communication_(inter_spacecraft_communication) {
   Initialize(file_name, id);
 }
 
-void QuadrantPhotodiodeSensor::MainRoutine(int count) {
+void QpdPositioningSensor::MainRoutine(int count) {
   if (count < 10) return;
 
   // Body -> Inertial frame
@@ -93,9 +92,9 @@ void QuadrantPhotodiodeSensor::MainRoutine(int count) {
   }
 }
 
-std::string QuadrantPhotodiodeSensor::GetLogHeader() const {
+std::string QpdPositioningSensor::GetLogHeader() const {
   std::string str_tmp = "";
-  std::string head = "quadrant_photodiode_sensor_";
+  std::string head = "qpd_positioning_sensor_";
   str_tmp += WriteScalar(head + "is_received_laser");
   str_tmp += WriteScalar(head + "distance_true[m]");
   str_tmp += WriteScalar(head + "y_axis_displacement_true[m]");
@@ -109,7 +108,7 @@ std::string QuadrantPhotodiodeSensor::GetLogHeader() const {
   return str_tmp;
 }
 
-std::string QuadrantPhotodiodeSensor::GetLogValue() const {
+std::string QpdPositioningSensor::GetLogValue() const {
   std::string str_tmp = "";
 
   str_tmp += WriteScalar(is_received_laser_);
@@ -125,9 +124,9 @@ std::string QuadrantPhotodiodeSensor::GetLogValue() const {
   return str_tmp;
 }
 
-libra::Vector<3> QuadrantPhotodiodeSensor::CalcLaserReceivedPosition(const libra::Vector<3> point_position, const libra::Vector<3> origin_position,
-                                                                     const libra::Vector<3> plane_normal_direction,
-                                                                     const libra::Vector<3> point_line_direction) {
+libra::Vector<3> QpdPositioningSensor::CalcLaserReceivedPosition(const libra::Vector<3> point_position, const libra::Vector<3> origin_position,
+                                                                 const libra::Vector<3> plane_normal_direction,
+                                                                 const libra::Vector<3> point_line_direction) {
   libra::Vector<3> q_p = point_position - origin_position;
   double temp1 = libra::InnerProduct(q_p, plane_normal_direction) / pow(plane_normal_direction.CalcNorm(), 2.0);
   libra::Vector<3> position_temp1 = q_p - temp1 * plane_normal_direction;
@@ -137,15 +136,15 @@ libra::Vector<3> QuadrantPhotodiodeSensor::CalcLaserReceivedPosition(const libra
   return position;
 }
 
-double QuadrantPhotodiodeSensor::CalcDisplacement(const libra::Vector<3> point_position, const libra::Vector<3> origin_position,
-                                                  const libra::Vector<3> displacement_direction) {
+double QpdPositioningSensor::CalcDisplacement(const libra::Vector<3> point_position, const libra::Vector<3> origin_position,
+                                              const libra::Vector<3> displacement_direction) {
   libra::Vector<3> q_p = point_position - origin_position;
   double displacement_m = libra::InnerProduct(q_p, displacement_direction) / pow(displacement_direction.CalcNorm(), 2.0);
   return displacement_m;
 };
 
-void QuadrantPhotodiodeSensor::CalcSensorOutput(LaserEmitter* laser_emitter, const double distance_from_beam_waist_m,
-                                                const double qpd_y_axis_displacement_m, const double qpd_z_axis_displacement_m) {
+void QpdPositioningSensor::CalcSensorOutput(LaserEmitter* laser_emitter, const double distance_from_beam_waist_m,
+                                            const double qpd_y_axis_displacement_m, const double qpd_z_axis_displacement_m) {
   qpd_sensor_radius_m_ = (double)(((int32_t)(qpd_sensor_radius_m_ / qpd_sensor_integral_step_m_)) * qpd_sensor_integral_step_m_);
   for (size_t horizontal_step = 0; horizontal_step <= (size_t)(qpd_sensor_radius_m_ / qpd_sensor_integral_step_m_) * 2; horizontal_step++) {
     double horizontal_pos_m = qpd_sensor_integral_step_m_ * horizontal_step - qpd_sensor_radius_m_;
@@ -166,7 +165,7 @@ void QuadrantPhotodiodeSensor::CalcSensorOutput(LaserEmitter* laser_emitter, con
   }
 }
 
-double QuadrantPhotodiodeSensor::CalcSign(const double input_value, const double threshold) {
+double QpdPositioningSensor::CalcSign(const double input_value, const double threshold) {
   if (input_value < -threshold) {
     return -1;
   } else if (input_value > threshold) {
@@ -175,12 +174,10 @@ double QuadrantPhotodiodeSensor::CalcSign(const double input_value, const double
   return 0.0;
 }
 
-double QuadrantPhotodiodeSensor::ObservePositionDisplacement(const QpdPositionDeterminationDirection determination_direction,
-                                                             const double qpd_sensor_output_V, const double qpd_sensor_output_sum_V,
-                                                             const std::vector<double>& qpd_ratio_reference_list) {
-  double qpd_sensor_output_polarization = (determination_direction == kYAxisDirection) ? -1.0 : 1.0;
-  double observed_displacement_m =
-      qpd_sensor_output_polarization * CalcSign(qpd_sensor_output_y_axis_V_, 0.0) * qpd_sensor_position_determination_threshold_m_;
+double QpdPositioningSensor::ObservePositionDisplacement(const QpdObservedPositionDirection observation_direction, const double qpd_sensor_output_V,
+                                                         const double qpd_sensor_output_sum_V, const std::vector<double>& qpd_ratio_reference_list) {
+  double qpd_sensor_output_polarization = (observation_direction == kYAxisDirection) ? -1.0 : 1.0;
+  double observed_displacement_m = qpd_sensor_output_polarization * CalcSign(qpd_sensor_output_y_axis_V_, 0.0) * qpd_positioning_threshold_m_;
   double sensor_value_ratio = qpd_sensor_output_V / qpd_sensor_output_sum_V;
   for (size_t i = 0; i < qpd_ratio_reference_list.size() - 1; ++i) {
     if ((qpd_sensor_output_polarization * sensor_value_ratio >= qpd_sensor_output_polarization * qpd_ratio_reference_list[i]) &&
@@ -194,9 +191,9 @@ double QuadrantPhotodiodeSensor::ObservePositionDisplacement(const QpdPositionDe
 }
 
 // Functions
-void QuadrantPhotodiodeSensor::Initialize(const std::string file_name, const size_t id) {
+void QpdPositioningSensor::Initialize(const std::string file_name, const size_t id) {
   IniAccess ini_file(file_name);
-  std::string name = "QUADRANT_PHOTODIODE_SENSOR_";
+  std::string name = "QPD_POSITIONING_SENSOR_";
   const std::string section_name = name + std::to_string(static_cast<long long>(id));
 
   std::string file_path = ini_file.ReadString(section_name.c_str(), "qpd_sensor_file_directory");
@@ -219,7 +216,7 @@ void QuadrantPhotodiodeSensor::Initialize(const std::string file_name, const siz
 
   qpd_sensor_radius_m_ = ini_file.ReadDouble(section_name.c_str(), "qpd_sensor_radius_m");
   qpd_sensor_integral_step_m_ = ini_file.ReadDouble(section_name.c_str(), "qpd_sensor_integral_step_m");
-  qpd_sensor_position_determination_threshold_m_ = ini_file.ReadDouble(section_name.c_str(), "qpd_sensor_position_determination_threshold_m");
+  qpd_positioning_threshold_m_ = ini_file.ReadDouble(section_name.c_str(), "qpd_positioning_threshold_m");
   qpd_laser_receivable_angle_rad_ = ini_file.ReadDouble(section_name.c_str(), "qpd_laser_receivable_angle_rad");
   qpd_sensor_output_voltage_threshold_V_ = ini_file.ReadDouble(section_name.c_str(), "qpd_sensor_output_voltage_threshold_V");
 

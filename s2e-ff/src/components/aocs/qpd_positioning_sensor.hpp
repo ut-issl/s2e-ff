@@ -1,10 +1,10 @@
 /**
- * @file quadrant_photodiode_sensor.hpp
- * @brief Quadrant photodiode (QPD) sensor
+ * @file qpd_positioning_sensor.hpp
+ * @brief Quadrant photodiode (QPD) positioning system
  */
 
-#ifndef S2E_COMPONENTS_QUADRANT_PHOTODIODE_SENSOR_HPP_
-#define S2E_COMPONENTS_QUADRANT_PHOTODIODE_SENSOR_HPP_
+#ifndef S2E_COMPONENTS_QPD_POSITIONING_SENSOR_HPP_
+#define S2E_COMPONENTS_QPD_POSITIONING_SENSOR_HPP_
 
 #include <components/base/component.hpp>
 #include <dynamics/dynamics.hpp>
@@ -15,23 +15,23 @@
 #include "../../simulation/case/ff_inter_spacecraft_communication.hpp"
 
 /**
- * @class QuadrantPhotodiodeSensor
+ * @class QpdPositioningSensor
  * @brief Quadrant photodiode sensor
  * @note  This component not only calculate the QPD sensor output values, but also calculate position displacements.
  */
-class QuadrantPhotodiodeSensor : public Component, public ILoggable {
+class QpdPositioningSensor : public Component, public ILoggable {
  public:
   /**
-   * @fn QuadrantPhotodiodeSensor
+   * @fn QpdPositioningSensor
    * @brief Constructor
    */
-  QuadrantPhotodiodeSensor(const int prescaler, ClockGenerator* clock_gen, const std::string file_name, const Dynamics& dynamics,
-                           const FfInterSpacecraftCommunication& inter_spacecraft_communication, const size_t id = 0);
+  QpdPositioningSensor(const int prescaler, ClockGenerator* clock_gen, const std::string file_name, const Dynamics& dynamics,
+                       const FfInterSpacecraftCommunication& inter_spacecraft_communication, const size_t id = 0);
   /**
-   * @fn ~QuadrantPhotodiodeSensor
+   * @fn ~QpdPositioningSensor
    * @brief Destructor
    */
-  ~QuadrantPhotodiodeSensor() {}
+  ~QpdPositioningSensor() {}
 
   // ComponentBase override function
   /**
@@ -59,20 +59,20 @@ class QuadrantPhotodiodeSensor : public Component, public ILoggable {
   inline bool GetIsReceivedLaser() const { return is_received_laser_; }
 
   /**
-   * @enum QpdPositionDeterminationDirection
+   * @enum QpdObservedPositionDirection
    * @brief Type of the quadrant photodiode sensor output value
    */
   typedef enum {
     kYAxisDirection = 0,  //!< y-axis direction
     kZAxisDirection,      //!< z-axis direction
-  } QpdPositionDeterminationDirection;
+  } QpdObservedPositionDirection;
 
  protected:
   double qpd_laser_receivable_angle_rad_;                      //!< laser receivable half angle from the normal direction [rad]
   double qpd_sensor_output_voltage_threshold_V_;               //!< Quadrant photodiode sensor output voltage threshold [V]
   double qpd_sensor_radius_m_;                                 //!< Quadrant photodiode sensor radius [m]
   double qpd_sensor_integral_step_m_;                          //!< Integral step to calculate the output value of the quadrant photodiode sensor [m]
-  double qpd_sensor_position_determination_threshold_m_;       //!< Position determination threshold using the quadrant photodiode sensor [m]
+  double qpd_positioning_threshold_m_;                         //!< Position determination threshold using the quadrant photodiode sensor [m]
   libra::TranslationFirstDualQuaternion dual_quaternion_c2b_;  //!< Dual quaternion from component to body frame
 
   bool is_received_laser_ = false;  //!< Flag to detect laser received
@@ -105,11 +105,11 @@ class QuadrantPhotodiodeSensor : public Component, public ILoggable {
 
   void CalcSensorOutput(LaserEmitter* laser_emitter, const double distance_from_beam_waist_m, const double qpd_horizontal_displacement_m,
                         const double qpd_vertical_displacement_m);
-  double ObservePositionDisplacement(const QpdPositionDeterminationDirection determination_direction, const double qpd_sensor_output_V,
+  double ObservePositionDisplacement(const QpdObservedPositionDirection observation_direction, const double qpd_sensor_output_V,
                                      const double qpd_sensor_output_sum_V, const std::vector<double>& qpd_ratio_reference_list);
   double CalcSign(const double input_value, const double threshold);
 
   void Initialize(const std::string file_name, const size_t id = 0);
 };
 
-#endif  // S2E_COMPONENTS_QUADRANT_PHOTODIODE_SENSOR_HPP_
+#endif  // S2E_COMPONENTS_QPD_POSITIONING_SENSOR_HPP_
