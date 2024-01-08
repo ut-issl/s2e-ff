@@ -91,8 +91,8 @@ class QpdPositioningSensor : public Component, public ILoggable {
   double observed_z_axis_displacement_m_ = 0.0;  //!< Observed displacement in the z-axis direction [m]
 
   std::vector<double> qpd_displacement_reference_list_m_;
-  std::vector<double> qpd_ratio_y_reference_list_;
-  std::vector<double> qpd_ratio_z_reference_list_;
+  std::vector<double> qpd_sensor_voltage_ratio_y_list_;
+  std::vector<double> qpd_sensor_voltage_ratio_z_list_;
 
   // Reference
   const Dynamics& dynamics_;

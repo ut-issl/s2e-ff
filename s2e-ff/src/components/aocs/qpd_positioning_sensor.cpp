@@ -25,19 +25,13 @@ void QpdPositioningSensor::MainRoutine(int count) {
   // Laser emitter info
   size_t number_of_laser_emitters = inter_spacecraft_communication_.GetNumberOfLasers();
   distance_true_m_ = 1e30;
-  y_axis_displacement_true_m_ = 1e30;
-  z_axis_displacement_true_m_ = 1e30;
+  y_axis_displacement_true_m_ = 1.0e3;
+  z_axis_displacement_true_m_ = 1.0e3;
   observed_y_axis_displacement_m_ = 1.0e3;
   observed_z_axis_displacement_m_ = 1.0e3;
   qpd_sensor_output_y_axis_V_ = 0.0;
   qpd_sensor_output_z_axis_V_ = 0.0;
   qpd_sensor_output_sum_V_ = 0.0;
-  double qpd_laser_distance_m = 0.0;
-  double qpd_y_axis_displacement_m = 0.0;
-  double qpd_z_axis_displacement_m = 0.0;
-
-  double qpd_received_laser_beam_radius_m = 0.0;
-  double qpd_received_laser_power_W = 0.0;
 
   is_received_laser_ = false;
   for (size_t laser_id = 0; laser_id < number_of_laser_emitters; laser_id++) {
@@ -60,9 +54,9 @@ void QpdPositioningSensor::MainRoutine(int count) {
     }
     libra::Vector<3> laser_received_position_c_m =
         CalcLaserReceivedPosition(laser_position_c_m, libra::Vector<3>{0.0}, x_axis_direction_c_, laser_emitting_direction_c);
-    qpd_laser_distance_m = laser_position_c_m.CalcNorm();
-    qpd_y_axis_displacement_m = CalcDisplacement(laser_received_position_c_m, libra::Vector<3>{0.0}, y_axis_direction_c_);
-    qpd_z_axis_displacement_m = CalcDisplacement(laser_received_position_c_m, libra::Vector<3>{0.0}, z_axis_direction_c_);
+    double qpd_laser_distance_m = laser_position_c_m.CalcNorm();
+    double qpd_y_axis_displacement_m = CalcDisplacement(laser_received_position_c_m, libra::Vector<3>{0.0}, y_axis_direction_c_);
+    double qpd_z_axis_displacement_m = CalcDisplacement(laser_received_position_c_m, libra::Vector<3>{0.0}, z_axis_direction_c_);
 
     if (qpd_laser_distance_m < distance_true_m_) {
       distance_true_m_ = qpd_laser_distance_m;
@@ -86,9 +80,9 @@ void QpdPositioningSensor::MainRoutine(int count) {
   }
   if (is_received_laser_) {
     observed_y_axis_displacement_m_ =
-        ObservePositionDisplacement(kYAxisDirection, qpd_sensor_output_y_axis_V_, qpd_sensor_output_sum_V_, qpd_ratio_y_reference_list_);
+        ObservePositionDisplacement(kYAxisDirection, qpd_sensor_output_y_axis_V_, qpd_sensor_output_sum_V_, qpd_sensor_voltage_ratio_y_list_);
     observed_z_axis_displacement_m_ =
-        ObservePositionDisplacement(kZAxisDirection, qpd_sensor_output_z_axis_V_, qpd_sensor_output_sum_V_, qpd_ratio_z_reference_list_);
+        ObservePositionDisplacement(kZAxisDirection, qpd_sensor_output_z_axis_V_, qpd_sensor_output_sum_V_, qpd_sensor_voltage_ratio_z_list_);
   }
 }
 
@@ -175,16 +169,16 @@ double QpdPositioningSensor::CalcSign(const double input_value, const double thr
 }
 
 double QpdPositioningSensor::ObservePositionDisplacement(const QpdObservedPositionDirection observation_direction, const double qpd_sensor_output_V,
-                                                         const double qpd_sensor_output_sum_V, const std::vector<double>& qpd_ratio_reference_list) {
+                                                         const double qpd_sensor_output_sum_V, const std::vector<double>& qpd_voltage_ratio_list) {
   double qpd_sensor_output_polarization = (observation_direction == kYAxisDirection) ? -1.0 : 1.0;
-  double observed_displacement_m = qpd_sensor_output_polarization * CalcSign(qpd_sensor_output_y_axis_V_, 0.0) * qpd_positioning_threshold_m_;
+  double observed_displacement_m = qpd_sensor_output_polarization * CalcSign(qpd_sensor_output_sum_V, 0.0) * qpd_positioning_threshold_m_;
   double sensor_value_ratio = qpd_sensor_output_V / qpd_sensor_output_sum_V;
-  for (size_t i = 0; i < qpd_ratio_reference_list.size() - 1; ++i) {
-    if ((qpd_sensor_output_polarization * sensor_value_ratio >= qpd_sensor_output_polarization * qpd_ratio_reference_list[i]) &&
-        (qpd_sensor_output_polarization * sensor_value_ratio <= qpd_sensor_output_polarization * qpd_ratio_reference_list[i + 1])) {
+  for (size_t i = 0; i < qpd_voltage_ratio_list.size() - 1; ++i) {
+    if ((qpd_sensor_output_polarization * sensor_value_ratio >= qpd_sensor_output_polarization * qpd_voltage_ratio_list[i]) &&
+        (qpd_sensor_output_polarization * sensor_value_ratio <= qpd_sensor_output_polarization * qpd_voltage_ratio_list[i + 1])) {
       observed_displacement_m = qpd_displacement_reference_list_m_[i];
       observed_displacement_m += (qpd_displacement_reference_list_m_[i + 1] - qpd_displacement_reference_list_m_[i]) *
-                                 (sensor_value_ratio - qpd_ratio_reference_list[i]) / (qpd_ratio_reference_list[i + 1] - qpd_ratio_reference_list[i]);
+                                 (sensor_value_ratio - qpd_voltage_ratio_list[i]) / (qpd_voltage_ratio_list[i + 1] - qpd_voltage_ratio_list[i]);
     }
   }
   return observed_displacement_m;
@@ -197,15 +191,15 @@ void QpdPositioningSensor::Initialize(const std::string file_name, const size_t 
   const std::string section_name = name + std::to_string(static_cast<long long>(id));
 
   std::string file_path = ini_file.ReadString(section_name.c_str(), "qpd_sensor_file_directory");
-  std::string filepath_qpd_sensor_reference = file_path + "qpd_sensor_reference.csv";
-  IniAccess conf_qpd_sensor_reference(filepath_qpd_sensor_reference);
-  std::vector<std::vector<std::string>> qpd_sensor_reference_str_list;
-  conf_qpd_sensor_reference.ReadCsvString(qpd_sensor_reference_str_list, 1000);
+  std::string filepath_qpd_sensor_voltage_ratio = file_path + "qpd_sensor_voltage_ratio.csv";
+  IniAccess conf_qpd_sensor_voltage_ratio(filepath_qpd_sensor_voltage_ratio);
+  std::vector<std::vector<std::string>> qpd_sensor_voltage_ratio_str_list;
+  conf_qpd_sensor_voltage_ratio.ReadCsvString(qpd_sensor_voltage_ratio_str_list, 1000);
 
-  for (size_t index = 1; index < qpd_sensor_reference_str_list.size(); ++index) {  // first row is for labels
-    qpd_displacement_reference_list_m_.push_back(stod(qpd_sensor_reference_str_list[index][0]));
-    qpd_ratio_y_reference_list_.push_back(stod(qpd_sensor_reference_str_list[index][1]));
-    qpd_ratio_z_reference_list_.push_back(stod(qpd_sensor_reference_str_list[index][2]));
+  for (size_t index = 1; index < qpd_sensor_voltage_ratio_str_list.size(); ++index) {  // first row is for labels
+    qpd_displacement_reference_list_m_.push_back(stod(qpd_sensor_voltage_ratio_str_list[index][0]));
+    qpd_sensor_voltage_ratio_y_list_.push_back(stod(qpd_sensor_voltage_ratio_str_list[index][1]));
+    qpd_sensor_voltage_ratio_z_list_.push_back(stod(qpd_sensor_voltage_ratio_str_list[index][2]));
   }
 
   libra::Quaternion quaternion_b2c;
