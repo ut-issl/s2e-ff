@@ -143,7 +143,7 @@ double QpdPositioningSensor::CalcDisplacement(const libra::Vector<3> point_posit
 void QpdPositioningSensor::CalcSensorOutput(LaserEmitter* laser_emitter, const double distance_from_beam_waist_m,
                                             const double qpd_y_axis_displacement_m, const double qpd_z_axis_displacement_m) {
   qpd_sensor_radius_m_ = (double)(((int32_t)(qpd_sensor_radius_m_ / qpd_sensor_integral_step_m_)) * qpd_sensor_integral_step_m_);
-  libra::Vector<3> qpd_standard_deviation_V_{0.0};
+  libra::Vector<3> qpd_standard_deviation_V{0.0};
   for (size_t y_axis_step = 0; y_axis_step <= (size_t)(qpd_sensor_radius_m_ / qpd_sensor_integral_step_m_) * 2; y_axis_step++) {
     double y_axis_pos_m = qpd_sensor_integral_step_m_ * y_axis_step - qpd_sensor_radius_m_;
     double z_axis_range_max_m = (double)((int32_t)(sqrt(pow(qpd_sensor_radius_m_, 2.0) - pow(y_axis_pos_m, 2.0)) / qpd_sensor_integral_step_m_) *
@@ -162,29 +162,29 @@ void QpdPositioningSensor::CalcSensorOutput(LaserEmitter* laser_emitter, const d
       qpd_sensor_output_z_axis_V_ += CalcSign(z_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * temp1;
       qpd_sensor_output_sum_V_ += temp1;
 
-      qpd_standard_deviation_V_[0] += CalcSign(-y_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * temp2;
-      qpd_standard_deviation_V_[1] += CalcSign(z_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * temp2;
-      qpd_standard_deviation_V_[2] += temp2;
+      qpd_standard_deviation_V[0] += CalcSign(-y_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * temp2;
+      qpd_standard_deviation_V[1] += CalcSign(z_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * temp2;
+      qpd_standard_deviation_V[2] += temp2;
     }
   }
   for (int std_id = 0; std_id < 3; ++std_id) {
-    qpd_standard_deviation_V_[std_id] =
-        qpd_sensor_output_std_scale_factor_ * fabs(qpd_standard_deviation_V_[std_id]) + qpd_sensor_output_std_constant_V_;
+    qpd_standard_deviation_V[std_id] =
+        qpd_sensor_output_std_scale_factor_ * fabs(qpd_standard_deviation_V[std_id]) + qpd_sensor_output_std_constant_V_;
   }
   libra::Vector<3> qpd_sensor_noise_base = Measure(libra::Vector<3>{0.0});
-  qpd_sensor_output_y_axis_V_ += qpd_sensor_noise_base[0] * qpd_standard_deviation_V_[0];
-  qpd_sensor_output_z_axis_V_ += qpd_sensor_noise_base[1] * qpd_standard_deviation_V_[1];
-  qpd_sensor_output_sum_V_ += qpd_sensor_noise_base[2] * qpd_standard_deviation_V_[2];
+  qpd_sensor_output_y_axis_V_ += qpd_sensor_noise_base[0] * qpd_standard_deviation_V[0];
+  qpd_sensor_output_z_axis_V_ += qpd_sensor_noise_base[1] * qpd_standard_deviation_V[1];
+  qpd_sensor_output_sum_V_ += qpd_sensor_noise_base[2] * qpd_standard_deviation_V[2];
   if (fabs(qpd_sensor_output_y_axis_V_) > qpd_sensor_output_sum_V_) {
-    qpd_sensor_output_y_axis_V_ -= 2 * qpd_sensor_noise_base[0] * qpd_standard_deviation_V_[0];
+    qpd_sensor_output_y_axis_V_ -= 2 * qpd_sensor_noise_base[0] * qpd_standard_deviation_V[0];
     if (fabs(qpd_sensor_output_y_axis_V_) > qpd_sensor_output_sum_V_) {
-      qpd_sensor_output_sum_V_ -= 2 * qpd_sensor_noise_base[2] * qpd_standard_deviation_V_[2];
+      qpd_sensor_output_sum_V_ -= 2 * qpd_sensor_noise_base[2] * qpd_standard_deviation_V[2];
     }
   }
-  if (fabs(qpd_sensor_output_z_axis_V_ + qpd_sensor_noise_base[1] * qpd_standard_deviation_V_[1]) > qpd_sensor_output_sum_V_) {
-    qpd_sensor_output_z_axis_V_ -= 2 * qpd_sensor_noise_base[1] * qpd_standard_deviation_V_[1];
+  if (fabs(qpd_sensor_output_z_axis_V_ + qpd_sensor_noise_base[1] * qpd_standard_deviation_V[1]) > qpd_sensor_output_sum_V_) {
+    qpd_sensor_output_z_axis_V_ -= 2 * qpd_sensor_noise_base[1] * qpd_standard_deviation_V[1];
     if (fabs(qpd_sensor_output_z_axis_V_) > qpd_sensor_output_sum_V_) {
-      qpd_sensor_output_sum_V_ -= 2 * qpd_sensor_noise_base[2] * qpd_standard_deviation_V_[2];
+      qpd_sensor_output_sum_V_ -= 2 * qpd_sensor_noise_base[2] * qpd_standard_deviation_V[2];
     }
   }
 }
