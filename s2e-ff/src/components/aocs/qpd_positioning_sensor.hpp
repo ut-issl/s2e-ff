@@ -84,9 +84,9 @@ class QpdPositioningSensor : public Component, public ILoggable {
   libra::Vector<3> y_axis_direction_c_{0.0};  //!< y-axis direction in the component coordinate system
   libra::Vector<3> z_axis_direction_c_{0.0};  //!< z-axis direction in the component coordinate system
 
-  double qpd_sensor_output_y_axis_V_;            //!< Quadrant photodiode sensor output value corresponding to the y-axis direction [V]
-  double qpd_sensor_output_z_axis_V_;            //!< Quadrant photodiode sensor output value corresponding to the y-axis direction [V]
-  double qpd_sensor_output_sum_V_;               //!< Quadrant photodiode sensor output value corresponding to the sum of the light intensity [V]
+  double qpd_sensor_output_y_axis_V_ = 0.0;      //!< Quadrant photodiode sensor output value corresponding to the y-axis direction [V]
+  double qpd_sensor_output_z_axis_V_ = 0.0;      //!< Quadrant photodiode sensor output value corresponding to the y-axis direction [V]
+  double qpd_sensor_output_sum_V_ = 0.0;         //!< Quadrant photodiode sensor output value corresponding to the sum of the light intensity [V]
   double observed_y_axis_displacement_m_ = 0.0;  //!< Observed displacement in the y-axis direction [m]
   double observed_z_axis_displacement_m_ = 0.0;  //!< Observed displacement in the z-axis direction [m]
 
@@ -103,8 +103,8 @@ class QpdPositioningSensor : public Component, public ILoggable {
   double CalcDisplacement(const libra::Vector<3> point_position, const libra::Vector<3> origin_position,
                           const libra::Vector<3> displacement_direction);
 
-  void CalcSensorOutput(LaserEmitter* laser_emitter, const double distance_from_beam_waist_m, const double qpd_horizontal_displacement_m,
-                        const double qpd_vertical_displacement_m);
+  void CalcSensorOutput(LaserEmitter* laser_emitter, const double distance_from_beam_waist_m, const double qpd_y_axis_displacement_m,
+                        const double qpd_z_axis_displacement_m);
   double ObservePositionDisplacement(const QpdObservedPositionDirection observation_direction, const double qpd_sensor_output_V,
                                      const double qpd_sensor_output_sum_V, const std::vector<double>& qpd_ratio_reference_list);
   double CalcSign(const double input_value, const double threshold);

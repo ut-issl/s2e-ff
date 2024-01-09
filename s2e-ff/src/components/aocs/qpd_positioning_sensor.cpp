@@ -48,7 +48,7 @@ void QpdPositioningSensor::MainRoutine(int count) {
     if (cos_theta < -1.0) cos_theta = -1.0;
     double qpd_laser_received_angle_rad = acos(cos_theta);
 
-    // Calc relative position displacement (horizontal direction and vertical direction)
+    // Calc relative position displacement (the y-axis direction and the z-axis direction)
     if (qpd_laser_received_angle_rad > qpd_laser_receivable_angle_rad_) {
       continue;
     }
@@ -140,20 +140,19 @@ double QpdPositioningSensor::CalcDisplacement(const libra::Vector<3> point_posit
 void QpdPositioningSensor::CalcSensorOutput(LaserEmitter* laser_emitter, const double distance_from_beam_waist_m,
                                             const double qpd_y_axis_displacement_m, const double qpd_z_axis_displacement_m) {
   qpd_sensor_radius_m_ = (double)(((int32_t)(qpd_sensor_radius_m_ / qpd_sensor_integral_step_m_)) * qpd_sensor_integral_step_m_);
-  for (size_t horizontal_step = 0; horizontal_step <= (size_t)(qpd_sensor_radius_m_ / qpd_sensor_integral_step_m_) * 2; horizontal_step++) {
-    double horizontal_pos_m = qpd_sensor_integral_step_m_ * horizontal_step - qpd_sensor_radius_m_;
-    double vertical_range_max_m =
-        (double)((int32_t)(sqrt(pow(qpd_sensor_radius_m_, 2.0) - pow(horizontal_pos_m, 2.0)) / qpd_sensor_integral_step_m_) *
-                 qpd_sensor_integral_step_m_);
-    for (size_t vertical_step = 0; vertical_step <= (size_t)(vertical_range_max_m / qpd_sensor_integral_step_m_) * 2; vertical_step++) {
-      double vertical_pos_m = qpd_sensor_integral_step_m_ * vertical_step - vertical_range_max_m;
+  for (size_t y_axis_step = 0; y_axis_step <= (size_t)(qpd_sensor_radius_m_ / qpd_sensor_integral_step_m_) * 2; y_axis_step++) {
+    double y_axis_pos_m = qpd_sensor_integral_step_m_ * y_axis_step - qpd_sensor_radius_m_;
+    double z_axis_range_max_m = (double)((int32_t)(sqrt(pow(qpd_sensor_radius_m_, 2.0) - pow(y_axis_pos_m, 2.0)) / qpd_sensor_integral_step_m_) *
+                                         qpd_sensor_integral_step_m_);
+    for (size_t z_axis_step = 0; z_axis_step <= (size_t)(z_axis_range_max_m / qpd_sensor_integral_step_m_) * 2; z_axis_step++) {
+      double z_axis_pos_m = qpd_sensor_integral_step_m_ * z_axis_step - z_axis_range_max_m;
       double deviation_from_optical_axis_m =
-          sqrt(pow(horizontal_pos_m - qpd_y_axis_displacement_m, 2.0) + pow(vertical_pos_m - qpd_z_axis_displacement_m, 2.0));
+          sqrt(pow(y_axis_pos_m - qpd_y_axis_displacement_m, 2.0) + pow(z_axis_pos_m - qpd_z_axis_displacement_m, 2.0));
       double temp = laser_emitter->CalcIntensity_W_m2(distance_from_beam_waist_m, deviation_from_optical_axis_m) * qpd_sensor_integral_step_m_ *
                     qpd_sensor_integral_step_m_;
 
-      qpd_sensor_output_y_axis_V_ += CalcSign(-horizontal_pos_m, qpd_sensor_integral_step_m_ / 2) * temp;
-      qpd_sensor_output_z_axis_V_ += CalcSign(vertical_pos_m, qpd_sensor_integral_step_m_ / 2) * temp;
+      qpd_sensor_output_y_axis_V_ += CalcSign(-y_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * temp;
+      qpd_sensor_output_z_axis_V_ += CalcSign(z_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * temp;
       qpd_sensor_output_sum_V_ += temp;
     }
   }
