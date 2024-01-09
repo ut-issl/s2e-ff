@@ -7,6 +7,7 @@
 #define S2E_COMPONENTS_QPD_POSITIONING_SENSOR_HPP_
 
 #include <components/base/component.hpp>
+#include <components/base/sensor.hpp>
 #include <dynamics/dynamics.hpp>
 #include <library/logger/logger.hpp>
 #include <library/math/vector.hpp>
@@ -19,13 +20,13 @@
  * @brief Quadrant photodiode sensor
  * @note  This component not only calculate the QPD sensor output values, but also calculate position displacements.
  */
-class QpdPositioningSensor : public Component, public ILoggable {
+class QpdPositioningSensor : public Component, public Sensor<3>, public ILoggable {
  public:
   /**
    * @fn QpdPositioningSensor
    * @brief Constructor
    */
-  QpdPositioningSensor(const int prescaler, ClockGenerator* clock_gen, const std::string file_name, const Dynamics& dynamics,
+  QpdPositioningSensor(const int prescaler, ClockGenerator* clock_gen, Sensor& sensor_base, const std::string file_name, const Dynamics& dynamics,
                        const FfInterSpacecraftCommunication& inter_spacecraft_communication, const size_t id = 0);
   /**
    * @fn ~QpdPositioningSensor
@@ -92,6 +93,9 @@ class QpdPositioningSensor : public Component, public ILoggable {
   std::vector<double>
       qpd_sensor_voltage_ratio_z_list_;  //!< List of `qpd_sensor_output_z_axis_V / qpd_sensor_output_sum_V` at each point on the z-axis.
 
+  double qpd_sensor_output_std_scale_factor_;
+  double qpd_sensor_output_std_constant_V_;
+
   // Reference
   const Dynamics& dynamics_;
   const FfInterSpacecraftCommunication& inter_spacecraft_communication_;
@@ -109,5 +113,9 @@ class QpdPositioningSensor : public Component, public ILoggable {
 
   void Initialize(const std::string file_name, const size_t id = 0);
 };
+
+QpdPositioningSensor InitializeQpdPositioningSensor(ClockGenerator* clock_gen, const std::string file_name, double compo_step_time_s,
+                                                    const Dynamics& dynamics, const FfInterSpacecraftCommunication& inter_spacecraft_communication,
+                                                    const size_t id = 0);
 
 #endif  // S2E_COMPONENTS_QPD_POSITIONING_SENSOR_HPP_

@@ -5,9 +5,12 @@
 
 #include "./qpd_positioning_sensor.hpp"
 
-QpdPositioningSensor::QpdPositioningSensor(const int prescaler, ClockGenerator* clock_gen, const std::string file_name, const Dynamics& dynamics,
-                                           const FfInterSpacecraftCommunication& inter_spacecraft_communication, const size_t id)
-    : Component(prescaler, clock_gen), dynamics_(dynamics), inter_spacecraft_communication_(inter_spacecraft_communication) {
+#include <components/base/initialize_sensor.hpp>
+
+QpdPositioningSensor::QpdPositioningSensor(const int prescaler, ClockGenerator* clock_gen, Sensor& sensor_base, const std::string file_name,
+                                           const Dynamics& dynamics, const FfInterSpacecraftCommunication& inter_spacecraft_communication,
+                                           const size_t id)
+    : Component(prescaler, clock_gen), Sensor(sensor_base), dynamics_(dynamics), inter_spacecraft_communication_(inter_spacecraft_communication) {
   Initialize(file_name, id);
 }
 
@@ -140,6 +143,7 @@ double QpdPositioningSensor::CalcDisplacement(const libra::Vector<3> point_posit
 void QpdPositioningSensor::CalcSensorOutput(LaserEmitter* laser_emitter, const double distance_from_beam_waist_m,
                                             const double qpd_y_axis_displacement_m, const double qpd_z_axis_displacement_m) {
   qpd_sensor_radius_m_ = (double)(((int32_t)(qpd_sensor_radius_m_ / qpd_sensor_integral_step_m_)) * qpd_sensor_integral_step_m_);
+  libra::Vector<3> qpd_standard_deviation_V_{0.0};
   for (size_t y_axis_step = 0; y_axis_step <= (size_t)(qpd_sensor_radius_m_ / qpd_sensor_integral_step_m_) * 2; y_axis_step++) {
     double y_axis_pos_m = qpd_sensor_integral_step_m_ * y_axis_step - qpd_sensor_radius_m_;
     double z_axis_range_max_m = (double)((int32_t)(sqrt(pow(qpd_sensor_radius_m_, 2.0) - pow(y_axis_pos_m, 2.0)) / qpd_sensor_integral_step_m_) *
@@ -148,15 +152,29 @@ void QpdPositioningSensor::CalcSensorOutput(LaserEmitter* laser_emitter, const d
       double z_axis_pos_m = qpd_sensor_integral_step_m_ * z_axis_step - z_axis_range_max_m;
       double deviation_from_optical_axis_m =
           sqrt(pow(y_axis_pos_m - qpd_y_axis_displacement_m, 2.0) + pow(z_axis_pos_m - qpd_z_axis_displacement_m, 2.0));
-      double temp = qpd_sensor_sensitivity_coefficient_V_W_ *
-                    laser_emitter->CalcIntensity_W_m2(distance_from_beam_waist_m, deviation_from_optical_axis_m) * qpd_sensor_integral_step_m_ *
-                    qpd_sensor_integral_step_m_;
+      double temp1 = qpd_sensor_sensitivity_coefficient_V_W_ *
+                     laser_emitter->CalcIntensity_W_m2(distance_from_beam_waist_m, deviation_from_optical_axis_m) * qpd_sensor_integral_step_m_ *
+                     qpd_sensor_integral_step_m_;
+      double temp2 = 2 * (y_axis_pos_m - qpd_y_axis_displacement_m + z_axis_pos_m - qpd_z_axis_displacement_m) /
+                     pow(laser_emitter->CalcBeamWidthRadius_m(distance_from_beam_waist_m), 2.0) * temp1;
 
-      qpd_sensor_output_y_axis_V_ += CalcSign(-y_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * temp;
-      qpd_sensor_output_z_axis_V_ += CalcSign(z_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * temp;
-      qpd_sensor_output_sum_V_ += temp;
+      qpd_sensor_output_y_axis_V_ += CalcSign(-y_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * temp1;
+      qpd_sensor_output_z_axis_V_ += CalcSign(z_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * temp1;
+      qpd_sensor_output_sum_V_ += temp1;
+
+      qpd_standard_deviation_V_[0] += CalcSign(-y_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * temp2;
+      qpd_standard_deviation_V_[1] += CalcSign(z_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * temp2;
+      qpd_standard_deviation_V_[2] += temp2;
     }
   }
+  for (int std_id = 0; std_id < 3; ++std_id) {
+    qpd_standard_deviation_V_[std_id] =
+        qpd_sensor_output_std_scale_factor_ * fabs(qpd_standard_deviation_V_[std_id]) + qpd_sensor_output_std_constant_V_;
+  }
+  libra::Vector<3> qpd_sensor_noise_base = Measure(libra::Vector<3>{0.0});
+  qpd_sensor_output_y_axis_V_ += qpd_sensor_noise_base[0] * qpd_standard_deviation_V_[0];
+  qpd_sensor_output_z_axis_V_ += qpd_sensor_noise_base[1] * qpd_standard_deviation_V_[1];
+  qpd_sensor_output_sum_V_ += qpd_sensor_noise_base[2] * qpd_standard_deviation_V_[2];
 }
 
 double QpdPositioningSensor::CalcSign(const double input_value, const double threshold) {
@@ -213,8 +231,24 @@ void QpdPositioningSensor::Initialize(const std::string file_name, const size_t 
   qpd_positioning_threshold_m_ = ini_file.ReadDouble(section_name.c_str(), "qpd_positioning_threshold_m");
   qpd_laser_receivable_angle_rad_ = ini_file.ReadDouble(section_name.c_str(), "qpd_laser_receivable_angle_rad");
   qpd_sensor_output_voltage_threshold_V_ = ini_file.ReadDouble(section_name.c_str(), "qpd_sensor_output_voltage_threshold_V");
+  qpd_sensor_output_std_scale_factor_ = ini_file.ReadDouble(section_name.c_str(), "qpd_sensor_output_std_scale_factor");
+  qpd_sensor_output_std_constant_V_ = ini_file.ReadDouble(section_name.c_str(), "qpd_sensor_output_std_constant_V");
 
   x_axis_direction_c_[0] = 1.0;
   y_axis_direction_c_[1] = 1.0;
   z_axis_direction_c_[2] = 1.0;
+}
+
+QpdPositioningSensor InitializeQpdPositioningSensor(ClockGenerator* clock_gen, const std::string file_name, double compo_step_time_s,
+                                                    const Dynamics& dynamics, const FfInterSpacecraftCommunication& inter_spacecraft_communication,
+                                                    const size_t id) {
+  IniAccess ini_file(file_name);
+  std::string name = "QPD_POSITIONING_SENSOR_";
+  const std::string section_name = name + std::to_string(static_cast<long long>(id));
+  int prescaler = ini_file.ReadInt(section_name.c_str(), "prescaler");
+
+  Sensor<3> sensor_base = ReadSensorInformation<3>(file_name, compo_step_time_s * (double)(prescaler), "QPD_POSITIONING_SENSOR", "V");
+  QpdPositioningSensor qpd_positioning_sensor(prescaler, clock_gen, sensor_base, file_name, dynamics, inter_spacecraft_communication, id);
+
+  return qpd_positioning_sensor;
 }
