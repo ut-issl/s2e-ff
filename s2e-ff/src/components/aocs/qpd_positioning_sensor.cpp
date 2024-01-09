@@ -172,16 +172,20 @@ void QpdPositioningSensor::CalcSensorOutput(LaserEmitter* laser_emitter, const d
         qpd_sensor_output_std_scale_factor_ * fabs(qpd_standard_deviation_V_[std_id]) + qpd_sensor_output_std_constant_V_;
   }
   libra::Vector<3> qpd_sensor_noise_base = Measure(libra::Vector<3>{0.0});
+  qpd_sensor_output_y_axis_V_ += qpd_sensor_noise_base[0] * qpd_standard_deviation_V_[0];
+  qpd_sensor_output_z_axis_V_ += qpd_sensor_noise_base[1] * qpd_standard_deviation_V_[1];
   qpd_sensor_output_sum_V_ += qpd_sensor_noise_base[2] * qpd_standard_deviation_V_[2];
-  if (fabs(qpd_sensor_output_y_axis_V_ + qpd_sensor_noise_base[0] * qpd_standard_deviation_V_[0]) > qpd_sensor_output_sum_V_) {
-    qpd_sensor_output_y_axis_V_ -= qpd_sensor_noise_base[0] * qpd_standard_deviation_V_[0];
-  } else {
-    qpd_sensor_output_y_axis_V_ += qpd_sensor_noise_base[0] * qpd_standard_deviation_V_[0];
+  if (fabs(qpd_sensor_output_y_axis_V_) > qpd_sensor_output_sum_V_) {
+    qpd_sensor_output_y_axis_V_ -= 2 * qpd_sensor_noise_base[0] * qpd_standard_deviation_V_[0];
+    if (fabs(qpd_sensor_output_y_axis_V_) > qpd_sensor_output_sum_V_) {
+      qpd_sensor_output_sum_V_ -= 2 * qpd_sensor_noise_base[2] * qpd_standard_deviation_V_[2];
+    }
   }
   if (fabs(qpd_sensor_output_z_axis_V_ + qpd_sensor_noise_base[1] * qpd_standard_deviation_V_[1]) > qpd_sensor_output_sum_V_) {
-    qpd_sensor_output_z_axis_V_ -= qpd_sensor_noise_base[1] * qpd_standard_deviation_V_[1];
-  } else {
-    qpd_sensor_output_z_axis_V_ += qpd_sensor_noise_base[1] * qpd_standard_deviation_V_[1];
+    qpd_sensor_output_z_axis_V_ -= 2 * qpd_sensor_noise_base[1] * qpd_standard_deviation_V_[1];
+    if (fabs(qpd_sensor_output_z_axis_V_) > qpd_sensor_output_sum_V_) {
+      qpd_sensor_output_sum_V_ -= 2 * qpd_sensor_noise_base[2] * qpd_standard_deviation_V_[2];
+    }
   }
 }
 
