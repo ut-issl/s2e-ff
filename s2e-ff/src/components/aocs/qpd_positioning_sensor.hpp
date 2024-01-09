@@ -81,8 +81,8 @@ class QpdPositioningSensor : public Component, public ILoggable {
   double z_axis_displacement_true_m_ = 0.0;
 
   libra::Vector<3> x_axis_direction_c_{0.0};  //!< x-axis direction in the component coordinate system
-  libra::Vector<3> y_axis_direction_c_{0.0};  //!< x-axis direction in the component coordinate system
-  libra::Vector<3> z_axis_direction_c_{0.0};  //!< x-axis direction in the component coordinate system
+  libra::Vector<3> y_axis_direction_c_{0.0};  //!< y-axis direction in the component coordinate system
+  libra::Vector<3> z_axis_direction_c_{0.0};  //!< z-axis direction in the component coordinate system
 
   double qpd_sensor_output_y_axis_V_;            //!< Quadrant photodiode sensor output value corresponding to the y-axis direction [V]
   double qpd_sensor_output_z_axis_V_;            //!< Quadrant photodiode sensor output value corresponding to the y-axis direction [V]
