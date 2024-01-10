@@ -175,8 +175,8 @@ double QpdPositioningSensor::ObservePositionDisplacement(const QpdObservedPositi
   for (size_t i = 0; i < qpd_voltage_ratio_list.size() - 1; ++i) {
     if ((qpd_sensor_output_polarization * sensor_value_ratio >= qpd_sensor_output_polarization * qpd_voltage_ratio_list[i]) &&
         (qpd_sensor_output_polarization * sensor_value_ratio <= qpd_sensor_output_polarization * qpd_voltage_ratio_list[i + 1])) {
-      observed_displacement_m = qpd_displacement_reference_list_m_[i];
-      observed_displacement_m += (qpd_displacement_reference_list_m_[i + 1] - qpd_displacement_reference_list_m_[i]) *
+      observed_displacement_m = qpd_sensor_displacement_list_m_[i];
+      observed_displacement_m += (qpd_sensor_displacement_list_m_[i + 1] - qpd_sensor_displacement_list_m_[i]) *
                                  (sensor_value_ratio - qpd_voltage_ratio_list[i]) / (qpd_voltage_ratio_list[i + 1] - qpd_voltage_ratio_list[i]);
     }
   }
@@ -196,7 +196,7 @@ void QpdPositioningSensor::Initialize(const std::string file_name, const size_t 
   conf_qpd_sensor_voltage_ratio.ReadCsvString(qpd_sensor_voltage_ratio_str_list, 1000);
 
   for (size_t index = 1; index < qpd_sensor_voltage_ratio_str_list.size(); ++index) {  // first row is for labels
-    qpd_displacement_reference_list_m_.push_back(stod(qpd_sensor_voltage_ratio_str_list[index][0]));
+    qpd_sensor_displacement_list_m_.push_back(stod(qpd_sensor_voltage_ratio_str_list[index][0]));
     qpd_sensor_voltage_ratio_y_list_.push_back(stod(qpd_sensor_voltage_ratio_str_list[index][1]));
     qpd_sensor_voltage_ratio_z_list_.push_back(stod(qpd_sensor_voltage_ratio_str_list[index][2]));
   }
