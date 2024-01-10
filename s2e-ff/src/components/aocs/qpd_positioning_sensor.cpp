@@ -181,7 +181,7 @@ void QpdPositioningSensor::CalcSensorOutput(LaserEmitter* laser_emitter, const d
       qpd_sensor_output_sum_V_ -= 2 * qpd_sensor_noise_base[2] * qpd_standard_deviation_V[2];
     }
   }
-  if (fabs(qpd_sensor_output_z_axis_V_ + qpd_sensor_noise_base[1] * qpd_standard_deviation_V[1]) > qpd_sensor_output_sum_V_) {
+  if (fabs(qpd_sensor_output_z_axis_V_) > qpd_sensor_output_sum_V_) {
     qpd_sensor_output_z_axis_V_ -= 2 * qpd_sensor_noise_base[1] * qpd_standard_deviation_V[1];
     if (fabs(qpd_sensor_output_z_axis_V_) > qpd_sensor_output_sum_V_) {
       qpd_sensor_output_sum_V_ -= 2 * qpd_sensor_noise_base[2] * qpd_standard_deviation_V[2];
