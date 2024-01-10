@@ -148,7 +148,8 @@ void QpdPositioningSensor::CalcSensorOutput(LaserEmitter* laser_emitter, const d
       double z_axis_pos_m = qpd_sensor_integral_step_m_ * z_axis_step - z_axis_range_max_m;
       double deviation_from_optical_axis_m =
           sqrt(pow(y_axis_pos_m - qpd_y_axis_displacement_m, 2.0) + pow(z_axis_pos_m - qpd_z_axis_displacement_m, 2.0));
-      double temp = laser_emitter->CalcIntensity_W_m2(distance_from_beam_waist_m, deviation_from_optical_axis_m) * qpd_sensor_integral_step_m_ *
+      double temp = qpd_sensor_sensitivity_coefficient_V_W_ *
+                    laser_emitter->CalcIntensity_W_m2(distance_from_beam_waist_m, deviation_from_optical_axis_m) * qpd_sensor_integral_step_m_ *
                     qpd_sensor_integral_step_m_;
 
       qpd_sensor_output_y_axis_V_ += CalcSign(-y_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * temp;
@@ -206,6 +207,7 @@ void QpdPositioningSensor::Initialize(const std::string file_name, const size_t 
   ini_file.ReadVector(section_name.c_str(), "position_b_m", position_b_m);
   dual_quaternion_c2b_ = libra::TranslationFirstDualQuaternion(-position_b_m, quaternion_b2c.Conjugate()).QuaternionConjugate();
 
+  qpd_sensor_sensitivity_coefficient_V_W_ = ini_file.ReadDouble(section_name.c_str(), "qpd_sensor_sensitivity_coefficient_V_W");
   qpd_sensor_radius_m_ = ini_file.ReadDouble(section_name.c_str(), "qpd_sensor_radius_m");
   qpd_sensor_integral_step_m_ = ini_file.ReadDouble(section_name.c_str(), "qpd_sensor_integral_step_m");
   qpd_positioning_threshold_m_ = ini_file.ReadDouble(section_name.c_str(), "qpd_positioning_threshold_m");

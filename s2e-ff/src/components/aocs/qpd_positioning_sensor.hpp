@@ -59,6 +59,7 @@ class QpdPositioningSensor : public Component, public ILoggable {
   inline bool GetIsReceivedLaser() const { return is_received_laser_; }
 
  protected:
+  double qpd_sensor_sensitivity_coefficient_V_W_;              //!< Sensitivity coefficient of the quadrant photodiode sensor [V/W]
   double qpd_laser_receivable_angle_rad_;                      //!< laser receivable half angle from the normal direction [rad]
   double qpd_sensor_output_voltage_threshold_V_;               //!< Quadrant photodiode sensor output voltage threshold [V]
   double qpd_sensor_radius_m_;                                 //!< Quadrant photodiode sensor radius [m]
@@ -75,9 +76,12 @@ class QpdPositioningSensor : public Component, public ILoggable {
   libra::Vector<3> y_axis_direction_c_{0.0};  //!< y-axis direction in the component coordinate system
   libra::Vector<3> z_axis_direction_c_{0.0};  //!< z-axis direction in the component coordinate system
 
-  double qpd_sensor_output_y_axis_V_ = 0.0;      //!< Quadrant photodiode sensor output value corresponding to the y-axis direction [V]
-  double qpd_sensor_output_z_axis_V_ = 0.0;      //!< Quadrant photodiode sensor output value corresponding to the y-axis direction [V]
-  double qpd_sensor_output_sum_V_ = 0.0;         //!< Quadrant photodiode sensor output value corresponding to the sum of the light intensity [V]
+  // This quadrant photodiode sensor is modeled after Thorlabs' PDQ80A product.
+  // Therefore, the acquired values are not the raw values of the four photodiodes but the following three values:
+  double qpd_sensor_output_y_axis_V_ = 0.0;  //!< Quadrant photodiode sensor output value corresponding to the y-axis direction [V]
+  double qpd_sensor_output_z_axis_V_ = 0.0;  //!< Quadrant photodiode sensor output value corresponding to the y-axis direction [V]
+  double qpd_sensor_output_sum_V_ = 0.0;     //!< Quadrant photodiode sensor output value corresponding to the sum of the light intensity [V]
+
   double observed_y_axis_displacement_m_ = 0.0;  //!< Observed displacement in the y-axis direction [m]
   double observed_z_axis_displacement_m_ = 0.0;  //!< Observed displacement in the z-axis direction [m]
 
