@@ -80,9 +80,9 @@ void QpdPositioningSensor::MainRoutine(int count) {
   }
   if (is_received_laser_) {
     observed_y_axis_displacement_m_ =
-        ObservePositionDisplacement(kYAxisDirection, qpd_sensor_output_y_axis_V_, qpd_sensor_output_sum_V_, qpd_sensor_voltage_ratio_y_list_);
+        ObservePositionDisplacement(-1.0, qpd_sensor_output_y_axis_V_, qpd_sensor_output_sum_V_, qpd_sensor_voltage_ratio_y_list_);
     observed_z_axis_displacement_m_ =
-        ObservePositionDisplacement(kZAxisDirection, qpd_sensor_output_z_axis_V_, qpd_sensor_output_sum_V_, qpd_sensor_voltage_ratio_z_list_);
+        ObservePositionDisplacement(1.0, qpd_sensor_output_z_axis_V_, qpd_sensor_output_sum_V_, qpd_sensor_voltage_ratio_z_list_);
   }
 }
 
@@ -167,9 +167,8 @@ double QpdPositioningSensor::CalcSign(const double input_value, const double thr
   return 0.0;
 }
 
-double QpdPositioningSensor::ObservePositionDisplacement(const QpdObservedPositionDirection observation_direction, const double qpd_sensor_output_V,
+double QpdPositioningSensor::ObservePositionDisplacement(const double qpd_sensor_output_polarization, const double qpd_sensor_output_V,
                                                          const double qpd_sensor_output_sum_V, const std::vector<double>& qpd_voltage_ratio_list) {
-  double qpd_sensor_output_polarization = (observation_direction == kYAxisDirection) ? -1.0 : 1.0;
   double observed_displacement_m = qpd_sensor_output_polarization * CalcSign(qpd_sensor_output_sum_V, 0.0) * qpd_positioning_threshold_m_;
   double sensor_value_ratio = qpd_sensor_output_V / qpd_sensor_output_sum_V;
   for (size_t i = 0; i < qpd_voltage_ratio_list.size() - 1; ++i) {

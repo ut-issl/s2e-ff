@@ -58,15 +58,6 @@ class QpdPositioningSensor : public Component, public ILoggable {
   inline double GetObservedZAxisDisplacement_m() const { return observed_z_axis_displacement_m_; }
   inline bool GetIsReceivedLaser() const { return is_received_laser_; }
 
-  /**
-   * @enum QpdObservedPositionDirection
-   * @brief Type of the quadrant photodiode sensor output value
-   */
-  typedef enum {
-    kYAxisDirection = 0,  //!< y-axis direction
-    kZAxisDirection,      //!< z-axis direction
-  } QpdObservedPositionDirection;
-
  protected:
   double qpd_laser_receivable_angle_rad_;                      //!< laser receivable half angle from the normal direction [rad]
   double qpd_sensor_output_voltage_threshold_V_;               //!< Quadrant photodiode sensor output voltage threshold [V]
@@ -108,7 +99,7 @@ class QpdPositioningSensor : public Component, public ILoggable {
 
   void CalcSensorOutput(LaserEmitter* laser_emitter, const double distance_from_beam_waist_m, const double qpd_y_axis_displacement_m,
                         const double qpd_z_axis_displacement_m);
-  double ObservePositionDisplacement(const QpdObservedPositionDirection observation_direction, const double qpd_sensor_output_V,
+  double ObservePositionDisplacement(const double qpd_sensor_output_polarization, const double qpd_sensor_output_V,
                                      const double qpd_sensor_output_sum_V, const std::vector<double>& qpd_ratio_reference_list);
   double CalcSign(const double input_value, const double threshold);
 
