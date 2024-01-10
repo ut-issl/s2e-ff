@@ -53,6 +53,8 @@ set(SOURCE_FILES
   src/components/aocs/relative_velocity_sensor.cpp
   src/components/aocs/initialize_relative_velocity_sensor.cpp
   src/components/aocs/laser_distance_meter.cpp
+  src/components/aocs/laser_emitter.cpp
+  src/components/aocs/qpd_positioning_sensor.cpp
   src/components/ideal/relative_attitude_controller.cpp
   src/components/ideal/initialize_relative_attitude_controller.cpp
   src/library/math/dual_quaternion.cpp
