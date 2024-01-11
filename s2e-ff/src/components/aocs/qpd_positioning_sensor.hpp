@@ -83,6 +83,9 @@ class QpdPositioningSensor : public Component, public Sensor<3>, public ILoggabl
   double qpd_sensor_output_z_axis_V_ = 0.0;  //!< Quadrant photodiode sensor output value corresponding to the y-axis direction [V]
   double qpd_sensor_output_sum_V_ = 0.0;     //!< Quadrant photodiode sensor output value corresponding to the sum of the light intensity [V]
 
+  double qpd_sensor_output_std_scale_factor_;
+  double qpd_sensor_output_std_constant_V_;
+
   double observed_y_axis_displacement_m_ = 0.0;  //!< Observed displacement in the y-axis direction [m]
   double observed_z_axis_displacement_m_ = 0.0;  //!< Observed displacement in the z-axis direction [m]
 
@@ -92,9 +95,6 @@ class QpdPositioningSensor : public Component, public Sensor<3>, public ILoggabl
       qpd_sensor_voltage_ratio_y_list_;  //!< List of `qpd_sensor_output_y_axis_V / qpd_sensor_output_sum_V` at each point on the y-axis.
   std::vector<double>
       qpd_sensor_voltage_ratio_z_list_;  //!< List of `qpd_sensor_output_z_axis_V / qpd_sensor_output_sum_V` at each point on the z-axis.
-
-  double qpd_sensor_output_std_scale_factor_;
-  double qpd_sensor_output_std_constant_V_;
 
   // Reference
   const Dynamics& dynamics_;
