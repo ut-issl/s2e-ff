@@ -7,10 +7,10 @@
 #define S2E_COMPONENTS_QPD_POSITIONING_SENSOR_HPP_
 
 #include <components/base/component.hpp>
-#include <components/base/sensor.hpp>
 #include <dynamics/dynamics.hpp>
 #include <library/logger/logger.hpp>
 #include <library/math/vector.hpp>
+#include <library/randomization/normal_randomization.hpp>
 
 #include "../../library/math/translation_first_dual_quaternion.hpp"
 #include "../../simulation/case/ff_inter_spacecraft_communication.hpp"
@@ -20,13 +20,13 @@
  * @brief Quadrant photodiode sensor
  * @note  This component not only calculate the QPD sensor output values, but also calculate position displacements.
  */
-class QpdPositioningSensor : public Component, public Sensor<3>, public ILoggable {
+class QpdPositioningSensor : public Component, public ILoggable {
  public:
   /**
    * @fn QpdPositioningSensor
    * @brief Constructor
    */
-  QpdPositioningSensor(const int prescaler, ClockGenerator* clock_gen, Sensor& sensor_base, const std::string file_name, const Dynamics& dynamics,
+  QpdPositioningSensor(const int prescaler, ClockGenerator* clock_gen, const std::string file_name, const Dynamics& dynamics,
                        const FfInterSpacecraftCommunication& inter_spacecraft_communication, const size_t id = 0);
   /**
    * @fn ~QpdPositioningSensor
@@ -79,12 +79,16 @@ class QpdPositioningSensor : public Component, public Sensor<3>, public ILoggabl
 
   // This quadrant photodiode sensor is modeled after Thorlabs' PDQ80A product.
   // Therefore, the acquired values are not the raw values of the four photodiodes but the following three values:
-  double qpd_sensor_output_y_axis_V_ = 0.0;  //!< Quadrant photodiode sensor output value corresponding to the y-axis direction [V]
-  double qpd_sensor_output_z_axis_V_ = 0.0;  //!< Quadrant photodiode sensor output value corresponding to the y-axis direction [V]
-  double qpd_sensor_output_sum_V_ = 0.0;     //!< Quadrant photodiode sensor output value corresponding to the sum of the light intensity [V]
+  double qpd_sensor_output_y_axis_V_ = 0.0;  //!< Quadrant photodiode sensor output value corresponding to the y-axis direction: E_y [V]
+  double qpd_sensor_output_z_axis_V_ = 0.0;  //!< Quadrant photodiode sensor output value corresponding to the y-axis direction: E_z [V]
+  double qpd_sensor_output_sum_V_ = 0.0;     //!< Quadrant photodiode sensor output value corresponding to the sum of the light intensity: E_sum [V]
 
-  double qpd_sensor_output_std_scale_factor_;
-  double qpd_sensor_output_std_constant_V_;
+  // Noise parameters
+  libra::NormalRand qpd_sensor_random_noise_y_axis_;  //!< Normal random for QPD sensor output value: E_y
+  libra::NormalRand qpd_sensor_random_noise_z_axis_;  //!< Normal random for QPD sensor output value: E_z
+  libra::NormalRand qpd_sensor_random_noise_sum_;     //!< Normal random for QPD sensor output value: E_sum
+  double qpd_standard_deviation_scale_factor_m_;
+  double qpd_standard_deviation_constant_V_;
 
   double observed_y_axis_displacement_m_ = 0.0;  //!< Observed displacement in the y-axis direction [m]
   double observed_z_axis_displacement_m_ = 0.0;  //!< Observed displacement in the z-axis direction [m]
@@ -110,6 +114,7 @@ class QpdPositioningSensor : public Component, public Sensor<3>, public ILoggabl
   double ObservePositionDisplacement(const double qpd_sensor_output_polarization, const double qpd_sensor_output_V,
                                      const double qpd_sensor_output_sum_V, const std::vector<double>& qpd_ratio_reference_list);
   double CalcSign(const double input_value, const double threshold);
+  double CalcStandardDeviation(const double sensor_output_derivative);
 
   void Initialize(const std::string file_name, const size_t id = 0);
 };
