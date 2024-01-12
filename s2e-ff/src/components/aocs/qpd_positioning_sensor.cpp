@@ -167,7 +167,7 @@ void QpdPositioningSensor::CalcSensorOutput(LaserEmitter* laser_emitter, const d
       qpd_standard_deviation_V[2] += temp2;
     }
   }
-  for (int standard_deviation_id = 0; standard_deviation_id < 3; ++standard_deviation_id) {
+  for (size_t standard_deviation_id = 0; standard_deviation_id < 3; ++standard_deviation_id) {
     qpd_standard_deviation_V[standard_deviation_id] =
         qpd_sensor_output_std_scale_factor_ * fabs(qpd_standard_deviation_V[standard_deviation_id]) + qpd_sensor_output_std_constant_V_;
   }
