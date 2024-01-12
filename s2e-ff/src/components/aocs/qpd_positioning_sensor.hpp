@@ -1,6 +1,6 @@
 /**
  * @file qpd_positioning_sensor.hpp
- * @brief Quadrant photodiode (QPD) positioning system
+ * @brief Quadrant photodiode (QPD) positioning sensor
  */
 
 #ifndef S2E_COMPONENTS_QPD_POSITIONING_SENSOR_HPP_

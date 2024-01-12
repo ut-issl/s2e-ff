@@ -1,6 +1,6 @@
 /**
  * @file qpd_positioning_sensor.cpp
- * @brief Quadrant photodiode (QPD) sensor
+ * @brief Quadrant photodiode (QPD) positioning sensor
  */
 
 #include "./qpd_positioning_sensor.hpp"
