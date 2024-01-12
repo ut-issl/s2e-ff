@@ -65,6 +65,8 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
   relative_attitude_controller_ = new RelativeAttitudeController(InitializeRelativeAttitudeController(
       clock_gen, relative_attitude_controller_file, *rel_info_, local_env_->GetCelestialInformation(), *dynamics_, sat_id));
 
+  relative_position_attitude_observer_ = new RelativePositionAttitudeObserver(1, clock_gen, laser_distance_meters_, qpd_positioning_sensors_);
+
   // Debug for actuator output
   libra::Vector<3> force_N;
   force_N[0] = 1.0;
@@ -93,6 +95,7 @@ FfComponents::~FfComponents() {
   for (auto qpd_positioning_sensor_ : qpd_positioning_sensors_) {
     delete qpd_positioning_sensor_;
   }
+  delete relative_position_attitude_observer_;
   // OBC must be deleted the last since it has com ports
   delete obc_;
 }
@@ -122,4 +125,5 @@ void FfComponents::LogSetup(Logger& logger) {
   for (auto qpd_positioning_sensor_ : qpd_positioning_sensors_) {
     logger.AddLogList(qpd_positioning_sensor_);
   }
+  logger.AddLogList(relative_position_attitude_observer_);
 }

@@ -121,6 +121,14 @@ std::string QpdPositioningSensor::GetLogValue() const {
   return str_tmp;
 }
 
+double QpdPositioningSensor::GetObservedYAxisDisplacementAfterCompensation_m(const double line_of_sight_distance) {
+  return observed_y_axis_displacement_m_ / CalcErrorCompensatedCoefficient(line_of_sight_distance);
+}
+
+double QpdPositioningSensor::GetObservedZAxisDisplacementAfterCompensation_m(const double line_of_sight_distance) {
+  return observed_z_axis_displacement_m_ / CalcErrorCompensatedCoefficient(line_of_sight_distance);
+}
+
 libra::Vector<3> QpdPositioningSensor::CalcLaserReceivedPosition(const libra::Vector<3> point_position, const libra::Vector<3> origin_position,
                                                                  const libra::Vector<3> plane_normal_direction,
                                                                  const libra::Vector<3> point_line_direction) {
@@ -228,6 +236,19 @@ double QpdPositioningSensor::CalcStandardDeviation(const double sensor_output_de
   return standard_deviation;
 }
 
+double QpdPositioningSensor::CalcErrorCompensatedCoefficient(const double line_of_sight_distance) {
+  double error_compensated_coefficient = 1.0;
+  for (size_t id = 0; id < line_of_sight_distance_list_m_.size() - 1; ++id) {
+    if (line_of_sight_distance_list_m_[id] <= line_of_sight_distance && line_of_sight_distance <= line_of_sight_distance_list_m_[id + 1]) {
+      error_compensated_coefficient = error_compensated_coefficient_list_[id];
+      error_compensated_coefficient += (error_compensated_coefficient_list_[id + 1] - error_compensated_coefficient_list_[id]) *
+                                       (line_of_sight_distance - line_of_sight_distance_list_m_[id]) /
+                                       (line_of_sight_distance_list_m_[id + 1] - line_of_sight_distance_list_m_[id]);
+    }
+  }
+  return error_compensated_coefficient;
+}
+
 double QpdPositioningSensor::ObservePositionDisplacement(const double qpd_sensor_output_polarization, const double qpd_sensor_output_V,
                                                          const double qpd_sensor_output_sum_V, const std::vector<double>& qpd_voltage_ratio_list) {
   double observed_displacement_m = qpd_sensor_output_polarization * CalcSign(qpd_sensor_output_sum_V, 0.0) * qpd_positioning_threshold_m_;
@@ -274,6 +295,16 @@ void QpdPositioningSensor::Initialize(const std::string file_name, const size_t 
     qpd_sensor_displacement_list_m_.push_back(stod(qpd_sensor_voltage_ratio_str_list[index][0]));
     qpd_sensor_voltage_ratio_y_list_.push_back(stod(qpd_sensor_voltage_ratio_str_list[index][1]));
     qpd_sensor_voltage_ratio_z_list_.push_back(stod(qpd_sensor_voltage_ratio_str_list[index][2]));
+  }
+
+  std::string filepath_qpd_sensor_error_compensated_coefficient = file_path + "qpd_sensor_error-compensated_coefficient.csv";
+  IniAccess conf_qpd_error_compensated_coefficient(filepath_qpd_sensor_error_compensated_coefficient);
+  std::vector<std::vector<std::string>> qpd_error_compensated_coefficient_str_list;
+  conf_qpd_error_compensated_coefficient.ReadCsvString(qpd_error_compensated_coefficient_str_list, 500);
+
+  for (size_t index = 1; index < qpd_error_compensated_coefficient_str_list.size(); ++index) {
+    line_of_sight_distance_list_m_.push_back(stod(qpd_error_compensated_coefficient_str_list[index][0]));
+    error_compensated_coefficient_list_.push_back(stod(qpd_error_compensated_coefficient_str_list[index][1]));
   }
 
   qpd_positioning_sensor_id_ = id;

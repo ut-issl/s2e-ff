@@ -58,6 +58,7 @@ set(SOURCE_FILES
   src/components/aocs/qpd_positioning_sensor.cpp
   src/components/ideal/relative_attitude_controller.cpp
   src/components/ideal/initialize_relative_attitude_controller.cpp
+  src/components/observer/relative_position_attitude_observer.cpp
   src/library/math/dual_quaternion.cpp
   src/library/math/rotation_first_dual_quaternion.cpp
   src/library/math/translation_first_dual_quaternion.cpp

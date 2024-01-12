@@ -57,6 +57,11 @@ class QpdPositioningSensor : public Component, public ILoggable {
   inline double GetZAxisDisplacementTrue_m() const { return z_axis_displacement_true_m_; }
   inline double GetObservedYAxisDisplacement_m() const { return observed_y_axis_displacement_m_; }
   inline double GetObservedZAxisDisplacement_m() const { return observed_z_axis_displacement_m_; }
+
+  double GetObservedYAxisDisplacementAfterCompensation_m(const double line_of_sight_distance);
+  double GetObservedZAxisDisplacementAfterCompensation_m(const double line_of_sight_distance);
+
+  inline double GetObservedZAxisDisplacementAfterCompensation_m() const { return observed_z_axis_displacement_m_; }
   inline bool GetIsReceivedLaser() const { return is_received_laser_; }
 
  protected:
@@ -98,6 +103,10 @@ class QpdPositioningSensor : public Component, public ILoggable {
   std::vector<double>
       qpd_sensor_voltage_ratio_z_list_;  //!< List of `qpd_sensor_output_z_axis_V / qpd_sensor_output_sum_V` at each point on the z-axis.
 
+  // The following arrays are required to compensate observed position displacement errors.
+  std::vector<double> line_of_sight_distance_list_m_;
+  std::vector<double> error_compensated_coefficient_list_;  //!< This coefficients compensate the errors of the observed position displacement.
+
   size_t qpd_positioning_sensor_id_ = 0;
 
   // Reference
@@ -115,6 +124,8 @@ class QpdPositioningSensor : public Component, public ILoggable {
                                      const double qpd_sensor_output_sum_V, const std::vector<double>& qpd_ratio_reference_list);
   double CalcSign(const double input_value, const double threshold);
   double CalcStandardDeviation(const double sensor_output_derivative, const double qpd_laser_distance_m);
+
+  double CalcErrorCompensatedCoefficient(const double line_of_sight_distance);
 
   void Initialize(const std::string file_name, const size_t id = 0);
 };

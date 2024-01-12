@@ -24,6 +24,7 @@
 #include "../../components/aocs/qpd_positioning_sensor.hpp"
 #include "../../components/aocs/relative_attitude_sensor.hpp"
 #include "../../components/ideal/initialize_relative_attitude_controller.hpp"
+#include "../../components/observer/relative_position_attitude_observer.hpp"
 
 /**
  * @class FfComponents
@@ -61,6 +62,9 @@ class FfComponents : public InstalledComponents {
    */
   void LogSetup(Logger& logger);
 
+  inline std::vector<LaserDistanceMeter*> GetLaserDistanceMeters() const { return laser_distance_meters_; }
+  inline std::vector<QpdPositioningSensor*> GetQpdPositioningSensors() const { return qpd_positioning_sensors_; }
+
  private:
   // Components
   // CDH
@@ -76,6 +80,8 @@ class FfComponents : public InstalledComponents {
   ForceGenerator* force_generator_;                           //!< Example of force generator
   TorqueGenerator* torque_generator_;                         //!< Example of torque generator
   RelativeAttitudeController* relative_attitude_controller_;  //!< Example of attitude controller
+  // Observers
+  RelativePositionAttitudeObserver* relative_position_attitude_observer_;
 
   // References
   const Dynamics* dynamics_;               //!< Dynamics information of the spacecraft
