@@ -168,18 +168,19 @@ void QpdPositioningSensor::CalcSensorOutput(LaserEmitter* laser_emitter, const d
       qpd_sensor_output_derivative_sum_V_m += temp2;
     }
   }
+  if (qpd_sensor_output_sum_V_ < qpd_sensor_output_voltage_threshold_V_) return;
+
   const double qpd_standard_deviation_y_axis_V = CalcStandardDeviation(qpd_sensor_output_derivative_y_axis_V_m);
   const double qpd_standard_deviation_z_axis_V = CalcStandardDeviation(qpd_sensor_output_derivative_z_axis_V_m);
   const double qpd_standard_deviation_sum_V = CalcStandardDeviation(qpd_sensor_output_derivative_sum_V_m);
 
-  qpd_sensor_random_noise_y_axis_.SetParameters(0.0, qpd_standard_deviation_y_axis_V);
-  qpd_sensor_random_noise_z_axis_.SetParameters(0.0, qpd_standard_deviation_z_axis_V);
-  qpd_sensor_random_noise_sum_.SetParameters(0.0, qpd_standard_deviation_sum_V);
-
   // Add Noise to to the quadrant photodiode output values
-  const double qpd_sensor_random_noise_y_axis = qpd_sensor_random_noise_y_axis_;
-  const double qpd_sensor_random_noise_z_axis = qpd_sensor_random_noise_z_axis_;
-  const double qpd_sensor_random_noise_sum = qpd_sensor_random_noise_sum_;
+  qpd_sensor_output_random_noise_.SetParameters(0.0, qpd_standard_deviation_y_axis_V);
+  const double qpd_sensor_random_noise_y_axis = qpd_sensor_output_random_noise_;
+  qpd_sensor_output_random_noise_.SetParameters(0.0, qpd_standard_deviation_z_axis_V);
+  const double qpd_sensor_random_noise_z_axis = qpd_sensor_output_random_noise_;
+  qpd_sensor_output_random_noise_.SetParameters(0.0, qpd_standard_deviation_sum_V);
+  const double qpd_sensor_random_noise_sum = qpd_sensor_output_random_noise_;
 
   qpd_sensor_output_y_axis_V_ += qpd_sensor_random_noise_y_axis;
   qpd_sensor_output_z_axis_V_ += qpd_sensor_random_noise_z_axis;
