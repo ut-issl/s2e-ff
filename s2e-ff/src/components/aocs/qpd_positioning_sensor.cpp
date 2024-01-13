@@ -73,7 +73,7 @@ void QpdPositioningSensor::MainRoutine(int count) {
     LaserEmitter laser_emitter = inter_spacecraft_communication_.GetLaserEmitter(laser_id);
     double laser_rayleigh_length_offset_m = laser_emitter.GetRayleighLengthOffset_m();
 
-    CalcSensorOutput(&laser_emitter, qpd_laser_distance_m - laser_rayleigh_length_offset_m, qpd_y_axis_displacement_m, qpd_z_axis_displacement_m);
+    CalcSensorOutput(&laser_emitter, qpd_laser_distance_m, laser_rayleigh_length_offset_m, qpd_y_axis_displacement_m, qpd_z_axis_displacement_m);
 
     if (qpd_sensor_output_sum_V_ < qpd_sensor_output_voltage_threshold_V_) {
       continue;
@@ -139,9 +139,11 @@ double QpdPositioningSensor::CalcDisplacement(const libra::Vector<3> point_posit
   return displacement_m;
 };
 
-void QpdPositioningSensor::CalcSensorOutput(LaserEmitter* laser_emitter, const double distance_from_beam_waist_m,
-                                            const double qpd_y_axis_displacement_m, const double qpd_z_axis_displacement_m) {
+void QpdPositioningSensor::CalcSensorOutput(LaserEmitter* laser_emitter, const double qpd_laser_distance_m,
+                                            const double laser_rayleigh_length_offset_m, const double qpd_y_axis_displacement_m,
+                                            const double qpd_z_axis_displacement_m) {
   qpd_sensor_radius_m_ = (double)(((int32_t)(qpd_sensor_radius_m_ / qpd_sensor_integral_step_m_)) * qpd_sensor_integral_step_m_);
+  const double distance_from_beam_waist_m = qpd_laser_distance_m - laser_rayleigh_length_offset_m;
   double qpd_sensor_output_derivative_y_axis_V_m = 0.0;
   double qpd_sensor_output_derivative_z_axis_V_m = 0.0;
   double qpd_sensor_output_derivative_sum_V_m = 0.0;
@@ -153,26 +155,31 @@ void QpdPositioningSensor::CalcSensorOutput(LaserEmitter* laser_emitter, const d
       double z_axis_pos_m = qpd_sensor_integral_step_m_ * z_axis_step - z_axis_range_max_m;
       double deviation_from_optical_axis_m =
           sqrt(pow(y_axis_pos_m - qpd_y_axis_displacement_m, 2.0) + pow(z_axis_pos_m - qpd_z_axis_displacement_m, 2.0));
-      double temp1 = qpd_sensor_sensitivity_coefficient_V_W_ *
-                     laser_emitter->CalcIntensity_W_m2(distance_from_beam_waist_m, deviation_from_optical_axis_m) * qpd_sensor_integral_step_m_ *
-                     qpd_sensor_integral_step_m_;
-      double temp2 = 2 * (y_axis_pos_m - qpd_y_axis_displacement_m + z_axis_pos_m - qpd_z_axis_displacement_m) /
-                     pow(laser_emitter->CalcBeamWidthRadius_m(distance_from_beam_waist_m), 2.0) * temp1;
 
-      qpd_sensor_output_y_axis_V_ += CalcSign(-y_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * temp1;
-      qpd_sensor_output_z_axis_V_ += CalcSign(z_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * temp1;
-      qpd_sensor_output_sum_V_ += temp1;
+      // Calculate a laser receiving amount at each point, and convert it to a voltage value.
+      double photovoltage_at_each_point = qpd_sensor_sensitivity_coefficient_V_W_ *
+                                          laser_emitter->CalcIntensity_W_m2(distance_from_beam_waist_m, deviation_from_optical_axis_m) *
+                                          qpd_sensor_integral_step_m_ * qpd_sensor_integral_step_m_;
 
-      qpd_sensor_output_derivative_y_axis_V_m += CalcSign(-y_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * temp2;
-      qpd_sensor_output_derivative_z_axis_V_m += CalcSign(z_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * temp2;
-      qpd_sensor_output_derivative_sum_V_m += temp2;
+      // Calculate the variation of the laser light received at each point, and convert it to a voltage value.
+      double photovoltage_variation_at_each_point = 2 * (y_axis_pos_m - qpd_y_axis_displacement_m + z_axis_pos_m - qpd_z_axis_displacement_m) /
+                                                    pow(laser_emitter->CalcBeamWidthRadius_m(distance_from_beam_waist_m), 2.0) *
+                                                    photovoltage_at_each_point;
+
+      qpd_sensor_output_y_axis_V_ += CalcSign(-y_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * photovoltage_at_each_point;
+      qpd_sensor_output_z_axis_V_ += CalcSign(z_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * photovoltage_at_each_point;
+      qpd_sensor_output_sum_V_ += photovoltage_at_each_point;
+
+      qpd_sensor_output_derivative_y_axis_V_m += CalcSign(-y_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * photovoltage_variation_at_each_point;
+      qpd_sensor_output_derivative_z_axis_V_m += CalcSign(z_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * photovoltage_variation_at_each_point;
+      qpd_sensor_output_derivative_sum_V_m += photovoltage_variation_at_each_point;
     }
   }
   if (qpd_sensor_output_sum_V_ < qpd_sensor_output_voltage_threshold_V_) return;
 
-  const double qpd_standard_deviation_y_axis_V = CalcStandardDeviation(qpd_sensor_output_derivative_y_axis_V_m);
-  const double qpd_standard_deviation_z_axis_V = CalcStandardDeviation(qpd_sensor_output_derivative_z_axis_V_m);
-  const double qpd_standard_deviation_sum_V = CalcStandardDeviation(qpd_sensor_output_derivative_sum_V_m);
+  const double qpd_standard_deviation_y_axis_V = CalcStandardDeviation(qpd_sensor_output_derivative_y_axis_V_m, qpd_laser_distance_m);
+  const double qpd_standard_deviation_z_axis_V = CalcStandardDeviation(qpd_sensor_output_derivative_z_axis_V_m, qpd_laser_distance_m);
+  const double qpd_standard_deviation_sum_V = CalcStandardDeviation(qpd_sensor_output_derivative_sum_V_m, qpd_laser_distance_m);
 
   // Add Noise to to the quadrant photodiode output values
   qpd_sensor_output_random_noise_.SetParameters(0.0, qpd_standard_deviation_y_axis_V);
@@ -208,8 +215,9 @@ double QpdPositioningSensor::CalcSign(const double input_value, const double thr
   return 0.0;
 }
 
-double QpdPositioningSensor::CalcStandardDeviation(const double sensor_output_derivative) {
-  double standard_deviation = qpd_standard_deviation_scale_factor_m_ * fabs(sensor_output_derivative) + qpd_standard_deviation_constant_V_;
+double QpdPositioningSensor::CalcStandardDeviation(const double sensor_output_derivative, const double qpd_laser_distance_m) {
+  double standard_deviation =
+      qpd_standard_deviation_scale_factor_ * qpd_laser_distance_m * fabs(sensor_output_derivative) + qpd_standard_deviation_constant_V_;
   return standard_deviation;
 }
 
@@ -258,7 +266,7 @@ void QpdPositioningSensor::Initialize(const std::string file_name, const size_t 
   qpd_positioning_threshold_m_ = ini_file.ReadDouble(section_name.c_str(), "qpd_positioning_threshold_m");
   qpd_laser_receivable_angle_rad_ = ini_file.ReadDouble(section_name.c_str(), "qpd_laser_receivable_angle_rad");
   qpd_sensor_output_voltage_threshold_V_ = ini_file.ReadDouble(section_name.c_str(), "qpd_sensor_output_voltage_threshold_V");
-  qpd_standard_deviation_scale_factor_m_ = ini_file.ReadDouble(section_name.c_str(), "qpd_standard_deviation_scale_factor_m");
+  qpd_standard_deviation_scale_factor_ = ini_file.ReadDouble(section_name.c_str(), "qpd_standard_deviation_scale_factor");
   qpd_standard_deviation_constant_V_ = ini_file.ReadDouble(section_name.c_str(), "qpd_standard_deviation_constant_V");
 
   x_axis_direction_c_[0] = 1.0;

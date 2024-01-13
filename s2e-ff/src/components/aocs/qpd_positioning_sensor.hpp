@@ -85,7 +85,7 @@ class QpdPositioningSensor : public Component, public ILoggable {
 
   // Noise parameters
   libra::NormalRand qpd_sensor_output_random_noise_;  //!< Normal random for QPD sensor output value
-  double qpd_standard_deviation_scale_factor_m_;
+  double qpd_standard_deviation_scale_factor_;
   double qpd_standard_deviation_constant_V_;
 
   double observed_y_axis_displacement_m_ = 0.0;  //!< Observed displacement in the y-axis direction [m]
@@ -107,12 +107,12 @@ class QpdPositioningSensor : public Component, public ILoggable {
   double CalcDisplacement(const libra::Vector<3> point_position, const libra::Vector<3> origin_position,
                           const libra::Vector<3> displacement_direction);
 
-  void CalcSensorOutput(LaserEmitter* laser_emitter, const double distance_from_beam_waist_m, const double qpd_y_axis_displacement_m,
-                        const double qpd_z_axis_displacement_m);
+  void CalcSensorOutput(LaserEmitter* laser_emitter, const double qpd_laser_distance_m, const double laser_rayleigh_length_offset_m,
+                        const double qpd_y_axis_displacement_m, const double qpd_z_axis_displacement_m);
   double ObservePositionDisplacement(const double qpd_sensor_output_polarization, const double qpd_sensor_output_V,
                                      const double qpd_sensor_output_sum_V, const std::vector<double>& qpd_ratio_reference_list);
   double CalcSign(const double input_value, const double threshold);
-  double CalcStandardDeviation(const double sensor_output_derivative);
+  double CalcStandardDeviation(const double sensor_output_derivative, const double qpd_laser_distance_m);
 
   void Initialize(const std::string file_name, const size_t id = 0);
 };
