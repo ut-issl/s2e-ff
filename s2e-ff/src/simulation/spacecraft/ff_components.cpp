@@ -42,7 +42,8 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
   laser_distance_meter_ = new LaserDistanceMeter(1, clock_gen, ldm_file, *dynamics_, inter_spacecraft_communication_);
 
   const std::string qpd_file = sat_file.ReadString(section_name.c_str(), "qpd_positioning_sensor_file");
-  qpd_positioning_sensor_ = new QpdPositioningSensor(1, clock_gen, qpd_file, *dynamics_, inter_spacecraft_communication_);
+  qpd_positioning_sensor_ =
+      new QpdPositioningSensor(InitializeQpdPositioningSensor(clock_gen, qpd_file, compo_step_sec, *dynamics_, inter_spacecraft_communication_));
 
   const std::string force_generator_file = sat_file.ReadString(section_name.c_str(), "force_generator_file");
   force_generator_ = new ForceGenerator(InitializeForceGenerator(clock_gen, force_generator_file, dynamics_));
