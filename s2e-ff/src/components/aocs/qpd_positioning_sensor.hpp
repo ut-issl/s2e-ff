@@ -84,9 +84,9 @@ class QpdPositioningSensor : public Component, public ILoggable {
   double qpd_sensor_output_sum_V_ = 0.0;     //!< Quadrant photodiode sensor output value corresponding to the sum of the light intensity: E_sum [V]
 
   // Noise parameters
-  libra::NormalRand qpd_sensor_output_random_noise_;  //!< Normal random for QPD sensor output value
-  double qpd_standard_deviation_scale_factor_;
-  double qpd_standard_deviation_constant_V_;
+  libra::NormalRand qpd_sensor_output_random_noise_;  //!< Normal random noise for QPD sensor output value
+  double qpd_standard_deviation_scale_factor_;        //!< Scale factor of the standard deviation: Coefficient to express position dependency
+  double qpd_standard_deviation_constant_V_;          //!< Constant value of the standard deviation, which is constant regardless of its position
 
   double observed_y_axis_displacement_m_ = 0.0;  //!< Observed displacement in the y-axis direction [m]
   double observed_z_axis_displacement_m_ = 0.0;  //!< Observed displacement in the z-axis direction [m]
