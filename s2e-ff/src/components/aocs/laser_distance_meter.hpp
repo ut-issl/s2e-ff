@@ -61,6 +61,7 @@ class LaserDistanceMeter : public Component, public ILoggable {
 
   bool is_reflected_ = false;         //!< Flag to detect reflected light
   double observed_distance_m_ = 0.0;  //!< Observed direction
+  size_t laser_id_ = 0;
 
   // Reference
   const Dynamics& dynamics_;

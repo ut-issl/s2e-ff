@@ -70,8 +70,8 @@ class FfComponents : public InstalledComponents {
   RelativePositionSensor* relative_position_sensor_;  //!< Example of Relative position sensor
   RelativeAttitudeSensor* relative_attitude_sensor_;  //!< Example of Relative attitude sensor
   RelativeVelocitySensor* relative_velocity_sensor_;  //!< Example of Relative velocity sensor
-  LaserDistanceMeter* laser_distance_meter_;
-  QpdPositioningSensor* qpd_positioning_sensor_;
+  std::vector<LaserDistanceMeter*> laser_distance_meters_;
+  std::vector<QpdPositioningSensor*> qpd_positioning_sensors_;
   // Actuators
   ForceGenerator* force_generator_;                           //!< Example of force generator
   TorqueGenerator* torque_generator_;                         //!< Example of torque generator

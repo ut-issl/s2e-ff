@@ -73,7 +73,7 @@ void LaserDistanceMeter::MainRoutine(int count) {
 
 std::string LaserDistanceMeter::GetLogHeader() const {
   std::string str_tmp = "";
-  std::string head = "laser_distance_meter_";
+  std::string head = "laser_distance_meter_" + std::to_string(laser_id_) + "_";
   str_tmp += WriteScalar(head + "is_reflected");
   str_tmp += WriteScalar(head + "observed_distance[m]");
 
@@ -102,6 +102,7 @@ void LaserDistanceMeter::Initialize(const std::string file_name, const size_t id
   IniAccess ini_file(file_name);
   std::string name = "LASER_DISTANCE_METER_";
   const std::string section_name = name + std::to_string(static_cast<long long>(id));
+  laser_id_ = id;
 
   libra::Quaternion quaternion_b2c;
   ini_file.ReadQuaternion(section_name.c_str(), "quaternion_b2c", quaternion_b2c);

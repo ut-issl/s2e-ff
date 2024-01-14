@@ -39,11 +39,21 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
       new RelativeVelocitySensor(InitializeRelativeVelocitySensor(clock_gen, rel_vel_file, compo_step_sec, *rel_info_, *dynamics_, sat_id));
 
   const std::string ldm_file = sat_file.ReadString(section_name.c_str(), "Laser_distance_meter_file");
-  laser_distance_meter_ = new LaserDistanceMeter(1, clock_gen, ldm_file, *dynamics_, inter_spacecraft_communication_);
+  config_->main_logger_->CopyFileToLogDirectory(ldm_file);
+  IniAccess laser_distance_meter_file(ldm_file);
+  size_t number_of_laser_distance_meters = laser_distance_meter_file.ReadInt("GENERAL", "number_of_laser_distance_meters");
+  for (size_t id = 0; id < number_of_laser_distance_meters; id++) {
+    laser_distance_meters_.push_back(new LaserDistanceMeter(1, clock_gen, ldm_file, *dynamics_, inter_spacecraft_communication_, id));
+  }
 
   const std::string qpd_file = sat_file.ReadString(section_name.c_str(), "qpd_positioning_sensor_file");
-  qpd_positioning_sensor_ =
-      new QpdPositioningSensor(InitializeQpdPositioningSensor(clock_gen, qpd_file, compo_step_sec, *dynamics_, inter_spacecraft_communication_));
+  config_->main_logger_->CopyFileToLogDirectory(qpd_file);
+  IniAccess qpd_positioning_sensor_file(qpd_file);
+  size_t number_of_qpd_positioning_sensors = qpd_positioning_sensor_file.ReadInt("GENERAL", "number_of_qpd_positioning_sensors");
+  for (size_t id = 0; id < number_of_qpd_positioning_sensors; id++) {
+    qpd_positioning_sensors_.push_back(new QpdPositioningSensor(
+        InitializeQpdPositioningSensor(clock_gen, qpd_file, compo_step_sec, *dynamics_, inter_spacecraft_communication_, id)));
+  }
 
   const std::string force_generator_file = sat_file.ReadString(section_name.c_str(), "force_generator_file");
   force_generator_ = new ForceGenerator(InitializeForceGenerator(clock_gen, force_generator_file, dynamics_));
@@ -77,8 +87,12 @@ FfComponents::~FfComponents() {
   delete force_generator_;
   delete torque_generator_;
   delete relative_attitude_controller_;
-  delete laser_distance_meter_;
-  delete qpd_positioning_sensor_;
+  for (auto laser_distance_meter_ : laser_distance_meters_) {
+    delete laser_distance_meter_;
+  }
+  for (auto qpd_positioning_sensor_ : qpd_positioning_sensors_) {
+    delete qpd_positioning_sensor_;
+  }
   // OBC must be deleted the last since it has com ports
   delete obc_;
 }
@@ -102,6 +116,10 @@ void FfComponents::LogSetup(Logger& logger) {
   logger.AddLogList(relative_velocity_sensor_);
   logger.AddLogList(force_generator_);
   logger.AddLogList(torque_generator_);
-  logger.AddLogList(laser_distance_meter_);
-  logger.AddLogList(qpd_positioning_sensor_);
+  for (auto laser_distance_meter_ : laser_distance_meters_) {
+    logger.AddLogList(laser_distance_meter_);
+  }
+  for (auto qpd_positioning_sensor_ : qpd_positioning_sensors_) {
+    logger.AddLogList(qpd_positioning_sensor_);
+  }
 }
