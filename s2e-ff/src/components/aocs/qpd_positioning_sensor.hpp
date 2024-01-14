@@ -61,7 +61,6 @@ class QpdPositioningSensor : public Component, public ILoggable {
   double GetObservedYAxisDisplacementAfterCompensation_m(const double line_of_sight_distance);
   double GetObservedZAxisDisplacementAfterCompensation_m(const double line_of_sight_distance);
 
-  inline double GetObservedZAxisDisplacementAfterCompensation_m() const { return observed_z_axis_displacement_m_; }
   inline bool GetIsReceivedLaser() const { return is_received_laser_; }
 
  protected:
