@@ -35,7 +35,7 @@ void RelativePositionAttitudeObserver::ObserveRelativePositionAttitude() {
   libra::Vector<kLaserDistanceMetersNumber> line_of_sight_distance_m{0.0};
 
   for (size_t laser_id = 0; laser_id < kLaserDistanceMetersNumber; ++laser_id) {
-    line_of_sight_distance_m[laser_id] = laser_distance_meters_[laser_id]->GetObservedDistance_m();
+    line_of_sight_distance_m[laser_id] = -laser_distance_meters_[laser_id]->GetObservedDistance_m();
   }
 
   observed_relative_position_m_[0] = (line_of_sight_distance_m[0] + line_of_sight_distance_m[2]) / 2.0;
