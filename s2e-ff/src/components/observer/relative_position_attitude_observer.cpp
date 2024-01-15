@@ -46,7 +46,7 @@ void RelativePositionAttitudeObserver::ObserveRelativePositionAttitude() {
   libra::Vector<kQpdPositioningSensorsNumber> displacement_z_axis_m{0.0};
   for (size_t qpd_id = 0; qpd_id < kQpdPositioningSensorsNumber; ++qpd_id) {
     displacement_y_axis_m[qpd_id] =
-        qpd_positioning_sensors_[qpd_id]->GetObservedYAxisDisplacementAfterCompensation_m(observed_relative_position_m_[0]);
+        -qpd_positioning_sensors_[qpd_id]->GetObservedYAxisDisplacementAfterCompensation_m(observed_relative_position_m_[0]);
     displacement_z_axis_m[qpd_id] =
         qpd_positioning_sensors_[qpd_id]->GetObservedZAxisDisplacementAfterCompensation_m(observed_relative_position_m_[0]);
   }
