@@ -124,7 +124,7 @@ class QpdPositioningSensor : public Component, public ILoggable {
   double CalcSign(const double input_value, const double threshold);
   double CalcStandardDeviation(const double sensor_output_derivative, const double qpd_laser_distance_m);
 
-  double CalcErrorCompensatedCoefficient(const double line_of_sight_distance);
+  double CalcErrorCompensatedCoefficient(double line_of_sight_distance);
 
   void Initialize(const std::string file_name, const size_t id = 0);
 };

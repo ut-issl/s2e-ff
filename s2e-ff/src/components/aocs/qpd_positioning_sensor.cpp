@@ -236,14 +236,16 @@ double QpdPositioningSensor::CalcStandardDeviation(const double sensor_output_de
   return standard_deviation;
 }
 
-double QpdPositioningSensor::CalcErrorCompensatedCoefficient(const double line_of_sight_distance) {
+double QpdPositioningSensor::CalcErrorCompensatedCoefficient(double line_of_sight_distance) {
   double error_compensated_coefficient = 1.0;
+  line_of_sight_distance = fabs(line_of_sight_distance);
   for (size_t id = 0; id < line_of_sight_distance_list_m_.size() - 1; ++id) {
     if (line_of_sight_distance_list_m_[id] <= line_of_sight_distance && line_of_sight_distance <= line_of_sight_distance_list_m_[id + 1]) {
       error_compensated_coefficient = error_compensated_coefficient_list_[id];
       error_compensated_coefficient += (error_compensated_coefficient_list_[id + 1] - error_compensated_coefficient_list_[id]) *
                                        (line_of_sight_distance - line_of_sight_distance_list_m_[id]) /
                                        (line_of_sight_distance_list_m_[id + 1] - line_of_sight_distance_list_m_[id]);
+      return error_compensated_coefficient;
     }
   }
   return error_compensated_coefficient;
