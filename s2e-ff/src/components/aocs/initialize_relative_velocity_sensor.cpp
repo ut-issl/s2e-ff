@@ -5,7 +5,7 @@
 
 #include "initialize_relative_velocity_sensor.hpp"
 
-#include <components/base/initialize_sensor.hpp>
+#include <components/base/sensor.hpp>
 #include <library/initialize/initialize_file_access.hpp>
 
 RelativeVelocitySensor InitializeRelativeVelocitySensor(ClockGenerator* clock_gen, const std::string file_name, const double compo_step_time_s,

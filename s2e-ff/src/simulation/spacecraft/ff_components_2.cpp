@@ -1,6 +1,6 @@
 #include "ff_components_2.hpp"
 
-#include <components/ideal/initialize_force_generator.hpp>
+#include <components/ideal/force_generator.hpp>
 #include <library/initialize/initialize_file_access.hpp>
 
 FfComponents2::FfComponents2(const Dynamics* dynamics, const Structure* structure, const LocalEnvironment* local_env,

@@ -5,7 +5,7 @@
 
 #include "relative_attitude_sensor.hpp"
 
-#include <components/base/initialize_sensor.hpp>
+#include <components/base/sensor.hpp>
 #include <library/initialize/initialize_file_access.hpp>
 
 RelativeAttitudeSensor::RelativeAttitudeSensor(const int prescaler, ClockGenerator* clock_gen, const int target_sat_id, const int reference_sat_id,
