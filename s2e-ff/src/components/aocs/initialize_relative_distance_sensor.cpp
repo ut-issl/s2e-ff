@@ -5,7 +5,7 @@
 
 #include "initialize_relative_distance_sensor.hpp"
 
-#include <components/base/initialize_sensor.hpp>
+#include <components/base/sensor.hpp>
 #include <library/initialize/initialize_file_access.hpp>
 
 RelativeDistanceSensor InitializeRelativeDistanceSensor(ClockGenerator* clock_gen, const std::string file_name, const double compo_step_time_s,

@@ -5,7 +5,7 @@
 
 #include "./qpd_positioning_sensor.hpp"
 
-#include <components/base/initialize_sensor.hpp>
+#include <components/base/sensor.hpp>
 
 QpdPositioningSensor::QpdPositioningSensor(const int prescaler, ClockGenerator* clock_gen, const std::string file_name, const Dynamics& dynamics,
                                            const FfInterSpacecraftCommunication& inter_spacecraft_communication, const size_t id)
