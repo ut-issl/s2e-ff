@@ -121,12 +121,36 @@ std::string QpdPositioningSensor::GetLogValue() const {
   return str_tmp;
 }
 
-double QpdPositioningSensor::GetObservedYAxisDisplacementAfterCompensation_m(const double line_of_sight_distance) {
-  return observed_y_axis_displacement_m_ / CalcErrorCompensatedCoefficient(line_of_sight_distance);
+void QpdPositioningSensor::SetErrorCompensatedCoefficient(double line_of_sight_distance) {
+  error_compensated_coefficient_ = 1.0;
+  line_of_sight_distance = fabs(line_of_sight_distance);
+  for (size_t id = 0; id < line_of_sight_distance_list_m_.size() - 1; ++id) {
+    if (line_of_sight_distance_list_m_[id] <= line_of_sight_distance && line_of_sight_distance <= line_of_sight_distance_list_m_[id + 1]) {
+      error_compensated_coefficient_ = error_compensated_coefficient_list_[id];
+      error_compensated_coefficient_ += (error_compensated_coefficient_list_[id + 1] - error_compensated_coefficient_list_[id]) *
+                                        (line_of_sight_distance - line_of_sight_distance_list_m_[id]) /
+                                        (line_of_sight_distance_list_m_[id + 1] - line_of_sight_distance_list_m_[id]);
+      return;
+    }
+  }
 }
 
-double QpdPositioningSensor::GetObservedZAxisDisplacementAfterCompensation_m(const double line_of_sight_distance) {
-  return observed_z_axis_displacement_m_ / CalcErrorCompensatedCoefficient(line_of_sight_distance);
+double QpdPositioningSensor::GetObservedYAxisDisplacementAfterCompensation_m() {
+  return observed_y_axis_displacement_m_ / error_compensated_coefficient_;
+}
+
+double QpdPositioningSensor::GetObservedZAxisDisplacementAfterCompensation_m() {
+  return observed_z_axis_displacement_m_ / error_compensated_coefficient_;
+}
+
+double QpdPositioningSensor::GetObservedZAxisDisplacementAfterCompensation_m(double line_of_sight_distance) {
+  SetErrorCompensatedCoefficient(line_of_sight_distance);
+  return observed_z_axis_displacement_m_ / error_compensated_coefficient_;
+}
+
+double QpdPositioningSensor::GetObservedYAxisDisplacementAfterCompensation_m(double line_of_sight_distance) {
+  SetErrorCompensatedCoefficient(line_of_sight_distance);
+  return observed_y_axis_displacement_m_ / error_compensated_coefficient_;
 }
 
 libra::Vector<3> QpdPositioningSensor::CalcLaserReceivedPosition(const libra::Vector<3> point_position, const libra::Vector<3> origin_position,
@@ -234,21 +258,6 @@ double QpdPositioningSensor::CalcStandardDeviation(const double sensor_output_de
   double standard_deviation =
       qpd_standard_deviation_scale_factor_ * qpd_laser_distance_m * fabs(sensor_output_derivative) + qpd_standard_deviation_constant_V_;
   return standard_deviation;
-}
-
-double QpdPositioningSensor::CalcErrorCompensatedCoefficient(double line_of_sight_distance) {
-  double error_compensated_coefficient = 1.0;
-  line_of_sight_distance = fabs(line_of_sight_distance);
-  for (size_t id = 0; id < line_of_sight_distance_list_m_.size() - 1; ++id) {
-    if (line_of_sight_distance_list_m_[id] <= line_of_sight_distance && line_of_sight_distance <= line_of_sight_distance_list_m_[id + 1]) {
-      error_compensated_coefficient = error_compensated_coefficient_list_[id];
-      error_compensated_coefficient += (error_compensated_coefficient_list_[id + 1] - error_compensated_coefficient_list_[id]) *
-                                       (line_of_sight_distance - line_of_sight_distance_list_m_[id]) /
-                                       (line_of_sight_distance_list_m_[id + 1] - line_of_sight_distance_list_m_[id]);
-      return error_compensated_coefficient;
-    }
-  }
-  return error_compensated_coefficient;
 }
 
 double QpdPositioningSensor::ObservePositionDisplacement(const double qpd_sensor_output_polarization, const double qpd_sensor_output_V,
