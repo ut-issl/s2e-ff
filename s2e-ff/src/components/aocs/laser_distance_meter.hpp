@@ -10,6 +10,7 @@
 #include <dynamics/dynamics.hpp>
 #include <library/logger/logger.hpp>
 #include <library/math/vector.hpp>
+#include <library/randomization/normal_randomization.hpp>
 
 #include "../../library/math/translation_first_dual_quaternion.hpp"
 #include "../../simulation/case/ff_inter_spacecraft_communication.hpp"
@@ -61,6 +62,11 @@ class LaserDistanceMeter : public Component, public ILoggable {
 
   bool is_reflected_ = false;         //!< Flag to detect reflected light
   double observed_distance_m_ = 0.0;  //!< Observed direction
+
+  // Random noise
+  libra::NormalRand random_noise_;                   //!< Normal random noise for the laser distance meter
+  double normal_random_standard_deviation_m_ = 0.0;  //!< Normal random standard deviation [m]
+
   size_t laser_id_ = 0;
 
   // Reference

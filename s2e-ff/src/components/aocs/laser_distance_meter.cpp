@@ -60,6 +60,8 @@ void LaserDistanceMeter::MainRoutine(int count) {
     // Observe closest point
     if (observed_distance_m < observed_distance_m_) {
       observed_distance_m_ = observed_distance_m;
+      random_noise_.SetParameters(0.0, normal_random_standard_deviation_m_);
+      observed_distance_m_ += random_noise_;
     }
   }
 
@@ -112,4 +114,6 @@ void LaserDistanceMeter::Initialize(const std::string file_name, const size_t id
 
   ini_file.ReadVector(section_name.c_str(), "laser_emitting_direction_c", laser_emitting_direction_c_);
   emission_angle_rad_ = ini_file.ReadDouble(section_name.c_str(), "emission_angle_rad");
+
+  normal_random_standard_deviation_m_ = ini_file.ReadDouble(section_name.c_str(), "normal_random_standard_deviation_c_m");
 }
