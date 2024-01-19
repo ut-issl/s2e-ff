@@ -19,7 +19,7 @@ std::string RelativePositionAttitudeObserver::GetLogHeader() const {
   std::string str_tmp = "";
   std::string head = "relative_position_attitude_observer_";
   str_tmp += WriteVector(head + "position", "tb2rb", "m", 3);
-  str_tmp += WriteVector(head + "eular_angle", "tb2rb", "rad", 3);
+  str_tmp += WriteVector(head + "euler_angle", "tb2rb", "rad", 3);
   return str_tmp;
 }
 
