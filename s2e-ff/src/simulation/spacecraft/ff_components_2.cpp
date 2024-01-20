@@ -14,10 +14,12 @@ FfComponents2::FfComponents2(const Dynamics* dynamics, const Structure* structur
       rel_info_(rel_info),
       inter_spacecraft_communication_(inter_spacecraft_communication) {
   // General
-  IniAccess sat_file = IniAccess(config->spacecraft_file_list_[1]);
+  const size_t sat_id = 1;
+  IniAccess sat_file = IniAccess(config->spacecraft_file_list_[sat_id]);
 
   // Component Instantiation
   obc_ = new OnBoardComputer(clock_gen);
+  double compo_step_sec = glo_env_->GetSimulationTime().GetComponentStepTime_s();
 
   std::string file_name = sat_file.ReadString("COMPONENT_FILES", "corner_cube_reflector_file");
   config_->main_logger_->CopyFileToLogDirectory(file_name);
@@ -28,14 +30,14 @@ FfComponents2::FfComponents2(const Dynamics* dynamics, const Structure* structur
   }
   inter_spacecraft_communication.SetCornerCubeReflector(corner_cube_reflectors_);
 
-  file_name = sat_file.ReadString("COMPONENT_FILES", "laser_emitter_file");
-  config_->main_logger_->CopyFileToLogDirectory(file_name);
-  IniAccess laser_emitter_file(file_name);
-  size_t number_of_laser_emitters = laser_emitter_file.ReadInt("GENERAL", "number_of_laser_emitters");
-  for (size_t id = 0; id < number_of_laser_emitters; id++) {
-    laser_emitters_.push_back(new LaserEmitter(InitializeLaserEmitter(1, clock_gen, file_name, *dynamics_, id)));
+  const std::string qpd_file = sat_file.ReadString("COMPONENT_FILES", "qpd_positioning_sensor_file");
+  config_->main_logger_->CopyFileToLogDirectory(qpd_file);
+  IniAccess qpd_positioning_sensor_file(qpd_file);
+  size_t number_of_qpd_positioning_sensors = qpd_positioning_sensor_file.ReadInt("GENERAL", "number_of_qpd_positioning_sensors");
+  for (size_t id = 0; id < number_of_qpd_positioning_sensors; id++) {
+    qpd_positioning_sensors_.push_back(new QpdPositioningSensor(
+        InitializeQpdPositioningSensor(clock_gen, qpd_file, compo_step_sec, *dynamics_, inter_spacecraft_communication, id)));
   }
-  inter_spacecraft_communication.SetLaserEmitter(laser_emitters_);
 
   // Debug for actuator output
   libra::Vector<3> force_N;
@@ -49,8 +51,8 @@ FfComponents2::~FfComponents2() {
   for (auto corner_cube_reflector : corner_cube_reflectors_) {
     delete corner_cube_reflector;
   }
-  for (auto laser_emitter : laser_emitters_) {
-    delete laser_emitter;
+  for (auto qpd_positioning_sensor : qpd_positioning_sensors_) {
+    delete qpd_positioning_sensor;
   }
   // OBC must be deleted the last since it has com ports
   delete obc_;
@@ -67,4 +69,8 @@ Vector<3> FfComponents2::GenerateTorque_b_Nm() {
   return torque_b_Nm_;
 }
 
-void FfComponents2::LogSetup(Logger& logger) { UNUSED(logger); }
+void FfComponents2::LogSetup(Logger& logger) {
+  for (auto qpd_positioning_sensor : qpd_positioning_sensors_) {
+    logger.AddLogList(qpd_positioning_sensor);
+  }
+}

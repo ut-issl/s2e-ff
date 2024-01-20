@@ -7,8 +7,10 @@
 
 RelativePositionAttitudeObserver::RelativePositionAttitudeObserver(const int prescaler, ClockGenerator* clock_gen,
                                                                    std::vector<LaserDistanceMeter*>& laser_distance_meters,
-                                                                   std::vector<QpdPositioningSensor*>& qpd_positioning_sensors)
-    : Component(prescaler, clock_gen), laser_distance_meters_(laser_distance_meters), qpd_positioning_sensors_(qpd_positioning_sensors) {}
+                                                                   FfInterSpacecraftCommunication& inter_spacecraft_communication)
+    : Component(prescaler, clock_gen),
+      laser_distance_meters_(laser_distance_meters),
+      inter_spacecraft_communication_(inter_spacecraft_communication) {}
 
 void RelativePositionAttitudeObserver::MainRoutine(int count) {
   UNUSED(count);
@@ -44,11 +46,12 @@ void RelativePositionAttitudeObserver::ObserveRelativePositionAttitude() {
 
   libra::Vector<kQpdPositioningSensorsNumber> displacement_y_axis_m{0.0};
   libra::Vector<kQpdPositioningSensorsNumber> displacement_z_axis_m{0.0};
-  for (size_t qpd_id = 0; qpd_id < kQpdPositioningSensorsNumber; ++qpd_id) {
-    qpd_positioning_sensors_[qpd_id]->SetErrorCompensatedCoefficient(observed_relative_position_m_[0]);
-    displacement_y_axis_m[qpd_id] = -qpd_positioning_sensors_[qpd_id]->GetObservedYAxisDisplacementAfterCompensation_m();
-    displacement_z_axis_m[qpd_id] = qpd_positioning_sensors_[qpd_id]->GetObservedZAxisDisplacementAfterCompensation_m();
-  }
+  // for (size_t qpd_id = 0; qpd_id < kQpdPositioningSensorsNumber; ++qpd_id) {
+  //   QpdPositioningSensor qpd_positioning_sensor = inter_spacecraft_communication_.GetQpdPositioningSensor(qpd_id);
+  //   qpd_positioning_sensor.SetErrorCompensatedCoefficient(observed_relative_position_m_[0]);
+  //   displacement_y_axis_m[qpd_id] = -qpd_positioning_sensor.GetObservedYAxisDisplacementAfterCompensation_m();
+  //   displacement_z_axis_m[qpd_id] = qpd_positioning_sensor.GetObservedZAxisDisplacementAfterCompensation_m();
+  // }
   observed_relative_position_m_[1] = (displacement_y_axis_m[0] + displacement_y_axis_m[1]) / 2.0;
   observed_relative_position_m_[2] = (displacement_z_axis_m[0] + displacement_z_axis_m[1]) / 2.0;
   observed_relative_euler_angle_rad_[0] = (displacement_y_axis_m[1] + displacement_y_axis_m[0]) / 2.0 / component_position_z_axis_m_;

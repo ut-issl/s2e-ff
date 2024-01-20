@@ -46,14 +46,14 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
     laser_distance_meters_.push_back(new LaserDistanceMeter(1, clock_gen, ldm_file, *dynamics_, inter_spacecraft_communication_, id));
   }
 
-  const std::string qpd_file = sat_file.ReadString(section_name.c_str(), "qpd_positioning_sensor_file");
-  config_->main_logger_->CopyFileToLogDirectory(qpd_file);
-  IniAccess qpd_positioning_sensor_file(qpd_file);
-  size_t number_of_qpd_positioning_sensors = qpd_positioning_sensor_file.ReadInt("GENERAL", "number_of_qpd_positioning_sensors");
-  for (size_t id = 0; id < number_of_qpd_positioning_sensors; id++) {
-    qpd_positioning_sensors_.push_back(new QpdPositioningSensor(
-        InitializeQpdPositioningSensor(clock_gen, qpd_file, compo_step_sec, *dynamics_, inter_spacecraft_communication_, id)));
+  const std::string lm_file = sat_file.ReadString("COMPONENT_FILES", "laser_emitter_file");
+  config_->main_logger_->CopyFileToLogDirectory(lm_file);
+  IniAccess laser_emitter_file(lm_file);
+  size_t number_of_laser_emitters = laser_emitter_file.ReadInt("GENERAL", "number_of_laser_emitters");
+  for (size_t id = 0; id < number_of_laser_emitters; id++) {
+    laser_emitters_.push_back(new LaserEmitter(InitializeLaserEmitter(1, clock_gen, lm_file, *dynamics_, id)));
   }
+  inter_spacecraft_communication.SetLaserEmitter(laser_emitters_);
 
   const std::string force_generator_file = sat_file.ReadString(section_name.c_str(), "force_generator_file");
   force_generator_ = new ForceGenerator(InitializeForceGenerator(clock_gen, force_generator_file, dynamics_));
@@ -65,7 +65,7 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
   relative_attitude_controller_ = new RelativeAttitudeController(InitializeRelativeAttitudeController(
       clock_gen, relative_attitude_controller_file, *rel_info_, local_env_->GetCelestialInformation(), *dynamics_, sat_id));
 
-  relative_position_attitude_observer_ = new RelativePositionAttitudeObserver(1, clock_gen, laser_distance_meters_, qpd_positioning_sensors_);
+  relative_position_attitude_observer_ = new RelativePositionAttitudeObserver(1, clock_gen, laser_distance_meters_, inter_spacecraft_communication_);
 
   // Debug for actuator output
   libra::Vector<3> force_N;
@@ -92,8 +92,8 @@ FfComponents::~FfComponents() {
   for (auto laser_distance_meter_ : laser_distance_meters_) {
     delete laser_distance_meter_;
   }
-  for (auto qpd_positioning_sensor_ : qpd_positioning_sensors_) {
-    delete qpd_positioning_sensor_;
+  for (auto laser_emitter_ : laser_emitters_) {
+    delete laser_emitter_;
   }
   delete relative_position_attitude_observer_;
   // OBC must be deleted the last since it has com ports
@@ -121,9 +121,6 @@ void FfComponents::LogSetup(Logger& logger) {
   logger.AddLogList(torque_generator_);
   for (auto laser_distance_meter_ : laser_distance_meters_) {
     logger.AddLogList(laser_distance_meter_);
-  }
-  for (auto qpd_positioning_sensor_ : qpd_positioning_sensors_) {
-    logger.AddLogList(qpd_positioning_sensor_);
   }
   logger.AddLogList(relative_position_attitude_observer_);
 }
