@@ -17,6 +17,7 @@
 #include <components/real/cdh/on_board_computer.hpp>
 
 #include "../../components/aocs/corner_cube_reflector.hpp"
+#include "../../components/aocs/information_parser.hpp"
 #include "../../components/aocs/initialize_relative_distance_sensor.hpp"
 #include "../../components/aocs/initialize_relative_position_sensor.hpp"
 #include "../../components/aocs/laser_emitter.hpp"
@@ -73,6 +74,7 @@ class FfComponents2 : public InstalledComponents {
   const GlobalEnvironment* glo_env_;       //!< Global environment information
   const SimulationConfiguration* config_;  //!< Simulation settings
   const RelativeInformation* rel_info_;    //!< Relative information
+  InformationParser* information_parser_;
   FfInterSpacecraftCommunication& inter_spacecraft_communication_;
 };
 

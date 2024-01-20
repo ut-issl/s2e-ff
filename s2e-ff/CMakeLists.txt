@@ -47,6 +47,7 @@ set(SOURCE_FILES
   src/s2e_ff.cpp
   src/components/aocs/corner_cube_reflector.cpp
   src/components/aocs/relative_distance_sensor.cpp
+  src/components/aocs/information_parser.cpp
   src/components/aocs/initialize_relative_distance_sensor.cpp
   src/components/aocs/relative_position_sensor.cpp
   src/components/aocs/initialize_relative_position_sensor.cpp

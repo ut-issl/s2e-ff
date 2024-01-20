@@ -121,14 +121,14 @@ std::string QpdPositioningSensor::GetLogValue() const {
   return str_tmp;
 }
 
-void QpdPositioningSensor::SetErrorCompensatedCoefficient(double line_of_sight_distance) {
+void QpdPositioningSensor::SetErrorCompensatedCoefficient(double line_of_sight_distance_m) {
   error_compensated_coefficient_ = 1.0;
-  line_of_sight_distance = fabs(line_of_sight_distance);
+  line_of_sight_distance_m = fabs(line_of_sight_distance_m);
   for (size_t id = 0; id < line_of_sight_distance_list_m_.size() - 1; ++id) {
-    if (line_of_sight_distance_list_m_[id] <= line_of_sight_distance && line_of_sight_distance <= line_of_sight_distance_list_m_[id + 1]) {
+    if (line_of_sight_distance_list_m_[id] <= line_of_sight_distance_m && line_of_sight_distance_m <= line_of_sight_distance_list_m_[id + 1]) {
       error_compensated_coefficient_ = error_compensated_coefficient_list_[id];
       error_compensated_coefficient_ += (error_compensated_coefficient_list_[id + 1] - error_compensated_coefficient_list_[id]) *
-                                        (line_of_sight_distance - line_of_sight_distance_list_m_[id]) /
+                                        (line_of_sight_distance_m - line_of_sight_distance_list_m_[id]) /
                                         (line_of_sight_distance_list_m_[id + 1] - line_of_sight_distance_list_m_[id]);
       return;
     }
@@ -143,13 +143,13 @@ double QpdPositioningSensor::GetObservedZAxisDisplacementAfterCompensation_m() {
   return observed_z_axis_displacement_m_ / error_compensated_coefficient_;
 }
 
-double QpdPositioningSensor::GetObservedZAxisDisplacementAfterCompensation_m(double line_of_sight_distance) {
-  SetErrorCompensatedCoefficient(line_of_sight_distance);
+double QpdPositioningSensor::GetObservedZAxisDisplacementAfterCompensation_m(double line_of_sight_distance_m) {
+  SetErrorCompensatedCoefficient(line_of_sight_distance_m);
   return observed_z_axis_displacement_m_ / error_compensated_coefficient_;
 }
 
-double QpdPositioningSensor::GetObservedYAxisDisplacementAfterCompensation_m(double line_of_sight_distance) {
-  SetErrorCompensatedCoefficient(line_of_sight_distance);
+double QpdPositioningSensor::GetObservedYAxisDisplacementAfterCompensation_m(double line_of_sight_distance_m) {
+  SetErrorCompensatedCoefficient(line_of_sight_distance_m);
   return observed_y_axis_displacement_m_ / error_compensated_coefficient_;
 }
 

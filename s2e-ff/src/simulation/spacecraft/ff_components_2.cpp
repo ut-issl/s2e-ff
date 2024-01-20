@@ -39,6 +39,8 @@ FfComponents2::FfComponents2(const Dynamics* dynamics, const Structure* structur
         InitializeQpdPositioningSensor(clock_gen, qpd_file, compo_step_sec, *dynamics_, inter_spacecraft_communication, id)));
   }
 
+  information_parser_ = new InformationParser(1, clock_gen, qpd_positioning_sensors_, inter_spacecraft_communication);
+
   // Debug for actuator output
   libra::Vector<3> force_N;
   force_N[0] = 1.0;
@@ -54,6 +56,7 @@ FfComponents2::~FfComponents2() {
   for (auto qpd_positioning_sensor : qpd_positioning_sensors_) {
     delete qpd_positioning_sensor;
   }
+  delete information_parser_;
   // OBC must be deleted the last since it has com ports
   delete obc_;
 }

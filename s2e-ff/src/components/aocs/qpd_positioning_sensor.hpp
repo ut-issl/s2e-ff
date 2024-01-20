@@ -58,12 +58,12 @@ class QpdPositioningSensor : public Component, public ILoggable {
   inline double GetObservedYAxisDisplacement_m() const { return observed_y_axis_displacement_m_; }
   inline double GetObservedZAxisDisplacement_m() const { return observed_z_axis_displacement_m_; }
 
-  void SetErrorCompensatedCoefficient(double line_of_sight_distance);
+  void SetErrorCompensatedCoefficient(double line_of_sight_distance_m);
 
   double GetObservedYAxisDisplacementAfterCompensation_m();
   double GetObservedZAxisDisplacementAfterCompensation_m();
-  double GetObservedYAxisDisplacementAfterCompensation_m(double line_of_sight_distance);
-  double GetObservedZAxisDisplacementAfterCompensation_m(double line_of_sight_distance);
+  double GetObservedYAxisDisplacementAfterCompensation_m(double line_of_sight_distance_m);
+  double GetObservedZAxisDisplacementAfterCompensation_m(double line_of_sight_distance_m);
 
   inline bool GetIsReceivedLaser() const { return is_received_laser_; }
 
