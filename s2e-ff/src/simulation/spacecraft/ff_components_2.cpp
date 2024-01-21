@@ -24,7 +24,7 @@ FfComponents2::FfComponents2(const Dynamics* dynamics, const Structure* structur
   IniAccess corner_cube_file(file_name);
   size_t number_of_reflectors = corner_cube_file.ReadInt("GENERAL", "number_of_reflectors");
   for (size_t id = 0; id < number_of_reflectors; id++) {
-    corner_cube_reflectors_.push_back(new CornerCubeReflector(file_name, dynamics_, id));
+    corner_cube_reflectors_.push_back(new CornerCubeReflector(1, clock_gen, file_name, dynamics_, id));
   }
   inter_spacecraft_communication.SetCornerCubeReflector(corner_cube_reflectors_);
 
