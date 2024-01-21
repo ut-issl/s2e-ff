@@ -29,6 +29,7 @@ void LaserDistanceMeter::MainRoutine(int count) {
   is_reflected_ = false;
   for (size_t reflector_id = 0; reflector_id < number_of_reflectors; reflector_id++) {
     // Get reflector information
+    inter_spacecraft_communication_.GetCornerCubeReflector(reflector_id).Update(count);
     libra::Vector<3> reflector_position_i_m = inter_spacecraft_communication_.GetCornerCubeReflector(reflector_id).GetReflectorPosition_i_m();
     libra::Vector<3> reflector_normal_direction_i = inter_spacecraft_communication_.GetCornerCubeReflector(reflector_id).GetNormalDirection_i();
 
