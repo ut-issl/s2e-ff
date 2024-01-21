@@ -45,7 +45,7 @@ void RelativePositionAttitudeObserver::ObserveRelativePositionAttitude() {
   observed_relative_euler_angle_rad_[2] = (line_of_sight_distance_m[0] - line_of_sight_distance_m[1]) / 2.0 / component_position_y_axis_m_;
 
   inter_spacecraft_communication_.SetLineOfSightDistance_m(observed_relative_position_m_[0]);
-  libra::Vector<kQpdPositioningSensorsNumber> displacement_y_axis_m = inter_spacecraft_communication_.GetYAxisDisplacementCalcedByQpdSensor_m();
+  libra::Vector<kQpdPositioningSensorsNumber> displacement_y_axis_m = -inter_spacecraft_communication_.GetYAxisDisplacementCalcedByQpdSensor_m();
   libra::Vector<kQpdPositioningSensorsNumber> displacement_z_axis_m = -inter_spacecraft_communication_.GetZAxisDisplacementCalcedByQpdSensor_m();
 
   observed_relative_position_m_[1] = (displacement_y_axis_m[0] + displacement_y_axis_m[1]) / 2.0;
