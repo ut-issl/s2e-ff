@@ -61,9 +61,9 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
   const std::string torque_generator_file = sat_file.ReadString(section_name.c_str(), "torque_generator_file");
   torque_generator_ = new TorqueGenerator(InitializeTorqueGenerator(clock_gen, torque_generator_file, dynamics_));
 
-  const std::string relative_attitude_controller_file = sat_file.ReadString(section_name.c_str(), "relative_attitude_controller_file");
-  relative_attitude_controller_ = new RelativeAttitudeController(InitializeRelativeAttitudeController(
-      clock_gen, relative_attitude_controller_file, *rel_info_, local_env_->GetCelestialInformation(), *dynamics_, sat_id));
+  // const std::string relative_attitude_controller_file = sat_file.ReadString(section_name.c_str(), "relative_attitude_controller_file");
+  // relative_attitude_controller_ = new RelativeAttitudeController(InitializeRelativeAttitudeController(
+  //     clock_gen, relative_attitude_controller_file, *rel_info_, local_env_->GetCelestialInformation(), *dynamics_, sat_id));
 
   relative_position_attitude_observer_ = new RelativePositionAttitudeObserver(1, clock_gen, laser_distance_meters_, inter_spacecraft_communication_);
 
@@ -88,7 +88,7 @@ FfComponents::~FfComponents() {
   delete relative_velocity_sensor_;
   delete force_generator_;
   delete torque_generator_;
-  delete relative_attitude_controller_;
+  // delete relative_attitude_controller_;
   for (auto laser_distance_meter_ : laser_distance_meters_) {
     delete laser_distance_meter_;
   }

@@ -76,9 +76,9 @@ class FfComponents : public InstalledComponents {
   std::vector<LaserDistanceMeter*> laser_distance_meters_;
   std::vector<LaserEmitter*> laser_emitters_;
   // Actuators
-  ForceGenerator* force_generator_;                           //!< Example of force generator
-  TorqueGenerator* torque_generator_;                         //!< Example of torque generator
-  RelativeAttitudeController* relative_attitude_controller_;  //!< Example of attitude controller
+  ForceGenerator* force_generator_;    //!< Example of force generator
+  TorqueGenerator* torque_generator_;  //!< Example of torque generator
+  // RelativeAttitudeController* relative_attitude_controller_;  //!< Example of attitude controller
   // Observers
   RelativePositionAttitudeObserver* relative_position_attitude_observer_;
 
