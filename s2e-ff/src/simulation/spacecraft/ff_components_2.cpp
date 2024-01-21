@@ -49,6 +49,9 @@ FfComponents2::~FfComponents2() {
   for (auto corner_cube_reflector : corner_cube_reflectors_) {
     delete corner_cube_reflector;
   }
+  for (auto laser_emitter : laser_emitters_) {
+    delete laser_emitter;
+  }
   // OBC must be deleted the last since it has com ports
   delete obc_;
 }
