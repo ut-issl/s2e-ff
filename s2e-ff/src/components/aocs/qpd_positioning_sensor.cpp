@@ -91,7 +91,7 @@ void QpdPositioningSensor::MainRoutine(int count) {
 
 std::string QpdPositioningSensor::GetLogHeader() const {
   std::string str_tmp = "";
-  std::string head = "qpd_positioning_sensor_";
+  std::string head = "qpd_positioning_sensor_" + std::to_string(qpd_positioning_sensor_id_) + "_";
   str_tmp += WriteScalar(head + "is_received_laser");
   str_tmp += WriteScalar(head + "distance_true[m]");
   str_tmp += WriteScalar(head + "y_axis_displacement_true[m]");
@@ -145,6 +145,9 @@ void QpdPositioningSensor::CalcSensorOutput(LaserEmitter* laser_emitter, const d
                                             const double qpd_z_axis_displacement_m) {
   qpd_sensor_radius_m_ = (double)(((int32_t)(qpd_sensor_radius_m_ / qpd_sensor_integral_step_m_)) * qpd_sensor_integral_step_m_);
   const double distance_from_beam_waist_m = qpd_laser_distance_m - laser_rayleigh_length_offset_m;
+  double qpd_sensor_output_y_axis_V = 0.0;
+  double qpd_sensor_output_z_axis_V = 0.0;
+  double qpd_sensor_output_sum_V = 0.0;
   double qpd_sensor_output_derivative_y_axis_V_m = 0.0;
   double qpd_sensor_output_derivative_z_axis_V_m = 0.0;
   double qpd_sensor_output_derivative_sum_V_m = 0.0;
@@ -167,16 +170,19 @@ void QpdPositioningSensor::CalcSensorOutput(LaserEmitter* laser_emitter, const d
                                                     pow(laser_emitter->CalcBeamWidthRadius_m(distance_from_beam_waist_m), 2.0) *
                                                     photovoltage_at_each_point;
 
-      qpd_sensor_output_y_axis_V_ += CalcSign(-y_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * photovoltage_at_each_point;
-      qpd_sensor_output_z_axis_V_ += CalcSign(z_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * photovoltage_at_each_point;
-      qpd_sensor_output_sum_V_ += photovoltage_at_each_point;
+      qpd_sensor_output_y_axis_V += CalcSign(-y_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * photovoltage_at_each_point;
+      qpd_sensor_output_z_axis_V += CalcSign(z_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * photovoltage_at_each_point;
+      qpd_sensor_output_sum_V += photovoltage_at_each_point;
 
       qpd_sensor_output_derivative_y_axis_V_m += CalcSign(-y_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * photovoltage_variation_at_each_point;
       qpd_sensor_output_derivative_z_axis_V_m += CalcSign(z_axis_pos_m, qpd_sensor_integral_step_m_ / 2) * photovoltage_variation_at_each_point;
       qpd_sensor_output_derivative_sum_V_m += photovoltage_variation_at_each_point;
     }
   }
-  if (qpd_sensor_output_sum_V_ < qpd_sensor_output_voltage_threshold_V_) return;
+  qpd_sensor_output_y_axis_V_ += qpd_sensor_output_y_axis_V;
+  qpd_sensor_output_z_axis_V_ += qpd_sensor_output_z_axis_V;
+  qpd_sensor_output_sum_V_ += qpd_sensor_output_sum_V;
+  if (qpd_sensor_output_sum_V < qpd_sensor_output_voltage_threshold_V_) return;
 
   const double qpd_standard_deviation_y_axis_V = CalcStandardDeviation(qpd_sensor_output_derivative_y_axis_V_m, qpd_laser_distance_m);
   const double qpd_standard_deviation_z_axis_V = CalcStandardDeviation(qpd_sensor_output_derivative_z_axis_V_m, qpd_laser_distance_m);
@@ -226,14 +232,29 @@ double QpdPositioningSensor::ObservePositionDisplacement(const double qpd_sensor
                                                          const double qpd_sensor_output_sum_V, const std::vector<double>& qpd_voltage_ratio_list) {
   double observed_displacement_m = qpd_sensor_output_polarization * CalcSign(qpd_sensor_output_sum_V, 0.0) * qpd_positioning_threshold_m_;
   double sensor_value_ratio = qpd_sensor_output_V / qpd_sensor_output_sum_V;
-  for (size_t i = 0; i < qpd_voltage_ratio_list.size() - 1; ++i) {
-    if ((qpd_sensor_output_polarization * sensor_value_ratio >= qpd_sensor_output_polarization * qpd_voltage_ratio_list[i]) &&
-        (qpd_sensor_output_polarization * sensor_value_ratio <= qpd_sensor_output_polarization * qpd_voltage_ratio_list[i + 1])) {
-      observed_displacement_m = qpd_sensor_displacement_list_m_[i];
-      observed_displacement_m += (qpd_sensor_displacement_list_m_[i + 1] - qpd_sensor_displacement_list_m_[i]) *
-                                 (sensor_value_ratio - qpd_voltage_ratio_list[i]) / (qpd_voltage_ratio_list[i + 1] - qpd_voltage_ratio_list[i]);
+  double sensor_value_ratio_with_polarization = qpd_sensor_output_polarization * sensor_value_ratio;
+
+  size_t left = 0;
+  size_t right = qpd_voltage_ratio_list.size() - 1;
+
+  if (sensor_value_ratio_with_polarization < qpd_sensor_output_polarization * qpd_voltage_ratio_list[left]) return observed_displacement_m;
+  if (sensor_value_ratio_with_polarization > qpd_sensor_output_polarization * qpd_voltage_ratio_list[right]) return observed_displacement_m;
+
+  while (left <= right) {
+    size_t mid = left + (right - left) / 2;
+    if ((sensor_value_ratio_with_polarization == qpd_sensor_output_polarization * qpd_voltage_ratio_list[mid])) {
+      return qpd_sensor_displacement_list_m_[mid];
+    } else if (sensor_value_ratio_with_polarization > qpd_sensor_output_polarization * qpd_voltage_ratio_list[mid]) {
+      left = mid + 1;
+    } else {
+      right = mid - 1;
     }
   }
+
+  observed_displacement_m = qpd_sensor_displacement_list_m_[right];
+  observed_displacement_m += (qpd_sensor_displacement_list_m_[left] - qpd_sensor_displacement_list_m_[right]) *
+                             (sensor_value_ratio - qpd_voltage_ratio_list[right]) / (qpd_voltage_ratio_list[left] - qpd_voltage_ratio_list[right]);
+
   return observed_displacement_m;
 }
 
@@ -254,6 +275,8 @@ void QpdPositioningSensor::Initialize(const std::string file_name, const size_t 
     qpd_sensor_voltage_ratio_y_list_.push_back(stod(qpd_sensor_voltage_ratio_str_list[index][1]));
     qpd_sensor_voltage_ratio_z_list_.push_back(stod(qpd_sensor_voltage_ratio_str_list[index][2]));
   }
+
+  qpd_positioning_sensor_id_ = id;
 
   libra::Quaternion quaternion_b2c;
   ini_file.ReadQuaternion(section_name.c_str(), "quaternion_b2c", quaternion_b2c);
