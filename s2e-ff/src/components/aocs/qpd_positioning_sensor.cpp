@@ -38,6 +38,7 @@ void QpdPositioningSensor::MainRoutine(int count) {
   is_received_laser_ = false;
   for (size_t laser_id = 0; laser_id < number_of_laser_emitters; laser_id++) {
     // Get laser information
+    inter_spacecraft_communication_.GetLaserEmitter(laser_id).Update(count);
     libra::Vector<3> laser_position_i_m = inter_spacecraft_communication_.GetLaserEmitter(laser_id).GetLaserPosition_i_m();
     libra::Vector<3> laser_emitting_direction_i = inter_spacecraft_communication_.GetLaserEmitter(laser_id).GetEmittingDirection_i();
 
