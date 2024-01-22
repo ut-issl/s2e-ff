@@ -90,8 +90,8 @@ Vector<3> FfComponents::GenerateForce_b_N() {
 }
 
 Vector<3> FfComponents::GenerateTorque_b_Nm() {
-  // No attitude control component
   Vector<3> torque_b_Nm_(0.0);
+  torque_b_Nm_ += torque_generator_->GetGeneratedTorque_b_Nm();
   return torque_b_Nm_;
 }
 
