@@ -72,8 +72,6 @@ class LaserEmitter : public Component, public GaussianBeamBase {
 
   libra::Vector<3> laser_position_i_m_{0.0};
   libra::Vector<3> laser_emitting_direction_i_{0.0};
-  libra::Vector<3> previous_laser_position_i_m_{0.0};
-  libra::Vector<3> previous_laser_emitting_direction_i_{0.0};
 
   int count_ = 0;
 
