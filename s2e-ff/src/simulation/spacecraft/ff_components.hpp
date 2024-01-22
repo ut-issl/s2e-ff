@@ -14,6 +14,7 @@
 
 // include for components
 #include <components/ideal/force_generator.hpp>
+#include <components/ideal/torque_generator.hpp>
 #include <components/real/cdh/on_board_computer.hpp>
 
 #include "../../components/aocs/initialize_relative_distance_sensor.hpp"
@@ -73,6 +74,7 @@ class FfComponents : public InstalledComponents {
   QpdPositioningSensor* qpd_positioning_sensor_;
   // Actuators
   ForceGenerator* force_generator_;                           //!< Example of force generator
+  TorqueGenerator* torque_generator_;                         //!< Example of torque generator
   RelativeAttitudeController* relative_attitude_controller_;  //!< Example of attitude controller
 
   // References

@@ -48,6 +48,9 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
   const std::string force_generator_file = sat_file.ReadString(section_name.c_str(), "force_generator_file");
   force_generator_ = new ForceGenerator(InitializeForceGenerator(clock_gen, force_generator_file, dynamics_));
 
+  const std::string torque_generator_file = sat_file.ReadString(section_name.c_str(), "torque_generator_file");
+  torque_generator_ = new TorqueGenerator(InitializeTorqueGenerator(clock_gen, torque_generator_file, dynamics_));
+
   const std::string relative_attitude_controller_file = sat_file.ReadString(section_name.c_str(), "relative_attitude_controller_file");
   relative_attitude_controller_ = new RelativeAttitudeController(InitializeRelativeAttitudeController(
       clock_gen, relative_attitude_controller_file, *rel_info_, local_env_->GetCelestialInformation(), *dynamics_, sat_id));
@@ -58,6 +61,12 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
   force_N[1] = 0.0;
   force_N[2] = 0.0;
   // force_generator_->SetForce_b_N(force_N);
+
+  libra::Vector<3> torque_Nm;
+  torque_Nm[0] = 0.1;
+  torque_Nm[1] = 0.0;
+  torque_Nm[2] = 0.0;
+  // torque_generator_->SetTorque_b_Nm(torque_Nm);
 }
 
 FfComponents::~FfComponents() {
@@ -66,6 +75,7 @@ FfComponents::~FfComponents() {
   delete relative_attitude_sensor_;
   delete relative_velocity_sensor_;
   delete force_generator_;
+  delete torque_generator_;
   delete relative_attitude_controller_;
   delete laser_distance_meter_;
   delete qpd_positioning_sensor_;
@@ -91,6 +101,7 @@ void FfComponents::LogSetup(Logger& logger) {
   logger.AddLogList(relative_attitude_sensor_);
   logger.AddLogList(relative_velocity_sensor_);
   logger.AddLogList(force_generator_);
+  logger.AddLogList(torque_generator_);
   logger.AddLogList(laser_distance_meter_);
   logger.AddLogList(qpd_positioning_sensor_);
 }
