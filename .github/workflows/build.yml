@@ -23,10 +23,10 @@ jobs:
       fail-fast: false
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
       - name: checkout the submodules
-        uses: actions/checkout@v3
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
         with:
           submodules: recursive
 
@@ -42,7 +42,7 @@ jobs:
 
       - name: cache extlib
         id: cache-extlib
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           key: extlib-${{ runner.os }}-${{ hashFiles('./s2e-core/ExtLibraries/**') }}
           path: ExtLibraries
@@ -92,10 +92,10 @@ jobs:
         build_bit: ['BUILD_64BIT=OFF', 'BUILD_64BIT=ON']
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
       - name: checkout the submodules
-        uses: actions/checkout@v3
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
         with:
           submodules: recursive
 
@@ -129,7 +129,7 @@ jobs:
 
       - name: cache extlib
         id: cache-extlib
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           key: extlib-${{ runner.os }}-${{ hashFiles('./s2e-core/ExtLibraries/**') }}-${{ matrix.build_bit }}
           path: ExtLibraries

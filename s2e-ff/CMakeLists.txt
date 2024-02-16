@@ -46,11 +46,12 @@ add_subdirectory(${S2E_CORE_DIR}/src/simulation s2e_core/simulation)
 set(SOURCE_FILES
   src/s2e_ff.cpp
   src/components/aocs/relative_distance_sensor.cpp
-  src/components/aocs/initialize_relative_distance_sensor.cpp
   src/components/aocs/relative_position_sensor.cpp
-  src/components/aocs/initialize_relative_position_sensor.cpp
+  src/components/aocs/relative_attitude_sensor.cpp
   src/components/aocs/relative_velocity_sensor.cpp
-  src/components/aocs/initialize_relative_velocity_sensor.cpp
+  src/components/aocs/laser_distance_meter.cpp
+  src/components/aocs/laser_emitter.cpp
+  src/components/aocs/qpd_positioning_sensor.cpp
   src/components/ideal/relative_attitude_controller.cpp
   src/components/ideal/initialize_relative_attitude_controller.cpp
   src/library/math/dual_quaternion.cpp
