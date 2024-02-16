@@ -98,6 +98,8 @@ class QpdPositioningSensor : public Component, public ILoggable {
   std::vector<double>
       qpd_sensor_voltage_ratio_z_list_;  //!< List of `qpd_sensor_output_z_axis_V / qpd_sensor_output_sum_V` at each point on the z-axis.
 
+  size_t qpd_positioning_sensor_id_ = 0;
+
   // Reference
   const Dynamics& dynamics_;
   const FfInterSpacecraftCommunication& inter_spacecraft_communication_;
