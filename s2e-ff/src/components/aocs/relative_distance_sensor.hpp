@@ -65,4 +65,11 @@ class RelativeDistanceSensor : public Component, public Sensor<1>, public ILogga
   const RelativeInformation& rel_info_;  //!< Relative information
 };
 
+/**
+ * @fn InitializeRelativeDistanceSensor
+ * @brief Initialize function
+ */
+RelativeDistanceSensor InitializeRelativeDistanceSensor(ClockGenerator* clock_gen, const std::string file_name, const double compo_step_time_s,
+                                                        const RelativeInformation& rel_info, const int reference_sat_id_input = -1);
+
 #endif  // S2E_COMPONENTS_AOCS_RELATIVE_DISTANCE_SENSOR_HPP_

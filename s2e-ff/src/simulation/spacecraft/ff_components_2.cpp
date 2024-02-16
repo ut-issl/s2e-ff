@@ -1,12 +1,18 @@
 #include "ff_components_2.hpp"
 
-#include <components/ideal/initialize_force_generator.hpp>
+#include <components/ideal/force_generator.hpp>
 #include <library/initialize/initialize_file_access.hpp>
 
 FfComponents2::FfComponents2(const Dynamics* dynamics, const Structure* structure, const LocalEnvironment* local_env,
                              const GlobalEnvironment* glo_env, const SimulationConfiguration* config, ClockGenerator* clock_gen,
-                             const RelativeInformation* rel_info, const int sat_id)
-    : dynamics_(dynamics), structure_(structure), local_env_(local_env), glo_env_(glo_env), config_(config), rel_info_(rel_info) {
+                             const RelativeInformation* rel_info, FfInterSpacecraftCommunication& inter_spacecraft_communication, const int sat_id)
+    : dynamics_(dynamics),
+      structure_(structure),
+      local_env_(local_env),
+      glo_env_(glo_env),
+      config_(config),
+      rel_info_(rel_info),
+      inter_spacecraft_communication_(inter_spacecraft_communication) {
   // General
   IniAccess sat_file = IniAccess(config->spacecraft_file_list_[sat_id]);
   double compo_step_sec = glo_env_->GetSimulationTime().GetComponentStepTime_s();
@@ -31,6 +37,23 @@ FfComponents2::FfComponents2(const Dynamics* dynamics, const Structure* structur
   force_generator_ = new ForceGenerator(InitializeForceGenerator(clock_gen, force_generator_file, dynamics_));
 
   relative_orbit_controller_ = new RelativeOrbitControllerDeputy(1, clock_gen, sat_id, *this);
+  std::string file_name = sat_file.ReadString("COMPONENT_FILES", "corner_cube_reflector_file");
+  config_->main_logger_->CopyFileToLogDirectory(file_name);
+  IniAccess corner_cube_file(file_name);
+  size_t number_of_reflectors = corner_cube_file.ReadInt("GENERAL", "number_of_reflectors");
+  for (size_t id = 0; id < number_of_reflectors; id++) {
+    corner_cube_reflectors_.push_back(new CornerCubeReflector(file_name, dynamics_, id));
+  }
+  inter_spacecraft_communication.SetCornerCubeReflector(corner_cube_reflectors_);
+
+  file_name = sat_file.ReadString("COMPONENT_FILES", "laser_emitter_file");
+  config_->main_logger_->CopyFileToLogDirectory(file_name);
+  IniAccess laser_emitter_file(file_name);
+  size_t number_of_laser_emitters = laser_emitter_file.ReadInt("GENERAL", "number_of_laser_emitters");
+  for (size_t id = 0; id < number_of_laser_emitters; id++) {
+    laser_emitters_.push_back(new LaserEmitter(InitializeLaserEmitter(file_name, *dynamics_, id)));
+  }
+  inter_spacecraft_communication.SetLaserEmitter(laser_emitters_);
 
   // Debug for actuator output
   libra::Vector<3> force_N;
@@ -46,6 +69,9 @@ FfComponents2::~FfComponents2() {
   delete relative_velocity_sensor_;
   delete force_generator_;
   delete relative_orbit_controller_;
+  for (auto corner_cube_reflector : corner_cube_reflectors_) {
+    delete corner_cube_reflector;
+  }
   // OBC must be deleted the last since it has com ports
   delete obc_;
 }

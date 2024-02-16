@@ -10,14 +10,20 @@
 #include <environment/local/local_environment.hpp>
 #include <simulation/spacecraft/installed_components.hpp>
 
+#include "../case/ff_inter_spacecraft_communication.hpp"
+
 // include for components
 #include <components/ideal/force_generator.hpp>
 #include <components/real/cdh/on_board_computer.hpp>
 
-#include "../../components/aocs/initialize_relative_distance_sensor.hpp"
-#include "../../components/aocs/initialize_relative_position_sensor.hpp"
-#include "../../components/aocs/initialize_relative_velocity_sensor.hpp"
+#include "../../components/aocs/corner_cube_reflector.hpp"
+#include "../../components/aocs/laser_emitter.hpp"
+#include "../../components/aocs/relative_attitude_sensor.hpp"
+#include "../../components/aocs/relative_distance_sensor.hpp"
+#include "../../components/aocs/relative_position_sensor.hpp"
+#include "../../components/aocs/relative_velocity_sensor.hpp"
 #include "../../components/controller/relative_orbit_controller_deputy.hpp"
+#include "../../components/ideal/initialize_relative_attitude_controller.hpp"
 
 class RelativeOrbitControllerDeputy;
 
@@ -32,7 +38,8 @@ class FfComponents2 : public InstalledComponents {
    * @brief Constructor
    */
   FfComponents2(const Dynamics* dynamics, const Structure* structure, const LocalEnvironment* local_env, const GlobalEnvironment* glo_env,
-                const SimulationConfiguration* config, ClockGenerator* clock_gen, const RelativeInformation* rel_info, const int sat_id);
+                const SimulationConfiguration* config, ClockGenerator* clock_gen, const RelativeInformation* rel_info,
+                FfInterSpacecraftCommunication& inter_spacecraft_communication, const int sat_id);
   /**
    * @fn ~FfComponents
    * @brief Destructor
@@ -65,6 +72,8 @@ class FfComponents2 : public InstalledComponents {
  private:
   // Components
   OnBoardComputer* obc_;  //!< On board computer
+  std::vector<CornerCubeReflector*> corner_cube_reflectors_;
+  std::vector<LaserEmitter*> laser_emitters_;
 
   // Sensors
   RelativeDistanceSensor* relative_distance_sensor_;
@@ -82,6 +91,7 @@ class FfComponents2 : public InstalledComponents {
   const GlobalEnvironment* glo_env_;       //!< Global environment information
   const SimulationConfiguration* config_;  //!< Simulation settings
   const RelativeInformation* rel_info_;    //!< Relative information
+  FfInterSpacecraftCommunication& inter_spacecraft_communication_;
 };
 
 #endif  // S2E_FF_SIMULATION_SPACECRAFT_FF_COMPONENTS_2_HPP_
