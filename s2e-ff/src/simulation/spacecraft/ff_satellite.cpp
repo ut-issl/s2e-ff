@@ -9,6 +9,9 @@ FfSat::FfSat(SimulationConfiguration* sim_config, const GlobalEnvironment* glo_e
   } else if (sat_id == 1) {
     components_ = new FfComponents2(dynamics_, structure_, local_environment_, glo_env, sim_config, &clock_generator_, relative_information,
                                     inter_spacecraft_communication_);
-  } else {  // not reach
+  } else {
+    components_ = new FfComponents2(dynamics_, structure_, local_environment_, glo_env, sim_config, &clock_generator_, relative_information,
+                                    inter_spacecraft_communication_);
+    ;
   }
 }
