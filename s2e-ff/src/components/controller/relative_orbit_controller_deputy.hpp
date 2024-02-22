@@ -28,16 +28,16 @@ class RelativeOrbitControllerDeputy : public Component, public ILoggable {
   double mass_kg_ = 10.0;
   double impulse_output_duration_sec_ = 10.0;
   double component_update_sec_ = 0.1;
-  double dv_start_s_ = 1e5;                                    // TODO: Fix the value
-  double dv_timing_s_ = 1e5;                                   // TODO: Fix the value
-  bool enable_thruster_ = true;                                // Change true if you want to test control algorithm
+  double dv_start_s_ = 1e5;      // TODO: Fix the value
+  double dv_timing_s_ = 1e5;     // TODO: Fix the value
+  bool enable_thruster_ = true;  // Change true if you want to test control algorithm
 
   int sc_id_;                                                  // Spacecraft ID
   QuasiNonsingularRelativeOrbitalElements target_qns_roe_;     //!< Target QNS Relative OE with semi-major axis
   QuasiNonsingularRelativeOrbitalElements estimated_qns_roe_;  //!< Estimated QNS Relative OE
 
-  double estimated_relative_distance_m_ = 0.0;                 //!< Estimated relative distance
-  double estimated_inc_vec_angle_ = 0.0;                       //!< Estimated angle of inclination vector
+  double estimated_relative_distance_m_ = 0.0;  //!< Estimated relative distance
+  double estimated_inc_vec_angle_ = 0.0;        //!< Estimated angle of inclination vector
 
   libra::Vector<3> dv_rtn_m_s_{0.0};
   double dv_timing_rad_ = 0.0;

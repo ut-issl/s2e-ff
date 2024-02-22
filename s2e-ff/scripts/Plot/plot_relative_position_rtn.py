@@ -66,14 +66,17 @@ ax.set_ylabel("Transverse [m]")
 ax.set_zlabel("Normal [m]")
 
 # Add plot settings if you need
-#ax.set_xlim(-100, 100)
-#ax.set_ylim(-100, 100)
-#ax.set_zlim(-100, 100)
+ax.set_xlim(-20, 20)
+ax.set_ylim(-20, 20)
+ax.set_zlim(-20, 20)
 
-ax.plot(0,0,0, marker="*", c="green", markersize=10, label="Sat0")
-ax.plot(d1[0],d1[1],d1[2], marker="x", linestyle='None', c="red", label="Sat1")
+ax.plot(0,0,0, marker="*", linestyle='None', c="green", markersize=10, label="m")
+ax.plot(d1[0],d1[1],d1[2], marker="x", linestyle='None', c="red", label="d1")
+ax.plot(d1[0][0],d1[1][0],d1[2][0], marker="*", linestyle='None', c="orange", label="d1 initial")
+
 # Add satellites if you need
-ax.plot(d2[0],d2[1],d2[2], marker="o", linestyle='None', c="blue", label="Sat2")
+ax.plot(d2[0],d2[1],d2[2], marker="o", linestyle='None', c="blue", label="d2")
+ax.plot(d2[0][0],d2[1][0],d2[2][0], marker="*", linestyle='None', c="orange", label="d2 initial")
 
 ax.legend()
 

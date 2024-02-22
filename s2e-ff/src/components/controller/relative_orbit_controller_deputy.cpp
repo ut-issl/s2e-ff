@@ -9,18 +9,18 @@ RelativeOrbitControllerDeputy::RelativeOrbitControllerDeputy(const int prescaler
   mu_m3_s2_ = environment::earth_gravitational_constant_m3_s2;
 
   // TODO: set target
-  double d_lambda = 0.00000433;  // 0.00000289;
-  double d_ix = 0.00000001;
-  double d_iy = 0.00000076;      // 0.00000051;
+  double d_lambda = 0.00000433;  // 30 m ISD
+  double d_ix = 0.00000077;      // 10 deg
+  double d_iy = 0.00000077;      // 10 deg
 
   Vector<6> target_roe{0.0};
   if (sc_id_ == 1) {  // deputy-1
-    target_roe[1] = -d_lambda;
-    target_roe[4] = -d_ix;
-    target_roe[5] = d_iy;
-  } else {  // deputy-2
     target_roe[1] = d_lambda;
     target_roe[4] = d_ix;
+    target_roe[5] = d_iy;
+  } else {  // deputy-2
+    target_roe[1] = -d_lambda;
+    target_roe[4] = -d_ix;
     target_roe[5] = -d_iy;
   }
   target_qns_roe_ = QuasiNonsingularRelativeOrbitalElements(a_m_, target_roe);
@@ -95,8 +95,10 @@ std::string RelativeOrbitControllerDeputy::GetLogValue() const {
 
 void RelativeOrbitControllerDeputy::EstimateStates() {
   a_m_ = 6928000.0;  // TODO: measure the latest semi major axis
-  libra::Vector<3> measured_rel_pos_rtn_m = components_.GetRelativePositionSensor().GetMeasuredTargetPosition_rtn_m();
-  libra::Vector<3> measured_rel_vel_rtn_m_s = components_.GetRelativeVelocitySensor().GetMeasuredTargetVelocity_rtn_m_s();
+  libra::Vector<3> measured_rel_pos_rtn_m =
+      -1.0 * components_.GetRelativePositionSensor().GetMeasuredTargetPosition_rtn_m();  // times -1 for mother -> daughter
+  libra::Vector<3> measured_rel_vel_rtn_m_s =
+      -1.0 * components_.GetRelativeVelocitySensor().GetMeasuredTargetVelocity_rtn_m_s();  // times -1 for mother -> daughter
   estimated_qns_roe_ = QuasiNonsingularRelativeOrbitalElements(a_m_, measured_rel_pos_rtn_m, measured_rel_vel_rtn_m_s, mu_m3_s2_);
   // TODO: Averaging, Filtering
 
@@ -156,11 +158,11 @@ libra::Vector<3> RelativeOrbitControllerDeputy::DoubleImpulse_seirios(double& fi
 
   // Control output
   libra::Vector<3> dv_rtn_N{0.0};
-  dv_rtn_N[0] = a * n * d_lambda / 4.0;
+  dv_rtn_N[0] = -a * n * d_lambda / 4.0;
   dv_rtn_N[2] = a * n * d_i / 2.0;
 
   // Timing
-  double first_maneuver_rad = atan2(d_iy, d_ix);
+  double first_maneuver_rad = atan2(d_iy, abs(d_ix));
   double delta_maneuver_rad = libra::pi;
   first_maneuver_s = abs(first_maneuver_rad) / n;
   delta_maneuver_s = abs(delta_maneuver_rad) / n;

@@ -5,8 +5,8 @@
 
 RelativeOrbitAnalyzer::RelativeOrbitAnalyzer(const int prescaler, ClockGenerator* clock_gen, const RelativeInformation& rel_info)
     : Component(prescaler, clock_gen), rel_info_(rel_info) {
-  double target_ra_deg = 0.0;    // TODO: Input parameter
-  double target_dec_deg = 10.0;  // TODO: Input parameter
+  double target_ra_deg = -52.0;  // TODO: Input parameter
+  double target_dec_deg = 2.4;   // TODO: Input parameter (minus?)
   dcm_eci_to_img_ = MakeDcmEciToImg(target_dec_deg, target_ra_deg);
 }
 
