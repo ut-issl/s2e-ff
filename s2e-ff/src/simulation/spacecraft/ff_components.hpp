@@ -24,6 +24,7 @@
 #include "../../components/aocs/relative_distance_sensor.hpp"
 #include "../../components/aocs/relative_position_sensor.hpp"
 #include "../../components/aocs/relative_velocity_sensor.hpp"
+#include "../../components/aocs/air-drag-control-panel.hpp"
 #include "../../components/controller/relative_orbit_controller_chief.hpp"
 #include "../../components/ideal/initialize_relative_attitude_controller.hpp"
 
@@ -39,7 +40,7 @@ class FfComponents : public InstalledComponents {
    * @fn FfComponents
    * @brief Constructor
    */
-  FfComponents(const Dynamics* dynamics, const Structure* structure, const LocalEnvironment* local_env, const GlobalEnvironment* glo_env,
+  FfComponents(const Dynamics* dynamics, Structure* structure, const LocalEnvironment* local_env, const GlobalEnvironment* glo_env,
                const SimulationConfiguration* config, ClockGenerator* clock_gen, const RelativeInformation* rel_info,
                FfInterSpacecraftCommunication& inter_spacecraft_communication);
   /**
@@ -73,6 +74,7 @@ class FfComponents : public InstalledComponents {
   inline RelativePositionSensor& GetRelativePositionSensor2() const { return *relative_position_sensor2_; }
   inline RelativeVelocitySensor& GetRelativeVelocitySensor2() const { return *relative_velocity_sensor2_; }
   inline ForceGenerator& GetForceGenerator() const { return *force_generator_; }
+  inline AirDragControlPanel& GetAirDragControlPanel() const { return *air_drag_control_panel_; }
 
  private:
   // Components
@@ -95,11 +97,12 @@ class FfComponents : public InstalledComponents {
   RelativeOrbitAnalyzer* relative_orbit_analyzer_;           // !< Relative orbit analyzer
   ForceGenerator* force_generator_;                          //!< Example of force generator
   TorqueGenerator* torque_generator_;                        //!< Example of torque generator
+  AirDragControlPanel* air_drag_control_panel_;
   // RelativeAttitudeController* relative_attitude_controller_;  //!< Example of attitude controller
 
   // References
   const Dynamics* dynamics_;               //!< Dynamics information of the spacecraft
-  const Structure* structure_;             //!< Structure information of the spacecraft
+  Structure* structure_;             //!< Structure information of the spacecraft
   const LocalEnvironment* local_env_;      //!< Local environment information around the spacecraft
   const GlobalEnvironment* glo_env_;       //!< Global environment information
   const SimulationConfiguration* config_;  //!< Simulation settings

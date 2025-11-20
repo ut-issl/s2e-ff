@@ -3,7 +3,7 @@
 #include <components/ideal/force_generator.hpp>
 #include <library/initialize/initialize_file_access.hpp>
 
-FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure, const LocalEnvironment* local_env, const GlobalEnvironment* glo_env,
+FfComponents::FfComponents(const Dynamics* dynamics,Structure* structure, const LocalEnvironment* local_env, const GlobalEnvironment* glo_env,
                            const SimulationConfiguration* config, ClockGenerator* clock_gen, const RelativeInformation* rel_info,
                            FfInterSpacecraftCommunication& inter_spacecraft_communication)
     : dynamics_(dynamics),
@@ -71,6 +71,8 @@ FfComponents::FfComponents(const Dynamics* dynamics, const Structure* structure,
 
   relative_orbit_controller_ = new RelativeOrbitControllerChief(1, clock_gen, *this);
 
+  air_drag_control_panel_ = new AirDragControlPanel(clock_gen, &structure_->GetToSetSurfaces()[6]);
+
   /*
     const std::string relative_attitude_controller_file = sat_file.ReadString(section_name.c_str(), "relative_attitude_controller_file");
     relative_attitude_controller_ = new RelativeAttitudeController(InitializeRelativeAttitudeController(
@@ -104,6 +106,7 @@ FfComponents::~FfComponents() {
   delete relative_orbit_analyzer_;
   delete relative_orbit_controller_;
   delete torque_generator_;
+  delete air_drag_control_panel_;
   // delete relative_attitude_controller_;
   delete laser_distance_meter_;
   delete qpd_positioning_sensor_;

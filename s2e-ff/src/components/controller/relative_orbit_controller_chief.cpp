@@ -28,10 +28,14 @@ void RelativeOrbitControllerChief::MainRoutine(int count) {
   libra::Vector<3> measured_rel_pos_deputy2_rtn_m = components_.GetRelativePositionSensor2().GetMeasuredTargetPosition_rtn_m();
   libra::Vector<3> measured_rel_vel_deputy2_rtn_m_s = components_.GetRelativeVelocitySensor2().GetMeasuredTargetVelocity_rtn_m_s();
 
-  
+  // スラスタで制御する場合はこちらを使う
   libra::Vector<3> f_b_N{0.0};
   // Add control algorithm to decide force
   components_.GetForceGenerator().SetForce_b_N(f_b_N);
+
+  // 空力制御パネルで制御する場合はこちらを使う
+  // components_.GetAirDragControlPanel().SetArea_m2(0.3); // 面積を変えてで空力を変更 0.0だと設定できないので注意
+  // components_.GetAirDragControlPanel().SetAngle_deg(0.0); // 面の角度を変えてで空力を変更 0度: 面が進行方向に垂直(最大面積)
 }
 
 std::string RelativeOrbitControllerChief::GetLogHeader() const {
