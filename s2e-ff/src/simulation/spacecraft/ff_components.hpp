@@ -66,9 +66,12 @@ class FfComponents : public InstalledComponents {
   void LogSetup(Logger& logger);
 
   // Getter
-  inline RelativeDistanceSensor& GetRelativeDistanceSensor() const { return *relative_distance_sensor_; }
-  inline RelativePositionSensor& GetRelativePositionSensor() const { return *relative_position_sensor_; }
-  inline RelativeVelocitySensor& GetRelativeVelocitySensor() const { return *relative_velocity_sensor_; }
+  inline RelativeDistanceSensor& GetRelativeDistanceSensor1() const { return *relative_distance_sensor1_; }
+  inline RelativePositionSensor& GetRelativePositionSensor1() const { return *relative_position_sensor1_; }
+  inline RelativeVelocitySensor& GetRelativeVelocitySensor1() const { return *relative_velocity_sensor1_; }
+  inline RelativeDistanceSensor& GetRelativeDistanceSensor2() const { return *relative_distance_sensor2_; }
+  inline RelativePositionSensor& GetRelativePositionSensor2() const { return *relative_position_sensor2_; }
+  inline RelativeVelocitySensor& GetRelativeVelocitySensor2() const { return *relative_velocity_sensor2_; }
   inline ForceGenerator& GetForceGenerator() const { return *force_generator_; }
 
  private:
@@ -76,10 +79,15 @@ class FfComponents : public InstalledComponents {
   // CDH
   OnBoardComputer* obc_;  //!< On board computer
   // Sensors
-  RelativeDistanceSensor* relative_distance_sensor_;  //!< Example of Relative distance sensor
-  RelativePositionSensor* relative_position_sensor_;  //!< Example of Relative position sensor
-  RelativeAttitudeSensor* relative_attitude_sensor_;  //!< Example of Relative attitude sensor
-  RelativeVelocitySensor* relative_velocity_sensor_;  //!< Example of Relative velocity sensor
+  RelativeDistanceSensor* relative_distance_sensor1_;  //!< Example of Relative distance sensor for deputy 1
+  RelativePositionSensor* relative_position_sensor1_;  //!< Example of Relative position sensor for deputy 1
+  RelativeAttitudeSensor* relative_attitude_sensor1_;  //!< Example of Relative attitude sensor for deputy 1
+  RelativeVelocitySensor* relative_velocity_sensor1_;  //!< Example of Relative velocity sensor for deputy 1
+  RelativeDistanceSensor* relative_distance_sensor2_;  //!< Example of Relative distance sensor for deputy 2
+  RelativePositionSensor* relative_position_sensor2_;  //!< Example of Relative position sensor for deputy 2
+  RelativeAttitudeSensor* relative_attitude_sensor2_;  //!< Example of Relative attitude sensor for deputy 2
+  RelativeVelocitySensor* relative_velocity_sensor2_;  //!< Example of Relative velocity sensor for deputy 2
+
   LaserDistanceMeter* laser_distance_meter_;
   QpdPositioningSensor* qpd_positioning_sensor_;
   // Actuators

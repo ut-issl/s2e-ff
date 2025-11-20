@@ -22,9 +22,13 @@ RelativeOrbitControllerChief::~RelativeOrbitControllerChief() {}
 
 void RelativeOrbitControllerChief::MainRoutine(int count) {
   UNUSED(count);
-  EstimateStates();
-  QuasiNonsingularRelativeOrbitalElements diff_qns_roe = target_qns_roe_ - estimated_qns_roe_;
+  // Estimate states
+  libra::Vector<3> measured_rel_pos_deputy1_rtn_m = components_.GetRelativePositionSensor1().GetMeasuredTargetPosition_rtn_m();
+  libra::Vector<3> measured_rel_vel_deputy1_rtn_m_s = components_.GetRelativeVelocitySensor1().GetMeasuredTargetVelocity_rtn_m_s();
+  libra::Vector<3> measured_rel_pos_deputy2_rtn_m = components_.GetRelativePositionSensor2().GetMeasuredTargetPosition_rtn_m();
+  libra::Vector<3> measured_rel_vel_deputy2_rtn_m_s = components_.GetRelativeVelocitySensor2().GetMeasuredTargetVelocity_rtn_m_s();
 
+  
   libra::Vector<3> f_b_N{0.0};
   // Add control algorithm to decide force
   components_.GetForceGenerator().SetForce_b_N(f_b_N);
@@ -45,8 +49,8 @@ std::string RelativeOrbitControllerChief::GetLogValue() const {
 
 void RelativeOrbitControllerChief::EstimateStates() {
   a_m_ = 6928000.0;  // TODO: measure the latest semi major axis
-  libra::Vector<3> measured_rel_pos_rtn_m = components_.GetRelativePositionSensor().GetMeasuredTargetPosition_rtn_m();
-  libra::Vector<3> measured_rel_vel_rtn_m_s = components_.GetRelativeVelocitySensor().GetMeasuredTargetVelocity_rtn_m_s();
+  libra::Vector<3> measured_rel_pos_rtn_m = components_.GetRelativePositionSensor1().GetMeasuredTargetPosition_rtn_m();
+  libra::Vector<3> measured_rel_vel_rtn_m_s = components_.GetRelativeVelocitySensor1().GetMeasuredTargetVelocity_rtn_m_s();
   estimated_qns_roe_ = QuasiNonsingularRelativeOrbitalElements(a_m_, measured_rel_pos_rtn_m, measured_rel_vel_rtn_m_s, mu_m3_s2_);
   // TODO: Averaging, Filtering
 
