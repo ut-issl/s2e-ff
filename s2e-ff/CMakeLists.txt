@@ -52,6 +52,7 @@ set(SOURCE_FILES
   src/components/aocs/laser_distance_meter.cpp
   src/components/aocs/laser_emitter.cpp
   src/components/aocs/qpd_positioning_sensor.cpp
+  src/components/aocs/air-drag-control-panel.cpp
   src/components/ideal/relative_attitude_controller.cpp
   src/components/ideal/initialize_relative_attitude_controller.cpp
   src/components/controller/relative_orbit_controller_deputy.cpp
