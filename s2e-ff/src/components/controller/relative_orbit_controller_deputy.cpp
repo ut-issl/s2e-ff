@@ -34,6 +34,7 @@ void RelativeOrbitControllerDeputy::MainRoutine(int count) {
   EstimateStates();
   QuasiNonsingularRelativeOrbitalElements diff_qns_roe = target_qns_roe_ - estimated_qns_roe_;
 
+  /*
   if (count > 1840 && count < 2000) {  // FIXME: set maneuver timing
     // Calc Maneuver output
     dv_rtn_m_s_ = DoubleImpulse_seirios(dv_start_s_, dv_timing_s_, diff_qns_roe);
@@ -66,6 +67,7 @@ void RelativeOrbitControllerDeputy::MainRoutine(int count) {
     }
     if (enable_thruster_) components_.GetForceGenerator().SetForce_rtn_N(f_rtn_N);
   }
+  */  
 }
 
 std::string RelativeOrbitControllerDeputy::GetLogHeader() const {
