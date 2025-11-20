@@ -138,6 +138,7 @@ void FfComponents::LogSetup(Logger& logger) {
   logger.AddLogList(relative_orbit_analyzer_);
   logger.AddLogList(force_generator_);
   logger.AddLogList(torque_generator_);
+  logger.AddLogList(air_drag_control_panel_);
   logger.AddLogList(laser_distance_meter_);
   logger.AddLogList(qpd_positioning_sensor_);
 }

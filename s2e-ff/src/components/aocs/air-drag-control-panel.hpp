@@ -53,19 +53,19 @@ class AirDragControlPanel : public Component, public ILoggable {
    * @brief Set the area of the surface in square meters
    * @param [in] area_m2: Area in square meters
    */
-  void SetArea_m2(double area_m2) {
-    surface_->SetArea_m2(area_m2);
-  }
+  void SetArea_m2(double area_m2) { area_m2_ = area_m2; }
 
   /**
    * @fn SetAngle_deg
    * @brief Set the angle of the surface in degrees
    * @param [in] angle_deg: Angle in degrees
    */
-  void SetAngle_deg(double angle_deg);
+  void SetAngle_deg(double angle_deg) { angle_deg_ = angle_deg; }
 
   protected:
   Surface* surface_;  //!< Surface information
+  double area_m2_;   //!< Area of the surface in square meters
+  double angle_deg_; //!< Rotation Angle of the surface in degrees
 };
 
 #endif  // S2E_COMPONENTS_EXAMPLES_AIR_DRAG_CONTROL_PANEL_HPP_
