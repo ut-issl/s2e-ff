@@ -26,8 +26,8 @@ void RelativeOrbitControllerChief::MainRoutine(int count) {
   QuasiNonsingularRelativeOrbitalElements diff_qns_roe = target_qns_roe_ - estimated_qns_roe_;
 
   // Control Law
-  //components_.GetAirDragControlPanel().SetArea_m2(0.3);
-  components_.GetAirDragControlPanel().SetAngle_deg(0.0);
+  // components_.GetAirDragControlPanel().SetArea_m2(0.3); // 面積を変えてで空力を変更 0.0だと設定できないので注意
+  // components_.GetAirDragControlPanel().SetAngle_deg(0.0); // 面の角度を変えてで空力を変更 0度: 面が進行方向に垂直(最大面積)
 }
 
 std::string RelativeOrbitControllerChief::GetLogHeader() const {
